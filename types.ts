@@ -1,0 +1,233 @@
+
+
+export type View = 
+  | 'DASHBOARD'
+  | 'PROTOCOLOS_LIST'
+  | 'PROTOCOLO_DETAIL'
+  | 'PROTOCOLO_FORM'
+  | 'NOTICIAS_LIST'
+  | 'NOTICIA_DETAIL'
+  | 'SECRETARIAS_LIST'
+  | 'MAPA_SERVICOS'
+  | 'TURISMO_DASHBOARD'
+  | 'TURISMO_LIST'
+  | 'TURISMO_DETAIL'
+  | 'CONTATOS_LIST'
+  | 'SERVICOS_ONLINE_DASHBOARD'
+  | 'SERVICO_FORM'
+  | 'AGENDAMENTOS_LIST'
+  | 'NOTIFICACOES_LIST'
+  | 'SERVICOS_DASHBOARD'
+  | 'MAIS_DASHBOARD'
+  | 'SEARCH';
+
+export enum TipoProtocolo {
+  RECLAMACAO = 'Reclamação',
+  SUGESTAO = 'Sugestão',
+  DENUNCIA = 'Denúncia',
+  ELOGIO = 'Elogio',
+}
+
+export enum CategoriaReclamacao {
+  ILUMINACAO = 'Iluminação Pública',
+  BURACO_VIA = 'Buraco na Via',
+  LIXO = 'Coleta de Lixo',
+  OBRAS = 'Obras e Reparos',
+  SANEAMENTO = 'Saneamento Básico',
+  OUTRO = 'Outro',
+}
+
+export enum StatusProtocolo {
+  RECEBIDO = 'Recebido',
+  EM_ANDAMENTO = 'Em Andamento',
+  RESOLVIDO = 'Resolvido',
+  REJEITADO = 'Rejeitado',
+}
+
+export interface HistoricoProtocolo {
+  status: StatusProtocolo;
+  data: string;
+  observacao?: string;
+}
+
+export interface Protocolo {
+  id: string;
+  protocolo: string;
+  userId: string;
+  tipo: TipoProtocolo;
+  categoria?: CategoriaReclamacao;
+  descricao: string;
+  localizacao?: {
+    lat: number;
+    lng: number;
+  };
+  fotos?: string[];
+  status: StatusProtocolo;
+  dataAbertura: string;
+  dataAtualizacao: string;
+  historico: HistoricoProtocolo[];
+  bairro: string;
+}
+
+export enum UserRole {
+  CIDADAO = 'Cidadão',
+  GESTOR = 'Gestor Público',
+}
+
+export interface UserProfile {
+    id: string;
+    name: string;
+    role: UserRole;
+    avatar: string;
+}
+
+export interface Comment {
+  id: string;
+  author: string;
+  avatar: string;
+  text: string;
+  date: string;
+}
+
+export interface Noticia {
+  id: string;
+  title: string;
+  summary: string;
+  date: string;
+  imageUrl: string;
+  link: string;
+  likes: number;
+  comments: Comment[];
+}
+
+export interface Secretaria {
+  id: string;
+  nome: string;
+  secretario: string;
+  cargo: string;
+  avatarUrl: string;
+  endereco: string;
+  telefone: string;
+  email: string;
+  horario: string;
+  link?: string;
+}
+
+export type CategoriaPredioPublico = 'Saúde' | 'Educação' | 'Assistência Social' | 'Administração';
+
+export interface PredioPublico {
+  id: string;
+  nome: string;
+  endereco: string;
+  telefone: string;
+  categoria: CategoriaPredioPublico;
+  horario: string;
+  servicos: string[];
+  localizacao: {
+    latitude: number;
+    longitude: number;
+  };
+  isOpenNow: boolean;
+  busyness?: string;
+  imageUrl?: string;
+}
+
+export type TurismoCategoria = 'Gastronomia' | 'Lazer e Entretenimento' | 'Hospedagem' | 'Pontos Turísticos';
+
+export interface TurismoItem {
+  id: string;
+  categoria: TurismoCategoria;
+  nome: string;
+  descricao: string;
+  descricaoCurta: string;
+  endereco: string;
+  contato?: string;
+  site?: string;
+  localizacao: {
+    latitude: number;
+    longitude: number;
+  };
+  imagens: string[];
+}
+
+export interface ChatAction {
+  buttonText: string;
+  view: View;
+  params?: {
+    protocoloId?: string;
+    noticiaId?: string;
+    turismoId?: string;
+    turismoCategoria?: TurismoCategoria;
+    servicoId?: string;
+  };
+}
+
+export interface ChatMessage {
+  id: string;
+  role: 'user' | 'model';
+  content: string;
+  action?: ChatAction;
+  feedback?: 'like' | 'dislike' | null;
+}
+
+export enum CategoriaContato {
+  EMERGENCIA = 'Emergência',
+  SERVICOS = 'Serviços Municipais',
+  SAUDE = 'Saúde',
+  OUTROS = 'Outros',
+}
+
+export interface ContatoUtil {
+  id: string;
+  categoria: CategoriaContato;
+  nome: string;
+  telefone: string;
+  icon: string; // Material Icon name
+}
+
+export enum CategoriaServicoOnline {
+  ASSISTENCIA = 'Assistência Social',
+  TRIBUTOS = 'Tributos e Finanças',
+  EDUCACAO = 'Educação',
+  SAUDE = 'Saúde',
+  OUTROS = 'Outros Serviços',
+}
+
+export interface ServicoOnline {
+  id: string;
+  categoria: CategoriaServicoOnline;
+  nome: string;
+  descricao: string;
+  icon: string; // Material Icon name
+  requiresAuth: boolean;
+}
+
+export enum AgendamentoStatus {
+  AGENDADO = 'Agendado',
+  CANCELADO = 'Cancelado',
+  REALIZADO = 'Realizado',
+}
+
+export interface Agendamento {
+  id: string;
+  userId: string;
+  servicoId: string;
+  servicoNome: string;
+  servicoIcon: string;
+  dataHora: string;
+  status: AgendamentoStatus;
+  lembreteAtivo: boolean;
+}
+
+export interface Notificacao {
+  id: string;
+  userId: string;
+  titulo: string;
+  mensagem: string;
+  data: string;
+  lida: boolean;
+  link?: {
+    view: View;
+    params?: any;
+  };
+}

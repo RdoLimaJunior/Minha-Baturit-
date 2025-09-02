@@ -1,4 +1,5 @@
 
+
 import React, { useState, useMemo } from 'react';
 import { useProtocolos } from '../../hooks/useMockData';
 import { Protocolo, StatusProtocolo, View, TipoProtocolo } from '../../types';
@@ -14,15 +15,15 @@ interface ProtocolosListProps {
 const getStatusChipStyle = (status: StatusProtocolo) => {
     switch (status) {
         case StatusProtocolo.RECEBIDO:
-            return 'bg-blue-100 text-blue-800';
+            return 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300';
         case StatusProtocolo.EM_ANDAMENTO:
-            return 'bg-yellow-100 text-yellow-800';
+            return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300';
         case StatusProtocolo.RESOLVIDO:
-            return 'bg-green-100 text-green-800';
+            return 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300';
         case StatusProtocolo.REJEITADO:
-            return 'bg-red-100 text-red-800';
+            return 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300';
         default:
-            return 'bg-gray-100 text-gray-800';
+            return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
     }
 };
 
@@ -35,7 +36,7 @@ const getProtocoloTypeStyle = (tipo: TipoProtocolo) => {
         case TipoProtocolo.ELOGIO:
             return { icon: 'thumb_up', color: 'text-green-500' };
         case TipoProtocolo.DENUNCIA:
-            return { icon: 'security', color: 'text-slate-600' };
+            return { icon: 'security', color: 'text-slate-600 dark:text-slate-400' };
         default:
             return { icon: 'article', color: 'text-slate-500' };
     }
@@ -50,17 +51,17 @@ const ProtocoloItem: React.FC<{ protocolo: Protocolo, onClick: () => void }> = (
                 <div className="flex items-center space-x-3">
                     <Icon name={typeStyle.icon} className={`text-2xl ${typeStyle.color}`} />
                     <div>
-                        <p className="text-sm font-semibold text-slate-500">{protocolo.protocolo}</p>
-                        <h3 className="font-bold text-slate-800">{protocolo.tipo}</h3>
-                        {protocolo.categoria && <p className="text-xs text-slate-500">{protocolo.categoria}</p>}
+                        <p className="text-sm font-semibold text-slate-500 dark:text-slate-400">{protocolo.protocolo}</p>
+                        <h3 className="font-bold text-slate-800 dark:text-slate-100">{protocolo.tipo}</h3>
+                        {protocolo.categoria && <p className="text-xs text-slate-500 dark:text-slate-400">{protocolo.categoria}</p>}
                     </div>
                 </div>
                 <span className={`text-xs font-medium px-2.5 py-0.5 rounded-full ${getStatusChipStyle(protocolo.status)}`}>
                     {protocolo.status}
                 </span>
             </div>
-            <p className="text-sm text-slate-600 mt-2 truncate">{protocolo.descricao}</p>
-            <div className="text-xs text-slate-400 mt-4 flex items-center">
+            <p className="text-sm text-slate-600 dark:text-slate-300 mt-2 truncate">{protocolo.descricao}</p>
+            <div className="text-xs text-slate-400 dark:text-slate-500 mt-4 flex items-center">
                 <Icon name="schedule" className="text-base mr-1" />
                 <span>Aberto em: {new Date(protocolo.dataAbertura).toLocaleDateString('pt-BR')}</span>
             </div>
@@ -100,12 +101,12 @@ const ProtocolosList: React.FC<ProtocolosListProps> = ({ navigateTo }) => {
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-slate-800">Meus Protocolos</h2>
+        <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Meus Protocolos</h2>
       </div>
 
       <Card className="!p-3">
         <div className="flex items-center space-x-2 flex-wrap">
-            <span className="text-sm font-medium text-slate-600 mr-2">Ordenar por:</span>
+            <span className="text-sm font-medium text-slate-600 dark:text-slate-300 mr-2">Ordenar por:</span>
             <Button size="sm" onClick={() => setSortBy('date-desc')} variant={sortBy === 'date-desc' ? 'primary' : 'ghost'}>Recentes</Button>
             <Button size="sm" onClick={() => setSortBy('date-asc')} variant={sortBy === 'date-asc' ? 'primary' : 'ghost'}>Antigos</Button>
             <Button size="sm" onClick={() => setSortBy('status')} variant={sortBy === 'status' ? 'primary' : 'ghost'}>Status</Button>
@@ -118,7 +119,7 @@ const ProtocolosList: React.FC<ProtocolosListProps> = ({ navigateTo }) => {
         ))
       ) : (
         <Card className="text-center">
-          <p className="text-slate-600">Você ainda não abriu nenhum protocolo.</p>
+          <p className="text-slate-600 dark:text-slate-300">Você ainda não abriu nenhum protocolo.</p>
           <Button onClick={() => navigateTo('PROTOCOLO_FORM')} className="mt-4">
             Abrir primeiro protocolo
           </Button>

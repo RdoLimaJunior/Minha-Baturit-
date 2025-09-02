@@ -30,14 +30,14 @@ const Button: React.FC<ButtonProps> = ({
 
   const variantClasses = {
     primary: 'bg-indigo-700 text-white hover:bg-indigo-800 focus:ring-indigo-600',
-    secondary: 'bg-slate-200 text-slate-800 hover:bg-slate-300 focus:ring-slate-400',
-    ghost: 'bg-transparent text-slate-600 hover:bg-slate-100 focus:ring-slate-400',
+    secondary: 'bg-slate-200 text-slate-800 hover:bg-slate-300 dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600 focus:ring-slate-400 dark:focus:ring-slate-500',
+    ghost: 'bg-transparent text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700 focus:ring-slate-400 dark:focus:ring-slate-500',
   };
   
   const sizeClasses = {
-    md: 'px-4 py-2 text-sm',
-    sm: 'px-2.5 py-1.5 text-xs',
-    lg: 'px-6 py-3 text-base',
+    md: 'px-4 py-2 text-base',
+    sm: 'px-2.5 py-1.5 text-sm',
+    lg: 'px-6 py-3 text-lg',
     icon: 'p-2',
   };
 

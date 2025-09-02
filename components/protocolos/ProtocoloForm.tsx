@@ -1,5 +1,3 @@
-
-
 import React, { useState } from 'react';
 import { CategoriaReclamacao, TipoProtocolo } from '../../types';
 import Button from '../ui/Button';
@@ -71,16 +69,16 @@ const ProtocoloForm: React.FC<ProtocoloFormProps> = ({ goBack }) => {
                 <Button onClick={goBack} variant="ghost" iconLeft="arrow_back">Voltar</Button>
                 <Card>
                     <div className="text-center mb-6">
-                        <h2 className="text-2xl font-bold text-slate-800">Participação Cidadã</h2>
-                        <p className="text-slate-600 mt-1">Qual tipo de protocolo você deseja abrir?</p>
+                        <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Participação Cidadã</h2>
+                        <p className="text-slate-600 dark:text-slate-300 mt-1">Qual tipo de protocolo você deseja abrir?</p>
                     </div>
                     <div className="space-y-3">
                         {Object.values(TipoProtocolo).map(type => (
-                            <Card key={type} onClick={() => handleTypeSelect(type)} className="flex items-center space-x-4 text-left !p-4 border-2 border-transparent hover:border-indigo-500 hover:shadow-lg">
-                                <Icon name={TIPO_PROTOCOLO_METADATA[type].icon} className="text-3xl text-indigo-600" />
+                            <Card key={type} onClick={() => handleTypeSelect(type)} className="flex items-center space-x-4 text-left !p-4 border-2 border-transparent hover:border-indigo-500 dark:hover:border-indigo-600 hover:shadow-lg dark:hover:bg-slate-700">
+                                <Icon name={TIPO_PROTOCOLO_METADATA[type].icon} className="text-3xl text-indigo-600 dark:text-indigo-400" />
                                 <div>
-                                    <h3 className="font-bold text-slate-800">{TIPO_PROTOCOLO_METADATA[type].title}</h3>
-                                    <p className="text-sm text-slate-500">{TIPO_PROTOCOLO_METADATA[type].description}</p>
+                                    <h3 className="font-bold text-slate-800 dark:text-slate-100">{TIPO_PROTOCOLO_METADATA[type].title}</h3>
+                                    <p className="text-sm text-slate-500 dark:text-slate-400">{TIPO_PROTOCOLO_METADATA[type].description}</p>
                                 </div>
                             </Card>
                         ))}
@@ -95,16 +93,16 @@ const ProtocoloForm: React.FC<ProtocoloFormProps> = ({ goBack }) => {
             <Button onClick={() => setStep(1)} variant="ghost" iconLeft="arrow_back">Mudar tipo</Button>
             <Card>
                 <form onSubmit={handleSubmit} className="space-y-6">
-                    <h2 className="text-2xl font-bold text-slate-800">{TIPO_PROTOCOLO_METADATA[tipo!]?.title}</h2>
+                    <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">{TIPO_PROTOCOLO_METADATA[tipo!]?.title}</h2>
                     
                     {tipo === TipoProtocolo.RECLAMACAO && (
                         <div>
-                            <label htmlFor="categoria" className="block text-sm font-medium text-slate-700 mb-1">Categoria *</label>
+                            <label htmlFor="categoria" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Categoria *</label>
                             <select
                                 id="categoria"
                                 value={categoria}
                                 onChange={(e) => setCategoria(e.target.value as CategoriaReclamacao)}
-                                className="w-full p-2 border border-slate-300 rounded-md focus:ring-indigo-600 focus:border-indigo-600"
+                                className="w-full p-2 bg-white text-slate-900 border border-slate-300 rounded-md focus:ring-indigo-600 focus:border-indigo-600 dark:bg-slate-700 dark:border-slate-600 dark:text-white"
                             >
                                 <option value="" disabled>Selecione uma categoria</option>
                                 {Object.values(CategoriaReclamacao).map(cat => <option key={cat} value={cat}>{cat}</option>)}
@@ -113,12 +111,12 @@ const ProtocoloForm: React.FC<ProtocoloFormProps> = ({ goBack }) => {
                     )}
 
                     <div>
-                        <label htmlFor="bairro" className="block text-sm font-medium text-slate-700 mb-1">Bairro *</label>
+                        <label htmlFor="bairro" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Bairro *</label>
                         <select
                             id="bairro"
                             value={bairro}
                             onChange={(e) => setBairro(e.target.value)}
-                            className="w-full p-2 border border-slate-300 rounded-md focus:ring-indigo-600 focus:border-indigo-600"
+                            className="w-full p-2 bg-white text-slate-900 border border-slate-300 rounded-md focus:ring-indigo-600 focus:border-indigo-600 dark:bg-slate-700 dark:border-slate-600 dark:text-white"
                         >
                             <option value="" disabled>Selecione seu bairro</option>
                             {BAIRROS_BATURITE.map(b => <option key={b} value={b}>{b}</option>)}
@@ -126,23 +124,23 @@ const ProtocoloForm: React.FC<ProtocoloFormProps> = ({ goBack }) => {
                     </div>
 
                     <div>
-                        <label htmlFor="descricao" className="block text-sm font-medium text-slate-700 mb-1">Descrição *</label>
+                        <label htmlFor="descricao" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Descrição *</label>
                         <textarea
                             id="descricao"
                             rows={4}
                             value={descricao}
                             onChange={(e) => setDescricao(e.target.value)}
-                            className="w-full p-2 border border-slate-300 rounded-md focus:ring-indigo-600 focus:border-indigo-600"
+                            className="w-full p-2 bg-white text-slate-900 border border-slate-300 rounded-md focus:ring-indigo-600 focus:border-indigo-600 dark:bg-slate-700 dark:border-slate-600 dark:text-white"
                             placeholder="Descreva sua solicitação com o máximo de detalhes."
                         ></textarea>
                     </div>
 
                     <div className="space-y-2">
-                        <label className="block text-sm font-medium text-slate-700">Foto (Opcional)</label>
-                        <label htmlFor="foto-upload" className="w-full flex items-center justify-center p-4 border-2 border-dashed border-slate-300 rounded-md cursor-pointer hover:bg-slate-50">
+                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">Foto (Opcional)</label>
+                        <label htmlFor="foto-upload" className="w-full flex items-center justify-center p-4 border-2 border-dashed border-slate-300 rounded-md cursor-pointer hover:bg-slate-50 dark:border-slate-600 dark:hover:bg-slate-700">
                             <div className="text-center">
-                                <Icon name="photo_camera" className="mx-auto text-4xl text-slate-400" />
-                                <span className="mt-2 block text-sm text-slate-600">Clique para enviar uma foto</span>
+                                <Icon name="photo_camera" className="mx-auto text-4xl text-slate-400 dark:text-slate-500" />
+                                <span className="mt-2 block text-sm text-slate-600 dark:text-slate-400">Clique para enviar uma foto</span>
                             </div>
                         </label>
                         <input id="foto-upload" type="file" className="sr-only" accept="image/*" onChange={handleFotoChange} />
@@ -150,12 +148,12 @@ const ProtocoloForm: React.FC<ProtocoloFormProps> = ({ goBack }) => {
                     </div>
 
                     <div className="space-y-2">
-                         <label className="block text-sm font-medium text-slate-700">Localização (Opcional)</label>
+                         <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">Localização (Opcional)</label>
                         <Button type="button" variant="secondary" onClick={handleGetLocation} iconLeft="my_location" className="w-full">
                            Usar minha localização atual
                         </Button>
                         {localizacao && (
-                            <div className="text-sm text-green-600 flex items-center justify-center">
+                            <div className="text-sm text-green-600 dark:text-green-400 flex items-center justify-center">
                                 <Icon name="check_circle" className="text-lg mr-1" />
                                 Localização capturada!
                             </div>

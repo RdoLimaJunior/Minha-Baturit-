@@ -9,14 +9,14 @@ import ChatMessageComponent from './dashboard/ChatMessage';
 
 const TypingIndicator = () => (
   <div className="flex items-end animate-fade-slide-in">
-    <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0 mr-3">
-        <Icon name="flutter_dash" className="text-indigo-700 !text-xl" />
+    <div className="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center flex-shrink-0 mr-3">
+        <Icon name="flutter_dash" className="text-indigo-700 dark:text-indigo-400 !text-xl" />
     </div>
-    <div className="max-w-xs md:max-w-md lg:max-w-lg px-4 py-3 rounded-2xl bg-slate-200 text-slate-800 rounded-bl-lg">
+    <div className="max-w-xs md:max-w-md lg:max-w-lg px-4 py-3 rounded-2xl bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-200 rounded-bl-lg">
         <div className="flex items-center space-x-1.5">
-            <span className="typing-dot"></span>
-            <span className="typing-dot" style={{ animationDelay: '0.2s' }}></span>
-            <span className="typing-dot" style={{ animationDelay: '0.4s' }}></span>
+            <span className="typing-dot dark:bg-slate-400"></span>
+            <span className="typing-dot dark:bg-slate-400" style={{ animationDelay: '0.2s' }}></span>
+            <span className="typing-dot dark:bg-slate-400" style={{ animationDelay: '0.4s' }}></span>
         </div>
     </div>
   </div>
@@ -31,11 +31,11 @@ const WeatherWidget = () => {
     };
 
     return (
-        <div className="flex items-center space-x-2 text-slate-700">
+        <div className="flex items-center space-x-2 text-slate-700 dark:text-slate-200">
             <Icon name={weather.icon} className="text-3xl text-amber-500" />
             <div className="text-right">
                 <p className="font-bold text-xl">{weather.temperature}°C</p>
-                <p className="text-xs text-slate-500">{weather.condition}</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">{weather.condition}</p>
             </div>
         </div>
     );
@@ -178,8 +178,8 @@ const Dashboard: React.FC<DashboardProps> = ({ navigateTo, userProfile }) => {
   if (userProfile.role === UserRole.GESTOR) {
     return (
         <div className="container mx-auto p-4">
-            <h2 className="text-2xl font-bold text-slate-800">Painel do Gestor</h2>
-            <p className="text-slate-600">Bem-vindo, {userProfile.name}. Funcionalidades de gestão em breve.</p>
+            <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Painel do Gestor</h2>
+            <p className="text-slate-600 dark:text-slate-300">Bem-vindo, {userProfile.name}. Funcionalidades de gestão em breve.</p>
         </div>
     );
   }
@@ -223,15 +223,15 @@ const Dashboard: React.FC<DashboardProps> = ({ navigateTo, userProfile }) => {
       <div className="container mx-auto p-4 space-y-6">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-bold text-slate-800">Olá, {userProfile.name}!</h1>
-            <p className="text-slate-600">Bem-vindo(a) ao Minha Baturité.</p>
+            <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Olá, {userProfile.name}!</h1>
+            <p className="text-slate-600 dark:text-slate-300">Bem-vindo(a) ao Minha Baturité.</p>
           </div>
           <WeatherWidget />
         </div>
 
         <Card className="!p-0 flex flex-col h-[65vh] max-h-[700px]">
-          <div className="flex-shrink-0 p-3 bg-white border-b border-slate-200 flex justify-between items-center">
-              <h3 className="font-semibold text-slate-700 text-sm">Assistente Uirapuru</h3>
+          <div className="flex-shrink-0 p-3 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center">
+              <h3 className="font-semibold text-slate-700 dark:text-slate-200 text-sm">Assistente Uirapuru</h3>
           </div>
           <div className="flex-grow p-4 space-y-4 overflow-y-auto" role="log" aria-live="polite">
               {messages.map((msg, index) => (
@@ -248,7 +248,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigateTo, userProfile }) => {
               {isLoading && <TypingIndicator />}
               <div ref={messagesEndRef} />
           </div>
-          <div className="flex-shrink-0 p-3 bg-white border-t border-slate-200">
+          <div className="flex-shrink-0 p-3 bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700">
               {messages.length <= 1 && !isLoading && (
                   <div className="mb-3">
                       <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
@@ -256,7 +256,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigateTo, userProfile }) => {
                           <button
                               key={i}
                               onClick={() => handleSendMessage(q)}
-                              className="px-3 py-1 bg-slate-100 text-slate-600 rounded-full text-sm font-medium whitespace-nowrap hover:bg-slate-200 transition-colors"
+                              className="px-3 py-1 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-200 rounded-full text-sm font-medium whitespace-nowrap hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors"
                           >
                           {q}
                           </button>
@@ -270,7 +270,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigateTo, userProfile }) => {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   placeholder={isListening ? "Ouvindo..." : "Pergunte ao assistente..."}
-                  className="w-full p-3 border border-slate-300 rounded-full focus:ring-indigo-600 focus:border-indigo-600 text-sm"
+                  className="w-full p-3 bg-white text-slate-900 border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 rounded-full focus:ring-indigo-600 focus:border-indigo-600 text-sm"
                   disabled={isLoading || isListening}
                   aria-label="Caixa de texto para perguntas ao assistente virtual"
               />
@@ -296,30 +296,30 @@ const Dashboard: React.FC<DashboardProps> = ({ navigateTo, userProfile }) => {
         </Card>
       </div>
       
-      <div className="text-center bg-slate-200 py-8">
+      <div className="text-center bg-slate-200 dark:bg-slate-800 py-8">
         <img 
             src="https://www.baturite.ce.gov.br/imagens/logo.png?time=1756738907" 
             alt="Logo Prefeitura de Baturité" 
             className="mx-auto h-16 sm:h-20 mb-4"
         />
-        <h3 className="font-semibold text-slate-700 mb-3">Siga nas redes sociais</h3>
+        <h3 className="font-semibold text-slate-700 dark:text-slate-200 mb-3">Siga nas redes sociais</h3>
         <div className="flex justify-center flex-wrap gap-4">
-            <a href="https://www.facebook.com/Governo-Municipal-de-Baturit%C3%A9-104660501581546" target="_blank" rel="noopener noreferrer" title="Facebook" className="text-slate-500 hover:text-blue-600 transition-colors">
+            <a href="https://www.facebook.com/Governo-Municipal-de-Baturit%C3%A9-104660501581546" target="_blank" rel="noopener noreferrer" title="Facebook" className="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-500 transition-colors">
                 <FacebookIcon />
             </a>
-            <a href="https://www.instagram.com/prefeitura.baturite/" target="_blank" rel="noopener noreferrer" title="Instagram" className="text-slate-500 hover:text-pink-500 transition-colors">
+            <a href="https://www.instagram.com/prefeitura.baturite/" target="_blank" rel="noopener noreferrer" title="Instagram" className="text-slate-500 dark:text-slate-400 hover:text-pink-500 dark:hover:text-pink-400 transition-colors">
                 <InstagramIcon />
             </a>
-            <a href="https://www.youtube.com/channel/UCyuBX70YG6fs4aN-cwKfECA" target="_blank" rel="noopener noreferrer" title="YouTube" className="text-slate-500 hover:text-red-600 transition-colors">
+            <a href="https://www.youtube.com/channel/UCyuBX70YG6fs4aN-cwKfECA" target="_blank" rel="noopener noreferrer" title="YouTube" className="text-slate-500 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-500 transition-colors">
                 <YouTubeIcon />
             </a>
-            <a href="https://x.com/prefbaturite" target="_blank" rel="noopener noreferrer" title="X (Twitter)" className="text-slate-500 hover:text-black transition-colors">
+            <a href="https://x.com/prefbaturite" target="_blank" rel="noopener noreferrer" title="X (Twitter)" className="text-slate-500 dark:text-slate-400 hover:text-black dark:hover:text-white transition-colors">
                 <XIcon />
             </a>
-            <a href="https://wa.me/5585912345678" target="_blank" rel="noopener noreferrer" title="WhatsApp" className="text-slate-500 hover:text-green-500 transition-colors">
+            <a href="https://wa.me/5585912345678" target="_blank" rel="noopener noreferrer" title="WhatsApp" className="text-slate-500 dark:text-slate-400 hover:text-green-500 dark:hover:text-green-400 transition-colors">
                 <WhatsAppIcon />
             </a>
-            <a href="https://tiktok.com/@prefeiturabaturite" target="_blank" rel="noopener noreferrer" title="TikTok" className="text-slate-500 hover:text-black transition-colors">
+            <a href="https://tiktok.com/@prefeiturabaturite" target="_blank" rel="noopener noreferrer" title="TikTok" className="text-slate-500 dark:text-slate-400 hover:text-black dark:hover:text-white transition-colors">
                 <TikTokIcon />
             </a>
         </div>

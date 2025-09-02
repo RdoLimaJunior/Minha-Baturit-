@@ -17,8 +17,8 @@ const SERVICOS_ITEMS: { view: View; icon: string; title: string; description: st
 const ServicosDashboard: React.FC<ServicosDashboardProps> = ({ navigateTo }) => {
   return (
     <div className="space-y-4">
-      <h2 className="text-2xl font-bold text-slate-800">Serviços ao Cidadão</h2>
-      <p className="text-slate-600">
+      <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Serviços ao Cidadão</h2>
+      <p className="text-slate-600 dark:text-slate-300">
         Encontre aqui as principais ferramentas para interagir com a prefeitura, solicitar serviços e agendar atendimentos.
       </p>
 
@@ -29,11 +29,11 @@ const ServicosDashboard: React.FC<ServicosDashboardProps> = ({ navigateTo }) => 
             onClick={() => navigateTo(item.view)}
             className="text-center flex flex-col items-center justify-center space-y-2 !p-6"
           >
-            <div className="bg-indigo-100 p-4 rounded-full">
-              <Icon name={item.icon} className="text-indigo-700 text-4xl" />
+            <div className="bg-indigo-100 dark:bg-indigo-900/50 p-4 rounded-full">
+              <Icon name={item.icon} className="text-indigo-700 dark:text-indigo-400 text-4xl" />
             </div>
-            <h3 className="font-bold text-slate-800 text-lg">{item.title}</h3>
-            <p className="text-sm text-slate-500">{item.description}</p>
+            <h3 className="font-bold text-slate-800 dark:text-slate-100 text-lg">{item.title}</h3>
+            <p className="text-sm text-slate-500 dark:text-slate-400">{item.description}</p>
           </Card>
         ))}
       </div>

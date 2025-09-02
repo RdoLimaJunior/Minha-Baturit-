@@ -9,6 +9,27 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      // Prevents Flash of Incorrect Theme (FOIT)
+      (function() {
+        try {
+          const theme = localStorage.getItem('theme');
+          const fontSize = localStorage.getItem('font-size') || 'base';
+          if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+          }
+          document.documentElement.classList.add('font-size-' + fontSize);
+        } catch (e) {
+          console.error('Failed to apply initial theme or font size.', e);
+        }
+      })();
+    </script>
+    <style>
+      :root.font-size-sm { font-size: 14px; }
+      :root.font-size-base { font-size: 16px; }
+      :root.font-size-lg { font-size: 18px; }
+      :root.font-size-xl { font-size: 20px; }
+    </style>
   <script type="importmap">
 {
   "imports": {
@@ -21,7 +42,7 @@
 }
 </script>
 </head>
-  <body class="bg-slate-100 antialiased">
+  <body class="bg-slate-100 dark:bg-slate-900 antialiased transition-colors duration-300">
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
   </body>

@@ -1,5 +1,8 @@
 
 
+export type Theme = 'light' | 'dark' | 'system';
+export type FontSize = 'sm' | 'base' | 'lg' | 'xl';
+
 export type View = 
   | 'DASHBOARD'
   | 'PROTOCOLOS_LIST'
@@ -19,7 +22,8 @@ export type View =
   | 'NOTIFICACOES_LIST'
   | 'SERVICOS_DASHBOARD'
   | 'MAIS_DASHBOARD'
-  | 'SEARCH';
+  | 'SEARCH'
+  | 'ACESSIBILIDADE';
 
 export enum TipoProtocolo {
   RECLAMACAO = 'Reclamação',

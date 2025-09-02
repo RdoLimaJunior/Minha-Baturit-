@@ -12,11 +12,11 @@ import { haversineDistance } from '../../utils/helpers';
 declare var L: any;
 
 const CATEGORIAS: CategoriaPredioPublico[] = ['Saúde', 'Educação', 'Assistência Social', 'Administração'];
-const CATEGORY_DETAILS: Record<CategoriaPredioPublico, { icon: string; color: string; bgColor: string }> = {
-    'Saúde': { icon: 'local_hospital', color: 'text-red-700', bgColor: 'bg-red-100' },
-    'Educação': { icon: 'school', color: 'text-blue-700', bgColor: 'bg-blue-100' },
-    'Assistência Social': { icon: 'people', color: 'text-purple-700', bgColor: 'bg-purple-100' },
-    'Administração': { icon: 'corporate_fare', color: 'text-gray-700', bgColor: 'bg-gray-200' }
+const CATEGORY_DETAILS: Record<CategoriaPredioPublico, { icon: string; color: string; bgColor: string, darkBgColor: string, darkColor: string }> = {
+    'Saúde': { icon: 'local_hospital', color: 'text-red-700', bgColor: 'bg-red-100', darkBgColor: 'dark:bg-red-900/50', darkColor: 'dark:text-red-300' },
+    'Educação': { icon: 'school', color: 'text-blue-700', bgColor: 'bg-blue-100', darkBgColor: 'dark:bg-blue-900/50', darkColor: 'dark:text-blue-300' },
+    'Assistência Social': { icon: 'people', color: 'text-purple-700', bgColor: 'bg-purple-100', darkBgColor: 'dark:bg-purple-900/50', darkColor: 'dark:text-purple-300' },
+    'Administração': { icon: 'corporate_fare', color: 'text-gray-700', bgColor: 'bg-gray-200', darkBgColor: 'dark:bg-gray-600', darkColor: 'dark:text-gray-200' }
 };
 
 
@@ -165,7 +165,7 @@ const MapaServicos: React.FC<MapaServicosProps> = ({ navigateTo }) => {
         <Button onClick={() => navigateTo('DASHBOARD')} variant="ghost" size="icon">
           <Icon name="arrow_back" />
         </Button>
-        <h2 className="text-2xl font-bold text-slate-800">Mapa de Serviços</h2>
+        <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Mapa de Serviços</h2>
       </div>
       
       <Card className="!p-3">
@@ -183,7 +183,7 @@ const MapaServicos: React.FC<MapaServicosProps> = ({ navigateTo }) => {
         ) : (
           <>
             <div ref={mapContainerRef} className="h-96 w-full z-0" />
-            <Button size="icon" onClick={handleCenterOnUser} className="absolute bottom-4 right-4 z-[1000] bg-white !text-slate-700 shadow-lg hover:!bg-slate-100" aria-label="Centralizar na minha localização">
+            <Button size="icon" onClick={handleCenterOnUser} className="absolute bottom-4 right-4 z-[1000] bg-white !text-slate-700 shadow-lg hover:!bg-slate-100 dark:bg-slate-700 dark:!text-slate-200 dark:hover:!bg-slate-600" aria-label="Centralizar na minha localização">
               <Icon name="my_location" />
             </Button>
           </>
@@ -191,35 +191,38 @@ const MapaServicos: React.FC<MapaServicosProps> = ({ navigateTo }) => {
       </Card>
 
       <div className="space-y-3 pt-4">
-        <h3 className="text-xl font-bold text-slate-800 px-1">Locais Encontrados</h3>
+        <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100 px-1">Locais Encontrados</h3>
         {loading ? <Spinner /> : prediosComDistancia.length > 0 ? (
-            prediosComDistancia.map(predio => (
+            prediosComDistancia.map(predio => {
+              const catDetails = CATEGORY_DETAILS[predio.categoria];
+              return (
                 <Card key={predio.id} className="!p-4 space-y-3">
                     <div className="flex justify-between items-start">
                        <div>
-                          <h3 className="font-bold text-lg text-slate-800">{predio.nome}</h3>
-                          <div className={`inline-flex items-center space-x-1.5 px-2 py-0.5 rounded-full text-xs font-medium ${CATEGORY_DETAILS[predio.categoria].bgColor} ${CATEGORY_DETAILS[predio.categoria].color} mt-1`}>
-                            <Icon name={CATEGORY_DETAILS[predio.categoria].icon} className="!text-sm" />
+                          <h3 className="font-bold text-lg text-slate-800 dark:text-slate-100">{predio.nome}</h3>
+                          <div className={`inline-flex items-center space-x-1.5 px-2 py-0.5 rounded-full text-xs font-medium ${catDetails.bgColor} ${catDetails.color} ${catDetails.darkBgColor} ${catDetails.darkColor} mt-1`}>
+                            <Icon name={catDetails.icon} className="!text-sm" />
                             <span>{predio.categoria}</span>
                           </div>
                        </div>
-                       <div className={`flex items-center space-x-1.5 text-xs font-semibold ${predio.isOpenNow ? 'text-green-600' : 'text-red-600'}`}>
+                       <div className={`flex items-center space-x-1.5 text-xs font-semibold ${predio.isOpenNow ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
                           <div className={`w-2 h-2 rounded-full ${predio.isOpenNow ? 'bg-green-500' : 'bg-red-500'}`}></div>
                           <span>{predio.isOpenNow ? 'Aberto' : 'Fechado'}</span>
                        </div>
                     </div>
-                    <div className="text-sm text-slate-600 space-y-1">
-                       <p className="flex items-center"><Icon name="location_on" className="text-base mr-2 text-slate-400" />{predio.endereco}</p>
-                       {predio.distance !== null && <p className="flex items-center"><Icon name="near_me" className="text-base mr-2 text-slate-400" />{`~${predio.distance.toFixed(1)} km de distância`}</p>}
+                    <div className="text-sm text-slate-600 dark:text-slate-300 space-y-1">
+                       <p className="flex items-center"><Icon name="location_on" className="text-base mr-2 text-slate-400 dark:text-slate-500" />{predio.endereco}</p>
+                       {predio.distance !== null && <p className="flex items-center"><Icon name="near_me" className="text-base mr-2 text-slate-400 dark:text-slate-500" />{`~${predio.distance.toFixed(1)} km de distância`}</p>}
                     </div>
-                    <div className="flex items-center space-x-2 pt-3 border-t border-slate-100">
+                    <div className="flex items-center space-x-2 pt-3 border-t border-slate-100 dark:border-slate-700">
                        <Button size="sm" onClick={() => setSelectedPredio(predio)} variant="secondary" className="w-full">Detalhes</Button>
                        <Button size="sm" onClick={() => showOnMap(predio)} variant="primary" className="w-full">Ver no Mapa</Button>
                     </div>
                 </Card>
-            ))
+              )
+            })
         ) : (
-            <Card><p className="text-center text-slate-600">Nenhum local encontrado para os filtros selecionados.</p></Card>
+            <Card><p className="text-center text-slate-600 dark:text-slate-300">Nenhum local encontrado para os filtros selecionados.</p></Card>
         )}
       </div>
 
@@ -228,33 +231,33 @@ const MapaServicos: React.FC<MapaServicosProps> = ({ navigateTo }) => {
         <Modal isOpen={!!selectedPredio} onClose={() => setSelectedPredio(null)} title={selectedPredio.nome}>
             <>
               {selectedPredio.imageUrl && (
-                <img src={selectedPredio.imageUrl} alt={`Foto de ${selectedPredio.nome}`} className="w-full h-56 object-cover bg-slate-200" />
+                <img src={selectedPredio.imageUrl} alt={`Foto de ${selectedPredio.nome}`} className="w-full h-56 object-cover bg-slate-200 dark:bg-slate-700" />
               )}
-              <div className="p-6 space-y-4 text-slate-700">
-                  <p className="text-base text-slate-600">{selectedPredio.endereco}</p>
+              <div className="p-6 space-y-4 text-slate-700 dark:text-slate-200">
+                  <p className="text-base text-slate-600 dark:text-slate-300">{selectedPredio.endereco}</p>
                   
-                  <div className="pt-4 border-t border-slate-200">
+                  <div className="pt-4 border-t border-slate-200 dark:border-slate-700">
                       <div className="space-y-2.5">
-                          <p className={`flex items-center font-semibold ${selectedPredio.isOpenNow ? 'text-green-600' : 'text-red-600'}`}>
+                          <p className={`flex items-center font-semibold ${selectedPredio.isOpenNow ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
                               <Icon name="fiber_manual_record" className="text-base mr-3" />
                               {selectedPredio.isOpenNow ? 'Aberto agora' : 'Fechado agora'}
                           </p>
                           {selectedPredio.busyness && (
-                              <p className="flex items-center"><Icon name="show_chart" className="text-xl mr-2 text-slate-500" />{selectedPredio.busyness}</p>
+                              <p className="flex items-center"><Icon name="show_chart" className="text-xl mr-2 text-slate-500 dark:text-slate-400" />{selectedPredio.busyness}</p>
                           )}
-                          <p className="flex items-center"><Icon name="schedule" className="text-xl mr-2 text-slate-500" />{selectedPredio.horario}</p>
-                          <p className="flex items-center"><Icon name="phone" className="text-xl mr-2 text-slate-500" />{selectedPredio.telefone}</p>
+                          <p className="flex items-center"><Icon name="schedule" className="text-xl mr-2 text-slate-500 dark:text-slate-400" />{selectedPredio.horario}</p>
+                          <p className="flex items-center"><Icon name="phone" className="text-xl mr-2 text-slate-500 dark:text-slate-400" />{selectedPredio.telefone}</p>
                       </div>
                   </div>
 
-                  <div className="pt-4 border-t border-slate-200">
-                      <h5 className="font-bold text-slate-800 mb-2">Serviços oferecidos:</h5>
+                  <div className="pt-4 border-t border-slate-200 dark:border-slate-700">
+                      <h5 className="font-bold text-slate-800 dark:text-slate-100 mb-2">Serviços oferecidos:</h5>
                       <ul className="list-disc list-inside space-y-1 pl-1">
                           {selectedPredio.servicos.map((s, i) => <li key={i}>{s}</li>)}
                       </ul>
                   </div>
                   
-                  <div className="pt-4 mt-4 border-t border-slate-200 flex items-center flex-wrap gap-3">
+                  <div className="pt-4 mt-4 border-t border-slate-200 dark:border-slate-700 flex items-center flex-wrap gap-3">
                       <Button iconLeft="directions" onClick={() => window.open(`https://www.google.com/maps/dir/?api=1&destination=${selectedPredio.localizacao.latitude},${selectedPredio.localizacao.longitude}`, '_blank')} variant="primary" className="bg-blue-600 hover:bg-blue-700 text-white">Google Maps</Button>
                       <Button iconLeft="navigation" onClick={() => window.open(`waze://?ll=${selectedPredio.localizacao.latitude},${selectedPredio.localizacao.longitude}&navigate=yes`, '_blank')} variant="secondary" className="bg-sky-500 hover:bg-sky-600 text-white">Waze</Button>
                   </div>

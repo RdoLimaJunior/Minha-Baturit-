@@ -2,6 +2,8 @@
 
 
 
+
+
 import React from 'react';
 import Icon from './ui/Icon';
 import { View } from '../types';
@@ -12,8 +14,8 @@ interface BottomNavProps {
 }
 
 const NavItem: React.FC<{ icon: string; label: string; view: View; isActive: boolean; onClick: (view: View) => void; }> = ({ icon, label, view, isActive, onClick }) => {
-  const activeClasses = 'text-indigo-700';
-  const inactiveClasses = 'text-slate-500 hover:text-slate-700';
+  const activeClasses = 'text-indigo-700 dark:text-white';
+  const inactiveClasses = 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200';
   return (
     <button onClick={() => onClick(view)} className={`flex flex-col items-center justify-center space-y-1 w-full transition-colors ${isActive ? activeClasses : inactiveClasses}`}>
       <Icon name={icon} className="text-2xl" />
@@ -49,7 +51,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ navigateTo, currentView }) => {
   };
 
   return (
-    <footer className="bg-white/90 backdrop-blur-sm border-t border-slate-200 fixed bottom-0 left-0 right-0 z-10">
+    <footer className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm border-t border-slate-200 dark:border-slate-700 fixed bottom-0 left-0 right-0 z-10">
       <div className="container mx-auto px-4 flex justify-around items-center h-16">
         {mainNavItems.map(item => (
           <NavItem 

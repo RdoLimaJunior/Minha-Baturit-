@@ -1,5 +1,3 @@
-
-
 import React from 'react';
 import { View, TurismoCategoria } from '../../types';
 import Card from '../ui/Card';
@@ -24,9 +22,9 @@ const TurismoDashboard: React.FC<TurismoDashboardProps> = ({ navigateTo }) => {
         <Button onClick={() => navigateTo('MAIS_DASHBOARD')} variant="ghost" size="icon">
           <Icon name="arrow_back" />
         </Button>
-        <h2 className="text-2xl font-bold text-slate-800">Turismo em Baturité</h2>
+        <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Turismo em Baturité</h2>
       </div>
-      <p className="text-slate-600">
+      <p className="text-slate-600 dark:text-slate-300">
         Explore os encantos da serra. Descubra lugares incríveis, sabores autênticos e a hospitalidade de Baturité.
       </p>
 
@@ -40,8 +38,8 @@ const TurismoDashboard: React.FC<TurismoDashboardProps> = ({ navigateTo }) => {
             <div className={`${cat.color} p-4 rounded-full`}>
               <Icon name={cat.icon} className="text-white text-4xl" />
             </div>
-            <h3 className="font-bold text-slate-800 text-lg">{cat.title}</h3>
-            <p className="text-sm text-slate-500">{cat.description}</p>
+            <h3 className="font-bold text-slate-800 dark:text-slate-100 text-lg">{cat.title}</h3>
+            <p className="text-sm text-slate-500 dark:text-slate-400">{cat.description}</p>
           </Card>
         ))}
       </div>

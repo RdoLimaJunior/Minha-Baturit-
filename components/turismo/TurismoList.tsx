@@ -1,4 +1,3 @@
-
 import React, { useMemo } from 'react';
 import { useTurismoItens } from '../../hooks/useMockData';
 import { View, TurismoCategoria, TurismoItem } from '../../types';
@@ -26,8 +25,8 @@ const TurismoListItem: React.FC<{ item: TurismoItem; onClick: () => void }> = ({
         onLoad={() => setIsImageLoading(false)}
       />
       <div className="p-4">
-        <h3 className="font-bold text-slate-800 text-lg">{item.nome}</h3>
-        <p className="text-sm text-slate-600 mt-1">{item.descricaoCurta}</p>
+        <h3 className="font-bold text-slate-800 dark:text-slate-100 text-lg">{item.nome}</h3>
+        <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">{item.descricaoCurta}</p>
       </div>
     </Card>
   );
@@ -47,7 +46,7 @@ const TurismoList: React.FC<TurismoListProps> = ({ categoria, navigateTo }) => {
         <Button onClick={() => navigateTo('TURISMO_DASHBOARD')} variant="ghost" size="icon">
           <Icon name="arrow_back" />
         </Button>
-        <h2 className="text-2xl font-bold text-slate-800">{categoria}</h2>
+        <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">{categoria}</h2>
       </div>
 
       {loading ? (
@@ -64,7 +63,7 @@ const TurismoList: React.FC<TurismoListProps> = ({ categoria, navigateTo }) => {
         </div>
       ) : (
         <Card className="text-center">
-          <p className="text-slate-600">Nenhum item encontrado nesta categoria no momento.</p>
+          <p className="text-slate-600 dark:text-slate-300">Nenhum item encontrado nesta categoria no momento.</p>
         </Card>
       )}
     </div>

@@ -1,5 +1,3 @@
-
-
 import React, { useMemo } from 'react';
 import { useContatosUteis } from '../../hooks/useMockData';
 import { ContatoUtil, CategoriaContato, View } from '../../types';
@@ -21,13 +19,13 @@ const ContatoItem: React.FC<{ contato: ContatoUtil }> = ({ contato }) => {
         <Card className="!p-4">
             <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
-                    <Icon name={contato.icon} className="text-3xl text-slate-500" />
+                    <Icon name={contato.icon} className="text-3xl text-slate-500 dark:text-slate-400" />
                     <div>
-                        <h3 className="font-bold text-slate-800">{contato.nome}</h3>
-                        <p className="text-slate-600">{contato.telefone}</p>
+                        <h3 className="font-bold text-slate-800 dark:text-slate-100">{contato.nome}</h3>
+                        <p className="text-slate-600 dark:text-slate-300">{contato.telefone}</p>
                     </div>
                 </div>
-                <Button size="icon" variant="ghost" onClick={handleCall} className="!text-green-600 hover:!bg-green-100" aria-label={`Ligar para ${contato.nome}`}>
+                <Button size="icon" variant="ghost" onClick={handleCall} className="!text-green-600 dark:!text-green-400 hover:!bg-green-100 dark:hover:!bg-green-900/50" aria-label={`Ligar para ${contato.nome}`}>
                     <Icon name="call" />
                 </Button>
             </div>
@@ -59,7 +57,7 @@ const ContatosList: React.FC<ContatosListProps> = ({ navigateTo }) => {
         <Button onClick={() => navigateTo('MAIS_DASHBOARD')} variant="ghost" size="icon" aria-label="Voltar para o início">
           <Icon name="arrow_back" />
         </Button>
-        <h2 className="text-2xl font-bold text-slate-800">Contatos Úteis</h2>
+        <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Contatos Úteis</h2>
       </div>
       
       {loading ? (
@@ -70,7 +68,7 @@ const ContatosList: React.FC<ContatosListProps> = ({ navigateTo }) => {
             if (groupedContatos[category]?.length > 0) {
               return (
                 <section key={category} aria-labelledby={`category-title-${category}`}>
-                  <h3 id={`category-title-${category}`} className="text-lg font-bold text-slate-700 mb-2 pl-1">{category}</h3>
+                  <h3 id={`category-title-${category}`} className="text-lg font-bold text-slate-700 dark:text-slate-200 mb-2 pl-1">{category}</h3>
                   <div className="space-y-3">
                     {groupedContatos[category].map(contato => (
                       <ContatoItem key={contato.id} contato={contato} />
@@ -84,7 +82,7 @@ const ContatosList: React.FC<ContatosListProps> = ({ navigateTo }) => {
         </div>
       ) : (
         <Card className="text-center">
-          <p className="text-slate-600">Nenhum contato encontrado.</p>
+          <p className="text-slate-600 dark:text-slate-300">Nenhum contato encontrado.</p>
         </Card>
       )}
     </div>

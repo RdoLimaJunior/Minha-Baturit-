@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useServicoOnlineById } from '../../hooks/useMockData';
 import Spinner from '../ui/Spinner';
@@ -53,24 +52,24 @@ const ServicoForm: React.FC<ServicoFormProps> = ({ servicoId, goBack }) => {
       <Card>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="text-center">
-            <Icon name={servico.icon} className="text-6xl text-indigo-700 mx-auto" />
-            <h2 className="text-2xl font-bold text-slate-800 mt-4">{servico.nome}</h2>
-            <p className="text-slate-600 mt-2">
+            <Icon name={servico.icon} className="text-6xl text-indigo-700 dark:text-indigo-400 mx-auto" />
+            <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mt-4">{servico.nome}</h2>
+            <p className="text-slate-600 dark:text-slate-300 mt-2">
               {servico.descricao}
             </p>
           </div>
           
-          <div className="border-t border-slate-200 pt-6">
-            <h3 className="text-lg font-semibold text-slate-800 mb-4">Realizar Agendamento</h3>
+          <div className="border-t border-slate-200 dark:border-slate-700 pt-6">
+            <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100 mb-4">Realizar Agendamento</h3>
             <div>
-              <label htmlFor="dataHora" className="block text-sm font-medium text-slate-700 mb-1">Escolha a data e hora *</label>
+              <label htmlFor="dataHora" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Escolha a data e hora *</label>
               <input
                 type="datetime-local"
                 id="dataHora"
                 value={dataHora}
                 onChange={(e) => setDataHora(e.target.value)}
                 min={getMinDateTime()}
-                className="w-full p-2 border border-slate-300 rounded-md focus:ring-indigo-600 focus:border-indigo-600"
+                className="w-full p-2 bg-white text-slate-900 border border-slate-300 rounded-md focus:ring-indigo-600 focus:border-indigo-600 dark:bg-slate-700 dark:border-slate-600 dark:text-white"
               />
             </div>
             
@@ -80,9 +79,9 @@ const ServicoForm: React.FC<ServicoFormProps> = ({ servicoId, goBack }) => {
                 type="checkbox"
                 checked={comLembrete}
                 onChange={(e) => setComLembrete(e.target.checked)}
-                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 dark:bg-slate-600 dark:border-slate-500"
               />
-              <label htmlFor="lembrete" className="ml-2 block text-sm text-slate-700">
+              <label htmlFor="lembrete" className="ml-2 block text-sm text-slate-700 dark:text-slate-300">
                 Criar lembrete para este agendamento
               </label>
             </div>

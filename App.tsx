@@ -18,6 +18,7 @@ import ServicosOnlineDashboard from './components/servicos/ServicosOnlineDashboa
 import ServicoForm from './components/servicos/ServicoForm';
 import AgendamentosList from './components/agendamentos/AgendamentosList';
 import NotificacoesList from './components/notificacoes/NotificacoesList';
+import Acessibilidade from './components/acessibilidade/Acessibilidade';
 import { UserProfile, View, TurismoCategoria } from './types';
 import { MOCK_USER_PROFILES } from './constants';
 import { ToastProvider } from './components/ui/Toast';
@@ -25,6 +26,7 @@ import BottomNav from './components/BottomNav';
 import ServicosDashboard from './components/servicos/ServicosDashboard';
 import MoreDashboard from './components/more/MoreDashboard';
 import Search from './components/search/Search';
+import { AccessibilityProvider } from './contexts/AccessibilityContext';
 
 
 // As importações abaixo são para componentes de versões futuras e não são usadas na versão inicial.
@@ -33,7 +35,7 @@ import './components/coleta/ColetaCalendar';
 import './components/admin/AdminDashboard';
 
 
-const App: React.FC = () => {
+const AppContent: React.FC = () => {
   const [view, setView] = useState<View>('DASHBOARD');
   const [activeProtocoloId, setActiveProtocoloId] = useState<string | null>(null);
   const [activeNoticiaId, setActiveNoticiaId] = useState<string | null>(null);
@@ -100,6 +102,8 @@ const App: React.FC = () => {
         return <MoreDashboard navigateTo={navigateTo} />;
       case 'SEARCH':
         return <Search navigateTo={navigateTo} />;
+      case 'ACESSIBILIDADE':
+        return <Acessibilidade navigateTo={navigateTo} />;
       default:
         return <Dashboard navigateTo={navigateTo} userProfile={activeProfile} />;
     }
@@ -110,17 +114,25 @@ const App: React.FC = () => {
     : "flex-grow container mx-auto p-4 pb-20";
 
   return (
-    <ToastProvider>
-      <div className="min-h-screen flex flex-col font-sans bg-slate-100">
-        <Header activeProfile={activeProfile} onProfileChange={handleProfileChange} navigateTo={navigateTo}/>
-        
-        <main className={mainContainerClass}>
-          {renderView()}
-        </main>
-        
-        <BottomNav navigateTo={navigateTo} currentView={view} />
-      </div>
-    </ToastProvider>
+    <div className="min-h-screen flex flex-col font-sans">
+      <Header activeProfile={activeProfile} onProfileChange={handleProfileChange} navigateTo={navigateTo}/>
+      
+      <main className={mainContainerClass}>
+        {renderView()}
+      </main>
+      
+      <BottomNav navigateTo={navigateTo} currentView={view} />
+    </div>
+  );
+};
+
+const App: React.FC = () => {
+  return (
+    <AccessibilityProvider>
+      <ToastProvider>
+        <AppContent />
+      </ToastProvider>
+    </AccessibilityProvider>
   );
 };
 

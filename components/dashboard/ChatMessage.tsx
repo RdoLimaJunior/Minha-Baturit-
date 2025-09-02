@@ -13,8 +13,8 @@ interface ChatMessageProps {
 }
 
 const UirapuruAvatar = () => (
-    <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0 mr-3">
-      <Icon name="flutter_dash" className="text-indigo-700 !text-xl" />
+    <div className="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center flex-shrink-0 mr-3">
+      <Icon name="flutter_dash" className="text-indigo-700 dark:text-indigo-400 !text-xl" />
     </div>
 );
 
@@ -30,7 +30,7 @@ const ChatMessageComponent: React.FC<ChatMessageProps> = ({ message, isLastMessa
                 </div>
                 <div className="flex items-center space-x-2 mt-2 h-8">
                     {(!isLastMessage || !isLoading) && (
-                        <Icon name="check" className="text-base text-slate-400" />
+                        <Icon name="check" className="text-base text-slate-400 dark:text-slate-500" />
                     )}
                 </div>
             </div>
@@ -41,7 +41,7 @@ const ChatMessageComponent: React.FC<ChatMessageProps> = ({ message, isLastMessa
         <div className="flex flex-col items-start animate-fade-slide-in">
             <div className="flex items-end">
                 <UirapuruAvatar />
-                <div className="max-w-xs md:max-w-md lg:max-w-lg px-4 py-2 rounded-2xl bg-slate-200 text-slate-800 rounded-bl-lg">
+                <div className="max-w-xs md:max-w-md lg:max-w-lg px-4 py-2 rounded-2xl bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-200 rounded-bl-lg">
                     <p className="whitespace-pre-wrap text-sm">{message.content}</p>
                 </div>
             </div>
@@ -52,7 +52,7 @@ const ChatMessageComponent: React.FC<ChatMessageProps> = ({ message, isLastMessa
                         iconRight="east"
                         size="sm"
                         variant='secondary'
-                        className="!font-semibold !bg-indigo-100 !text-indigo-800 hover:!bg-indigo-200"
+                        className="!font-semibold !bg-indigo-100 dark:!bg-indigo-900/50 !text-indigo-800 dark:!text-indigo-300 hover:!bg-indigo-200 dark:hover:!bg-indigo-900"
                     >
                         {message.action!.buttonText}
                     </Button>
@@ -62,21 +62,21 @@ const ChatMessageComponent: React.FC<ChatMessageProps> = ({ message, isLastMessa
                         <button
                             onClick={() => onFeedback(message.id, 'like')}
                             title="Gostei"
-                            className={`p-1 rounded-full text-slate-500 hover:bg-slate-100 transition-colors ${message.feedback === 'like' ? '!text-green-600 !bg-green-100' : ''}`}
+                            className={`p-1 rounded-full text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-600 transition-colors ${message.feedback === 'like' ? '!text-green-600 !bg-green-100 dark:!bg-green-900/50' : ''}`}
                         >
                             <Icon name="thumb_up" className="text-lg" />
                         </button>
                         <button
                             onClick={() => onFeedback(message.id, 'dislike')}
                             title="Não Gostei"
-                            className={`p-1 rounded-full text-slate-500 hover:bg-slate-100 transition-colors ${message.feedback === 'dislike' ? '!text-red-600 !bg-red-100' : ''}`}
+                            className={`p-1 rounded-full text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-600 transition-colors ${message.feedback === 'dislike' ? '!text-red-600 !bg-red-100 dark:!bg-red-900/50' : ''}`}
                         >
                             <Icon name="thumb_down" className="text-lg" />
                         </button>
                         <button
                             onClick={() => onCopy(message.content)}
                             title="Copiar"
-                            className="p-1 rounded-full text-slate-500 hover:bg-slate-100 transition-colors"
+                            className="p-1 rounded-full text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-600 transition-colors"
                         >
                             <Icon name="content_copy" className="text-lg" />
                         </button>

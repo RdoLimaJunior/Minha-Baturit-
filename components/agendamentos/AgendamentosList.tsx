@@ -1,5 +1,3 @@
-
-
 import React, { useState, useMemo } from 'react';
 import { useAgendamentos } from '../../hooks/useMockData';
 import { Agendamento, AgendamentoStatus, View } from '../../types';
@@ -17,13 +15,13 @@ interface AgendamentosListProps {
 const getStatusChipStyle = (status: AgendamentoStatus) => {
     switch (status) {
         case AgendamentoStatus.AGENDADO:
-            return 'bg-blue-100 text-blue-800';
+            return 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300';
         case AgendamentoStatus.REALIZADO:
-            return 'bg-green-100 text-green-800';
+            return 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300';
         case AgendamentoStatus.CANCELADO:
-            return 'bg-red-100 text-red-800';
+            return 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300';
         default:
-            return 'bg-gray-100 text-gray-800';
+            return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
     }
 };
 
@@ -36,10 +34,10 @@ const AgendamentoItem: React.FC<{ agendamento: Agendamento; onCancel: (id: strin
         <Card>
             <div className="flex justify-between items-start">
                 <div className="flex items-center space-x-3">
-                    <Icon name={agendamento.servicoIcon} className="text-2xl text-indigo-600" />
+                    <Icon name={agendamento.servicoIcon} className="text-2xl text-indigo-600 dark:text-indigo-400" />
                     <div>
-                        <h3 className="font-bold text-slate-800">{agendamento.servicoNome}</h3>
-                        <p className="text-sm text-slate-500">{dataFormatada} às {horaFormatada}</p>
+                        <h3 className="font-bold text-slate-800 dark:text-slate-100">{agendamento.servicoNome}</h3>
+                        <p className="text-sm text-slate-500 dark:text-slate-400">{dataFormatada} às {horaFormatada}</p>
                     </div>
                 </div>
                 <span className={`text-xs font-medium px-2.5 py-0.5 rounded-full ${getStatusChipStyle(agendamento.status)}`}>
@@ -47,7 +45,7 @@ const AgendamentoItem: React.FC<{ agendamento: Agendamento; onCancel: (id: strin
                 </span>
             </div>
             {isCancellable && agendamento.status === AgendamentoStatus.AGENDADO && (
-                <div className="mt-4 pt-4 border-t border-slate-100 text-right">
+                <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-700 text-right">
                     <Button size="sm" variant="secondary" onClick={() => onCancel(agendamento.id)}>
                         Cancelar
                     </Button>
@@ -134,7 +132,7 @@ const AgendamentosList: React.FC<AgendamentosListProps> = ({ navigateTo }) => {
             <Button onClick={() => navigateTo('SERVICOS_DASHBOARD')} variant="ghost" size="icon">
               <Icon name="arrow_back" />
             </Button>
-            <h2 className="text-2xl font-bold text-slate-800">Agenda do Cidadão</h2>
+            <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Agenda do Cidadão</h2>
         </div>
         <Button
             onClick={() => setIsCalendarOpen(!isCalendarOpen)}
@@ -143,7 +141,7 @@ const AgendamentosList: React.FC<AgendamentosListProps> = ({ navigateTo }) => {
             aria-label={isCalendarOpen ? "Ocultar calendário" : "Mostrar calendário"}
             aria-expanded={isCalendarOpen}
             aria-controls="calendar-view-container"
-            className={!isCalendarOpen ? "text-indigo-700" : ""}
+            className={!isCalendarOpen ? "text-indigo-700 dark:text-indigo-400" : ""}
         >
             <Icon name="calendar_month" />
         </Button>
@@ -164,7 +162,7 @@ const AgendamentosList: React.FC<AgendamentosListProps> = ({ navigateTo }) => {
       {selectedDate ? (
         <div>
           <div className="flex justify-between items-center mb-2">
-            <h3 className="text-lg font-bold text-slate-700 pl-1">
+            <h3 className="text-lg font-bold text-slate-700 dark:text-slate-200 pl-1">
               Agendamentos de {selectedDate.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long' })}
             </h3>
             <Button size="sm" variant="ghost" onClick={() => setSelectedDate(null)}>Limpar</Button>
@@ -176,13 +174,13 @@ const AgendamentosList: React.FC<AgendamentosListProps> = ({ navigateTo }) => {
               ))}
             </div>
           ) : (
-            <Card><p className="text-center text-slate-500">Nenhum agendamento para este dia.</p></Card>
+            <Card><p className="text-center text-slate-500 dark:text-slate-400">Nenhum agendamento para este dia.</p></Card>
           )}
         </div>
       ) : (
         <>
           <div>
-            <h3 className="text-lg font-bold text-slate-700 mb-2 pl-1">Próximos</h3>
+            <h3 className="text-lg font-bold text-slate-700 dark:text-slate-200 mb-2 pl-1">Próximos</h3>
             {proximos.length > 0 ? (
               <div className="space-y-3">
                 {proximos.map(ag => (
@@ -190,12 +188,12 @@ const AgendamentosList: React.FC<AgendamentosListProps> = ({ navigateTo }) => {
                 ))}
               </div>
             ) : (
-              <Card><p className="text-center text-slate-500">Nenhum agendamento futuro.</p></Card>
+              <Card><p className="text-center text-slate-500 dark:text-slate-400">Nenhum agendamento futuro.</p></Card>
             )}
           </div>
 
           <div>
-            <h3 className="text-lg font-bold text-slate-700 mb-2 pl-1">Anteriores</h3>
+            <h3 className="text-lg font-bold text-slate-700 dark:text-slate-200 mb-2 pl-1">Anteriores</h3>
             {anteriores.length > 0 ? (
               <div className="space-y-3">
                 {anteriores.map(ag => (
@@ -203,7 +201,7 @@ const AgendamentosList: React.FC<AgendamentosListProps> = ({ navigateTo }) => {
                 ))}
               </div>
             ) : (
-              <Card><p className="text-center text-slate-500">Nenhum agendamento anterior.</p></Card>
+              <Card><p className="text-center text-slate-500 dark:text-slate-400">Nenhum agendamento anterior.</p></Card>
             )}
           </div>
         </>

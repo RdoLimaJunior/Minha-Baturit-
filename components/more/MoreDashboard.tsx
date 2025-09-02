@@ -17,7 +17,7 @@ const MORE_ITEMS = [
 const MoreDashboard: React.FC<MoreDashboardProps> = ({ navigateTo }) => {
   return (
     <div className="space-y-4">
-      <h2 className="text-2xl font-bold text-slate-800">Mais Opções</h2>
+      <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Mais Opções</h2>
       
       <div className="space-y-3 pt-2">
         {MORE_ITEMS.map(item => (
@@ -27,10 +27,10 @@ const MoreDashboard: React.FC<MoreDashboardProps> = ({ navigateTo }) => {
             className="!p-4 flex items-center justify-between"
           >
             <div className="flex items-center space-x-4">
-                <Icon name={item.icon} className="text-2xl text-slate-600" />
-                <h3 className="font-semibold text-slate-800">{item.title}</h3>
+                <Icon name={item.icon} className="text-2xl text-slate-600 dark:text-slate-300" />
+                <h3 className="font-semibold text-slate-800 dark:text-slate-200">{item.title}</h3>
             </div>
-            <Icon name="chevron_right" className="text-slate-400" />
+            <Icon name="chevron_right" className="text-slate-400 dark:text-slate-500" />
           </Card>
         ))}
       </div>

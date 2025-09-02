@@ -63,11 +63,11 @@ const NoticiaItem: React.FC<{ noticia: Noticia, onNavigate: () => void }> = ({ n
             <img 
               src="https://www.baturite.ce.gov.br/imagens/logo-prefeitura-de-baturite.png" 
               alt="Logo Prefeitura" 
-              className="w-10 h-10 rounded-full object-cover border-2 border-slate-200"
+              className="w-10 h-10 rounded-full object-cover border-2 border-slate-200 dark:border-slate-700"
             />
             <div>
-              <h4 className="font-bold text-slate-800">Prefeitura de Baturité</h4>
-              <p className="text-xs text-slate-500">{new Date(noticia.date).toLocaleDateString('pt-BR', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+              <h4 className="font-bold text-slate-800 dark:text-slate-100">Prefeitura de Baturité</h4>
+              <p className="text-xs text-slate-500 dark:text-slate-400">{new Date(noticia.date).toLocaleDateString('pt-BR', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
             </div>
           </div>
           <LazyImage 
@@ -79,22 +79,22 @@ const NoticiaItem: React.FC<{ noticia: Noticia, onNavigate: () => void }> = ({ n
           />
           <div className="p-4">
               <div className="flex items-center space-x-4">
-                 <button onClick={handleLike} className="flex items-center space-x-1 text-slate-600 hover:text-red-500 transition-colors">
+                 <button onClick={handleLike} className="flex items-center space-x-1 text-slate-600 dark:text-slate-300 hover:text-red-500 dark:hover:text-red-500 transition-colors">
                     <Icon name={isLiked ? 'favorite' : 'favorite_border'} className={`text-3xl ${isLiked ? 'text-red-500' : ''}`} />
                  </button>
-                 <button onClick={onNavigate} className="flex items-center space-x-1 text-slate-600 hover:text-indigo-700 transition-colors">
+                 <button onClick={onNavigate} className="flex items-center space-x-1 text-slate-600 dark:text-slate-300 hover:text-indigo-700 dark:hover:text-indigo-400 transition-colors">
                     <Icon name="chat_bubble_outline" className="text-3xl" />
                  </button>
-                 <button onClick={handleShare} className="flex items-center space-x-1 text-slate-600 hover:text-indigo-700 transition-colors">
+                 <button onClick={handleShare} className="flex items-center space-x-1 text-slate-600 dark:text-slate-300 hover:text-indigo-700 dark:hover:text-indigo-400 transition-colors">
                     <Icon name="share" className="text-3xl" />
                  </button>
               </div>
-              <p className="font-semibold text-sm text-slate-700 mt-3">{likeCount.toLocaleString('pt-BR')} curtidas</p>
-              <p className="text-sm text-slate-800 mt-2">
+              <p className="font-semibold text-sm text-slate-700 dark:text-slate-200 mt-3">{likeCount.toLocaleString('pt-BR')} curtidas</p>
+              <p className="text-sm text-slate-800 dark:text-slate-100 mt-2">
                 <span className="font-bold">Prefeitura de Baturité</span> {noticia.summary}
               </p>
               {noticia.comments.length > 0 && (
-                <button onClick={onNavigate} className="text-sm text-slate-500 mt-2 font-semibold">
+                <button onClick={onNavigate} className="text-sm text-slate-500 dark:text-slate-400 mt-2 font-semibold">
                     Ver todos os {noticia.comments.length} comentários
                 </button>
               )}
@@ -112,7 +112,7 @@ const NoticiasList: React.FC<NoticiasListProps> = ({ navigateTo }) => {
         <Button onClick={() => navigateTo('MAIS_DASHBOARD')} variant="ghost" size="icon">
           <Icon name="arrow_back" />
         </Button>
-        <h2 className="text-2xl font-bold text-slate-800">Últimas Notícias</h2>
+        <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Últimas Notícias</h2>
       </div>
 
       {loading ? (
@@ -125,7 +125,7 @@ const NoticiasList: React.FC<NoticiasListProps> = ({ navigateTo }) => {
         </div>
       ) : (
         <Card className="text-center">
-          <p className="text-slate-600">Nenhuma notícia encontrada no momento.</p>
+          <p className="text-slate-600 dark:text-slate-300">Nenhuma notícia encontrada no momento.</p>
         </Card>
       )}
     </div>

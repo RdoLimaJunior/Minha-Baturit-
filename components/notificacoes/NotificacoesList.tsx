@@ -6,6 +6,7 @@ import Spinner from '../ui/Spinner';
 import Icon from '../ui/Icon';
 import Button from '../ui/Button';
 import { timeSince } from '../../utils/helpers';
+import { useToast } from '../ui/Toast';
 
 interface NotificacoesListProps {
   navigateTo: (view: View, params?: any) => void;
@@ -18,7 +19,7 @@ const getIconForNotificacao = (notificacao: Notificacao) => {
     if (notificacao.titulo.toLowerCase().includes('protocolo')) {
         return { icon: 'list_alt', color: 'text-green-500' };
     }
-    return { icon: 'notifications', color: 'text-slate-500' };
+    return { icon: 'notifications', color: 'text-slate-500 dark:text-slate-400' };
 };
 
 const NotificacaoItem: React.FC<{ notificacao: Notificacao; onClick: () => void; }> = ({ notificacao, onClick }) => {
@@ -27,13 +28,13 @@ const NotificacaoItem: React.FC<{ notificacao: Notificacao; onClick: () => void;
     return (
         <div 
             onClick={onClick}
-            className={`flex items-start space-x-4 p-4 border-l-4 ${notificacao.lida ? 'border-transparent bg-white' : 'border-indigo-500 bg-indigo-50'} rounded-r-lg shadow-sm cursor-pointer hover:bg-slate-100 transition-colors`}
+            className={`flex items-start space-x-4 p-4 border-l-4 ${notificacao.lida ? 'border-transparent bg-white dark:bg-slate-800' : 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30'} rounded-r-lg shadow-sm cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors`}
         >
             <Icon name={icon} className={`text-3xl mt-1 ${color}`} />
             <div className="flex-1">
-                <h3 className="font-bold text-slate-800">{notificacao.titulo}</h3>
-                <p className="text-sm text-slate-600 mt-1">{notificacao.mensagem}</p>
-                <p className="text-xs text-slate-400 mt-2">{timeSince(notificacao.data)}</p>
+                <h3 className="font-bold text-slate-800 dark:text-slate-100">{notificacao.titulo}</h3>
+                <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">{notificacao.mensagem}</p>
+                <p className="text-xs text-slate-400 dark:text-slate-500 mt-2">{timeSince(notificacao.data)}</p>
             </div>
         </div>
     );
@@ -42,6 +43,7 @@ const NotificacaoItem: React.FC<{ notificacao: Notificacao; onClick: () => void;
 const NotificacoesList: React.FC<NotificacoesListProps> = ({ navigateTo }) => {
   const { data: notificacoes, loading } = useNotificacoes();
   const [listaNotificacoes, setListaNotificacoes] = useState<Notificacao[]>([]);
+  const { addToast } = useToast();
   
   useEffect(() => {
     if (notificacoes) {
@@ -64,6 +66,7 @@ const NotificacoesList: React.FC<NotificacoesListProps> = ({ navigateTo }) => {
   
   const markAllAsRead = () => {
       setListaNotificacoes(prev => prev.map(n => ({ ...n, lida: true })));
+      addToast('Todas as notificações foram marcadas como lidas.', 'success');
   };
 
   const unreadCount = listaNotificacoes.filter(n => !n.lida).length;
@@ -75,7 +78,7 @@ const NotificacoesList: React.FC<NotificacoesListProps> = ({ navigateTo }) => {
             <Button onClick={() => navigateTo('DASHBOARD')} variant="ghost" size="icon">
               <Icon name="arrow_back" />
             </Button>
-            <h2 className="text-2xl font-bold text-slate-800">Notificações</h2>
+            <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Notificações</h2>
         </div>
         {unreadCount > 0 && (
             <Button size="sm" variant="ghost" onClick={markAllAsRead}>
@@ -98,8 +101,8 @@ const NotificacoesList: React.FC<NotificacoesListProps> = ({ navigateTo }) => {
         </div>
       ) : (
         <Card className="text-center py-10">
-            <Icon name="notifications_off" className="text-5xl text-slate-400 mx-auto" />
-            <p className="text-slate-600 mt-4">Você não tem nenhuma notificação.</p>
+            <Icon name="notifications_off" className="text-5xl text-slate-400 dark:text-slate-500 mx-auto" />
+            <p className="text-slate-600 dark:text-slate-300 mt-4">Você não tem nenhuma notificação.</p>
         </Card>
       )}
     </div>

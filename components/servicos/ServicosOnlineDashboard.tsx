@@ -10,6 +10,17 @@ interface ServicosOnlineDashboardProps {
   navigateTo: (view: View, params?: { servicoId?: string }) => void;
 }
 
+const ServicoSkeletonItem: React.FC = () => (
+    <Card className="flex items-start space-x-4 animate-pulse">
+        <div className="w-8 h-8 rounded-md bg-slate-200 dark:bg-slate-700 mt-1"></div>
+        <div className="flex-1 space-y-2">
+            <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-1/2"></div>
+            <div className="h-3 bg-slate-200 dark:bg-slate-700 rounded w-full"></div>
+            <div className="h-3 bg-slate-200 dark:bg-slate-700 rounded w-5/6"></div>
+        </div>
+    </Card>
+);
+
 const ServicoCard: React.FC<{ servico: ServicoOnline; onClick: () => void }> = ({ servico, onClick }) => (
     <Card onClick={onClick} className="flex items-start space-x-4">
         <Icon name={servico.icon} className="text-3xl text-indigo-700 dark:text-indigo-400 mt-1" />
@@ -48,6 +59,33 @@ const ServicosOnlineDashboard: React.FC<ServicosOnlineDashboardProps> = ({ navig
       CategoriaServicoOnline.OUTROS,
   ];
 
+  if (loading) {
+      return (
+          <div className="space-y-4">
+              <div className="flex items-center space-x-2 animate-pulse">
+                  <Button variant="ghost" size="icon" className="!bg-slate-200 dark:!bg-slate-700" disabled><Icon name="arrow_back" className="text-transparent" /></Button>
+                  <div className="h-8 w-2/3 rounded bg-slate-200 dark:bg-slate-700"></div>
+              </div>
+              <div className="h-4 w-full rounded bg-slate-200 dark:bg-slate-700 animate-pulse mt-2"></div>
+              <div className="h-4 w-5/6 rounded bg-slate-200 dark:bg-slate-700 animate-pulse"></div>
+
+              <div className="sticky top-[70px] bg-slate-100 dark:bg-slate-900 py-2 z-5 animate-pulse">
+                  <div className="h-12 w-full rounded-full bg-slate-200 dark:bg-slate-800"></div>
+              </div>
+              
+              <div className="space-y-6 pt-2">
+                  {[...Array(2)].map((_, section) => (
+                      <div key={section} className="space-y-3">
+                          <div className="h-5 w-1/3 bg-slate-200 dark:bg-slate-700 rounded mb-2 ml-1 animate-pulse"></div>
+                          <ServicoSkeletonItem />
+                          <ServicoSkeletonItem />
+                      </div>
+                  ))}
+              </div>
+          </div>
+      );
+  }
+
   return (
     <div className="space-y-4">
       <div className="flex items-center space-x-2">
@@ -73,9 +111,7 @@ const ServicosOnlineDashboard: React.FC<ServicosOnlineDashboardProps> = ({ navig
         </div>
       </div>
       
-      {loading ? (
-        <Spinner />
-      ) : groupedServicos ? (
+      {groupedServicos ? (
         <div className="space-y-6">
           {categoryOrder.map(category => {
             if (groupedServicos[category]?.length > 0) {

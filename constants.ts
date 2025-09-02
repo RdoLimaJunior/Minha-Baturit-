@@ -1,6 +1,7 @@
 
 
-import { Protocolo, CategoriaReclamacao, StatusProtocolo, UserProfile, UserRole, Noticia, Comment, Secretaria, PredioPublico, TurismoItem, ContatoUtil, CategoriaContato, ServicoOnline, CategoriaServicoOnline, TipoProtocolo, Agendamento, AgendamentoStatus, Notificacao } from './types';
+
+import { Protocolo, CategoriaReclamacao, StatusProtocolo, UserProfile, UserRole, Noticia, Comment, Secretaria, PredioPublico, TurismoItem, ContatoUtil, CategoriaContato, ServicoOnline, CategoriaServicoOnline, TipoProtocolo, Agendamento, AgendamentoStatus, Notificacao, Publicacao, TipoPublicacao, StatusPublicacao, ConsultaPublica, StatusConsultaPublica } from './types';
 
 export const BAIRROS_BATURITE: string[] = [
     "Centro", "Conselheiro Estelita", "Putiú", "São Francisco", "Nossa Senhora de Fátima", "Mondubim", "Guarani", "Sanharão"
@@ -9,6 +10,8 @@ export const BAIRROS_BATURITE: string[] = [
 export const MOCK_USER_PROFILES: UserProfile[] = [
     { id: '1', name: 'Raimundo', role: UserRole.CIDADAO, avatar: 'https://i.pravatar.cc/150?u=raimundo' },
     { id: '2', name: 'Gestor', role: UserRole.GESTOR, avatar: 'https://i.pravatar.cc/150?u=gestor' },
+    { id: '3', name: 'Ana', role: UserRole.CIDADAO, avatar: 'https://i.pravatar.cc/150?u=ana' },
+    { id: '4', name: 'Carlos', role: UserRole.CIDADAO, avatar: 'https://i.pravatar.cc/150?u=carlos' },
 ];
 
 export const MOCK_PROTOCOLOS: Protocolo[] = [
@@ -473,4 +476,133 @@ export const MOCK_NOTIFICACOES: Notificacao[] = [
     lida: true,
     link: { view: 'PROTOCOLO_DETAIL', params: { protocoloId: '1' } }
   }
+];
+
+export const MOCK_PUBLICATIONS: Publicacao[] = [
+    {
+        id: 'pub1',
+        tipo: TipoPublicacao.PROBLEMA,
+        title: 'Calçada quebrada na Rua Principal',
+        resumo: 'A calçada em frente ao número 123 está completamente destruída, oferecendo risco para pedestres, principalmente idosos.',
+        descricao: 'Há meses a calçada na Rua Principal, próximo à padaria, está em péssimas condições. Vários moradores já tropeçaram no local. É uma área de grande movimento e precisa de reparo urgente antes que um acidente mais grave aconteça. Anexei uma foto para mostrar a situação.',
+        bairro: 'Centro',
+        tags: ['#calçada', '#acessibilidade', '#segurança'],
+        fotos: ['https://picsum.photos/seed/calcada1/800/600'],
+        author: {
+            uid: '1',
+            name: 'Raimundo',
+            avatar: MOCK_USER_PROFILES[0].avatar,
+            isAnonymous: false,
+        },
+        counts: { supports: 42, comments: 3 },
+        status: StatusPublicacao.EM_ANALISE,
+        createdAt: '2024-07-25T10:00:00Z',
+        updatedAt: '2024-07-26T14:00:00Z',
+        historico: [
+            { status: StatusPublicacao.ABERTO, data: '2024-07-25T10:00:00Z', observacao: 'Publicação recebida e aguardando moderação.' },
+            { status: StatusPublicacao.EM_ANALISE, data: '2024-07-26T14:00:00Z', observacao: 'Encaminhado para a Secretaria de Infraestrutura.', responsavel: 'Moderação' }
+        ],
+        comments: [
+            { id: 'cpub1', author: { uid: 'user2', name: 'Maria', avatar: 'https://i.pravatar.cc/150?u=maria' }, text: 'Realmente, passo aí todo dia e está muito perigoso!', date: '2024-07-25T11:00:00Z', isOfficialReply: false },
+            { id: 'cpub2', author: { uid: 'gestor1', name: 'Secretaria de Infraestrutura', avatar: MOCK_USER_PROFILES[1].avatar }, text: 'Agradecemos o registro. Uma equipe fará a vistoria no local até o final da semana para avaliar a urgência do reparo.', date: '2024-07-26T14:05:00Z', isOfficialReply: true }
+        ],
+    },
+    {
+        id: 'pub2',
+        tipo: TipoPublicacao.IDEIA,
+        title: 'Criar uma feira de artesanato local aos domingos na Praça da Matriz',
+        resumo: 'Uma feira semanal poderia impulsionar o turismo, gerar renda para os artesãos locais e criar um novo ponto de encontro para a comunidade.',
+        descricao: 'Baturité tem muitos artesãos talentosos que não têm um espaço fixo para vender seus produtos. Uma feira na Praça da Matriz aos domingos de manhã poderia se tornar uma atração turística, atraindo visitantes de outras cidades e valorizando nossa cultura. Poderia ter também barracas de comidas típicas.',
+        bairro: 'Centro',
+        tags: ['#turismo', '#cultura', '#economia'],
+        author: {
+            uid: 'user3',
+            name: 'Anônimo',
+            avatar: 'https://i.pravatar.cc/150?u=anonymous',
+            isAnonymous: true,
+        },
+        counts: { supports: 112, comments: 5 },
+        status: StatusPublicacao.ABERTO,
+        createdAt: '2024-07-22T09:00:00Z',
+        updatedAt: '2024-07-22T09:00:00Z',
+        historico: [
+             { status: StatusPublicacao.ABERTO, data: '2024-07-22T09:00:00Z', observacao: 'Publicação aprovada pela moderação.' }
+        ],
+        comments: [],
+    },
+    {
+        id: 'pub3',
+        tipo: TipoPublicacao.ELOGIO,
+        title: 'Parabéns pela organização da festa junina no bairro São Francisco',
+        resumo: 'A festa estava incrível! Muito bem organizada, segura e com atrações para toda a família. A equipe da prefeitura está de parabéns!',
+        descricao: 'Queria deixar meu agradecimento e elogio a todos os envolvidos na organização do São João do nosso bairro. A decoração estava linda, as barracas com comidas deliciosas e a seleção de bandas foi ótima. Me senti seguro com a presença da guarda municipal. Foi um evento que uniu a comunidade. Espero que tenha todos os anos!',
+        bairro: 'São Francisco',
+        author: {
+            uid: 'user4',
+            name: 'Carlos',
+            avatar: 'https://i.pravatar.cc/150?u=carlos',
+            isAnonymous: false,
+        },
+        counts: { supports: 88, comments: 1 },
+        status: StatusPublicacao.CONCLUIDO,
+        createdAt: '2024-06-30T22:00:00Z',
+        updatedAt: '2024-07-01T11:00:00Z',
+        historico: [
+             { status: StatusPublicacao.ABERTO, data: '2024-06-30T22:00:00Z' },
+             { status: StatusPublicacao.CONCLUIDO, data: '2024-07-01T11:00:00Z', observacao: 'Agradecimento encaminhado à Secretaria de Cultura.', responsavel: 'Moderação' }
+        ],
+        comments: [
+            { id: 'cpub3', author: { uid: 'gestor2', name: 'Secretaria de Cultura', avatar: 'https://i.pravatar.cc/150?u=gestor_cultura' }, text: 'Ficamos muito felizes com seu feedback! É gratificante saber que o evento agradou a comunidade. Já estamos planejando o do próximo ano!', date: '2024-07-01T11:05:00Z', isOfficialReply: true }
+        ],
+    },
+];
+
+const hoje = new Date();
+const dataFim = new Date();
+dataFim.setDate(hoje.getDate() + 15); // A consulta termina em 15 dias
+
+export const MOCK_CONSULTAS_PUBLICAS: ConsultaPublica[] = [
+    {
+        id: 'cp1',
+        title: 'Consulta Pública sobre melhorias para a CE-060',
+        summary: 'Participe da discussão sobre o projeto de restauração e duplicação da rodovia CE-060, trecho que atravessa os municípios de Redenção, Aracoiaba e Baturité.',
+        description: 'A Superintendência de Obras Públicas (SOP) convida a população a participar da consulta pública sobre as melhorias planejadas para a rodovia CE-060. O projeto visa a duplicação de um segmento de 2 km em Baturité e a restauração de 65,4 km da via, com foco em segurança e trafegabilidade. Sua opinião é fundamental para aprimorar o projeto, abordando questões como a construção de ciclovias, novas paradas de ônibus, e o impacto na urbanização local. Todas as contribuições serão analisadas pela equipe técnica.',
+        imageUrl: 'https://www.sop.ce.gov.br/wp-content/uploads/sites/46/2024/03/WhatsApp-Image-2024-03-28-at-10.45.19.jpeg',
+        status: StatusConsultaPublica.ABERTA,
+        startDate: hoje.toISOString(),
+        endDate: dataFim.toISOString(),
+        documentos: [
+            { nome: 'Edital da Consulta.pdf', url: '#', icon: 'description' },
+            { nome: 'Estudo Técnico Preliminar.pdf', url: '#', icon: 'science' },
+            { nome: 'Mapa do Projeto.png', url: '#', icon: 'map' },
+        ],
+        opinioes: [
+            {
+                id: 'op1',
+                author: { uid: '3', name: 'Ana', avatar: MOCK_USER_PROFILES[2].avatar },
+                text: 'A duplicação é muito necessária, principalmente na entrada de Baturité. O trânsito ali é perigoso. A ciclovia também é uma ótima ideia para a segurança dos ciclistas.',
+                date: new Date(hoje.getTime() - 86400000).toISOString(), // Ontem
+            },
+            {
+                id: 'op2',
+                author: { uid: '4', name: 'Carlos', avatar: MOCK_USER_PROFILES[3].avatar },
+                text: 'Gostaria de sugerir que as novas paradas de ônibus tenham cobertura e assentos adequados. Muitos idosos utilizam o transporte público e sofrem com o sol e a chuva.',
+                date: new Date(hoje.getTime() - 172800000).toISOString(), // Anteontem
+            }
+        ]
+    },
+    {
+        id: 'cp2',
+        title: 'Revisão do Plano Diretor Municipal',
+        summary: 'A Prefeitura de Baturité inicia o processo de revisão do Plano Diretor e convida a comunidade a participar ativamente da construção do futuro da nossa cidade.',
+        description: 'O Plano Diretor é a lei que orienta o desenvolvimento e o crescimento da cidade. Esta revisão é uma oportunidade para definirmos juntos as diretrizes para habitação, meio ambiente, mobilidade urbana e desenvolvimento econômico para os próximos 10 anos. Participe das audiências e envie suas sugestões.',
+        imageUrl: 'https://picsum.photos/seed/planodiretor/800/400',
+        status: StatusConsultaPublica.ENCERRADA,
+        startDate: new Date('2024-05-01T00:00:00Z').toISOString(),
+        endDate: new Date('2024-06-30T23:59:59Z').toISOString(),
+        documentos: [
+             { nome: 'Lei do Plano Diretor Atual.pdf', url: '#', icon: 'gavel' },
+        ],
+        opinioes: []
+    }
 ];

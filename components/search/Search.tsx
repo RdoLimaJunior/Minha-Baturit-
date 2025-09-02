@@ -10,6 +10,16 @@ interface SearchProps {
   navigateTo: (view: View, params?: any) => void;
 }
 
+const ResultSkeletonItem: React.FC = () => (
+    <div className="p-4 flex items-center space-x-4 animate-pulse">
+        <div className="w-6 h-6 rounded bg-slate-200 dark:bg-slate-700"></div>
+        <div className="flex-1 space-y-2">
+            <div className="h-3 w-1/2 bg-slate-200 dark:bg-slate-700 rounded"></div>
+            <div className="h-2 w-full bg-slate-200 dark:bg-slate-700 rounded"></div>
+        </div>
+    </div>
+);
+
 const ResultItem: React.FC<{ icon: string, title: string, subtitle: string, onClick: () => void }> = ({ icon, title, subtitle, onClick }) => (
     <div onClick={onClick} className="p-4 flex items-center space-x-4 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg">
         <Icon name={icon} className="text-2xl text-slate-500 dark:text-slate-400" />
@@ -89,7 +99,19 @@ const Search: React.FC<SearchProps> = ({ navigateTo }) => {
                 </div>
             </div>
 
-            {isLoading && <Spinner />}
+            {isLoading && (
+                <Card>
+                    <div className="space-y-4">
+                        {[...Array(2)].map((_, i) => (
+                            <section key={i}>
+                                <div className="h-6 w-1/4 bg-slate-100 dark:bg-slate-700 rounded-md my-2 animate-pulse"></div>
+                                <ResultSkeletonItem />
+                                <ResultSkeletonItem />
+                            </section>
+                        ))}
+                    </div>
+                </Card>
+            )}
 
             {!isLoading && searchResults && (
                 <Card>

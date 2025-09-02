@@ -19,6 +19,25 @@ const CATEGORY_DETAILS: Record<CategoriaPredioPublico, { icon: string; color: st
     'Administração': { icon: 'corporate_fare', color: 'text-gray-700', bgColor: 'bg-gray-200', darkBgColor: 'dark:bg-gray-600', darkColor: 'dark:text-gray-200' }
 };
 
+const PredioPublicoSkeletonItem: React.FC = () => (
+    <Card className="!p-4 space-y-3 animate-pulse">
+        <div className="flex justify-between items-start">
+            <div className="w-3/4 space-y-2">
+                <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-full"></div>
+                <div className="h-5 bg-slate-200 dark:bg-slate-700 rounded w-1/3"></div>
+            </div>
+            <div className="h-5 w-1/5 bg-slate-200 dark:bg-slate-700 rounded-full"></div>
+        </div>
+        <div className="space-y-2">
+            <div className="h-3 bg-slate-200 dark:bg-slate-700 rounded w-full"></div>
+            <div className="h-3 bg-slate-200 dark:bg-slate-700 rounded w-1/2"></div>
+        </div>
+        <div className="flex items-center space-x-2 pt-3 border-t border-slate-100 dark:border-slate-700">
+            <div className="h-9 bg-slate-200 dark:bg-slate-700 rounded-lg w-full"></div>
+            <div className="h-9 bg-slate-200 dark:bg-slate-700 rounded-lg w-full"></div>
+        </div>
+    </Card>
+);
 
 const getCategoryIcon = (category: CategoriaPredioPublico) => {
     const detail = CATEGORY_DETAILS[category] || { icon: 'location_on', color: 'bg-gray-500' };
@@ -192,7 +211,11 @@ const MapaServicos: React.FC<MapaServicosProps> = ({ navigateTo }) => {
 
       <div className="space-y-3 pt-4">
         <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100 px-1">Locais Encontrados</h3>
-        {loading ? <Spinner /> : prediosComDistancia.length > 0 ? (
+        {loading ? (
+            <div className="space-y-3">
+                {[...Array(3)].map((_, i) => <PredioPublicoSkeletonItem key={i} />)}
+            </div>
+        ) : prediosComDistancia.length > 0 ? (
             prediosComDistancia.map(predio => {
               const catDetails = CATEGORY_DETAILS[predio.categoria];
               return (

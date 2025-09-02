@@ -1,5 +1,3 @@
-
-
 import React, { useState, useCallback } from 'react';
 import Header from './components/Header';
 import Dashboard from './components/Dashboard';
@@ -27,6 +25,11 @@ import ServicosDashboard from './components/servicos/ServicosDashboard';
 import MoreDashboard from './components/more/MoreDashboard';
 import Search from './components/search/Search';
 import { AccessibilityProvider } from './contexts/AccessibilityContext';
+import ParticipacaoFeed from './components/participacao/ParticipacaoFeed';
+import ParticipacaoDetail from './components/participacao/ParticipacaoDetail';
+import ParticipacaoForm from './components/participacao/ParticipacaoForm';
+import ConsultasPublicasList from './components/consultas/ConsultasPublicasList';
+import ConsultaPublicaDetail from './components/consultas/ConsultaPublicaDetail';
 
 
 // As importações abaixo são para componentes de versões futuras e não são usadas na versão inicial.
@@ -42,16 +45,20 @@ const AppContent: React.FC = () => {
   const [activeTurismoId, setActiveTurismoId] = useState<string | null>(null);
   const [activeTurismoCategoria, setActiveTurismoCategoria] = useState<TurismoCategoria | null>(null);
   const [activeServicoId, setActiveServicoId] = useState<string | null>(null);
+  const [activePublicacaoId, setActivePublicacaoId] = useState<string | null>(null);
+  const [activeConsultaId, setActiveConsultaId] = useState<string | null>(null);
   const [activeProfile, setActiveProfile] = useState<UserProfile>(MOCK_USER_PROFILES[0]);
   
 
-  const navigateTo = useCallback((newView: View, params: { protocoloId?: string; noticiaId?: string; turismoId?: string; turismoCategoria?: TurismoCategoria, servicoId?: string } | null = null) => {
+  const navigateTo = useCallback((newView: View, params: { protocoloId?: string; noticiaId?: string; turismoId?: string; turismoCategoria?: TurismoCategoria, servicoId?: string; publicacaoId?: string; consultaId?: string; } | null = null) => {
     setView(newView);
     setActiveProtocoloId(params?.protocoloId || null);
     setActiveNoticiaId(params?.noticiaId || null);
     setActiveTurismoId(params?.turismoId || null);
     setActiveTurismoCategoria(params?.turismoCategoria || null);
     setActiveServicoId(params?.servicoId || null);
+    setActivePublicacaoId(params?.publicacaoId || null);
+    setActiveConsultaId(params?.consultaId || null);
     window.scrollTo(0, 0);
   }, []);
   
@@ -59,6 +66,10 @@ const AppContent: React.FC = () => {
     const nextProfileIndex = (MOCK_USER_PROFILES.findIndex(p => p.id === activeProfile.id) + 1) % MOCK_USER_PROFILES.length;
     setActiveProfile(MOCK_USER_PROFILES[nextProfileIndex]);
     navigateTo('DASHBOARD');
+  };
+
+  const handleBottomNav = (view: View) => {
+    navigateTo(view);
   };
 
   const renderView = () => {
@@ -104,6 +115,16 @@ const AppContent: React.FC = () => {
         return <Search navigateTo={navigateTo} />;
       case 'ACESSIBILIDADE':
         return <Acessibilidade navigateTo={navigateTo} />;
+      case 'PARTICIPACAO_FEED':
+        return <ParticipacaoFeed navigateTo={navigateTo} />;
+      case 'PARTICIPACAO_DETAIL':
+        return activePublicacaoId ? <ParticipacaoDetail publicacaoId={activePublicacaoId} navigateTo={navigateTo} /> : <ParticipacaoFeed navigateTo={navigateTo} />;
+      case 'PARTICIPACAO_FORM':
+        return <ParticipacaoForm goBack={() => navigateTo('PARTICIPACAO_FEED')} />;
+      case 'CONSULTAS_PUBLICAS_LIST':
+        return <ConsultasPublicasList navigateTo={navigateTo} />;
+      case 'CONSULTAS_PUBLICAS_DETAIL':
+        return activeConsultaId ? <ConsultaPublicaDetail consultaId={activeConsultaId} navigateTo={navigateTo} /> : <ConsultasPublicasList navigateTo={navigateTo} />;
       default:
         return <Dashboard navigateTo={navigateTo} userProfile={activeProfile} />;
     }
@@ -121,7 +142,7 @@ const AppContent: React.FC = () => {
         {renderView()}
       </main>
       
-      <BottomNav navigateTo={navigateTo} currentView={view} />
+      <BottomNav navigateTo={handleBottomNav} currentView={view} />
     </div>
   );
 };

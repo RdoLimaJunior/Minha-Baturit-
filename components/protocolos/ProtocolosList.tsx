@@ -12,6 +12,25 @@ interface ProtocolosListProps {
   navigateTo: (view: View, params?: { protocoloId?: string }) => void;
 }
 
+const ProtocoloSkeletonItem: React.FC = () => (
+    <Card>
+        <div className="animate-pulse flex flex-col space-y-3">
+            <div className="flex justify-between items-start">
+                <div className="flex items-center space-x-3 w-3/4">
+                    <div className="w-6 h-6 bg-slate-200 dark:bg-slate-700 rounded-md"></div>
+                    <div className="flex-1 space-y-2">
+                        <div className="h-2 bg-slate-200 dark:bg-slate-700 rounded w-1/4"></div>
+                        <div className="h-3 bg-slate-200 dark:bg-slate-700 rounded w-1/2"></div>
+                    </div>
+                </div>
+                <div className="h-5 w-20 bg-slate-200 dark:bg-slate-700 rounded-full"></div>
+            </div>
+            <div className="h-2 bg-slate-200 dark:bg-slate-700 rounded w-full"></div>
+            <div className="h-2 bg-slate-200 dark:bg-slate-700 rounded w-1/3 pt-2"></div>
+        </div>
+    </Card>
+);
+
 const getStatusChipStyle = (status: StatusProtocolo) => {
     switch (status) {
         case StatusProtocolo.RECEBIDO:
@@ -96,7 +115,26 @@ const ProtocolosList: React.FC<ProtocolosListProps> = ({ navigateTo }) => {
   }, [protocolos, sortBy]);
 
 
-  if (loading) return <Spinner />;
+  if (loading) {
+      return (
+          <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                  <div className="h-8 bg-slate-200 dark:bg-slate-700 rounded w-1/3 animate-pulse"></div>
+              </div>
+              <Card className="!p-3">
+                  <div className="flex items-center space-x-2 flex-wrap animate-pulse">
+                      <div className="h-6 w-20 bg-slate-200 dark:bg-slate-700 rounded"></div>
+                      <div className="h-8 w-24 bg-slate-200 dark:bg-slate-700 rounded-lg"></div>
+                      <div className="h-8 w-24 bg-slate-200 dark:bg-slate-700 rounded-lg"></div>
+                      <div className="h-8 w-24 bg-slate-200 dark:bg-slate-700 rounded-lg"></div>
+                  </div>
+              </Card>
+              <div className="space-y-4">
+                  {[...Array(3)].map((_, i) => <ProtocoloSkeletonItem key={i} />)}
+              </div>
+          </div>
+      );
+  }
 
   return (
     <div className="space-y-4">

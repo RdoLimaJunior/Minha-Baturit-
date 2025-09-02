@@ -1,8 +1,9 @@
 
 
+
 import { useState, useEffect } from 'react';
-import { MOCK_PROTOCOLOS, MOCK_NOTICIAS, MOCK_SECRETARIAS, MOCK_PREDIOS_PUBLICOS, MOCK_TURISMO_ITENS, MOCK_CONTATOS, MOCK_SERVICOS_ONLINE, MOCK_AGENDAMENTOS, MOCK_NOTIFICACOES } from '../constants';
-import { Protocolo, Noticia, Secretaria, PredioPublico, TurismoItem, ContatoUtil, ServicoOnline, Agendamento, Notificacao } from '../types';
+import { MOCK_PROTOCOLOS, MOCK_NOTICIAS, MOCK_SECRETARIAS, MOCK_PREDIOS_PUBLICOS, MOCK_TURISMO_ITENS, MOCK_CONTATOS, MOCK_SERVICOS_ONLINE, MOCK_AGENDAMENTOS, MOCK_NOTIFICACOES, MOCK_PUBLICATIONS, MOCK_CONSULTAS_PUBLICAS } from '../constants';
+import { Protocolo, Noticia, Secretaria, PredioPublico, TurismoItem, ContatoUtil, ServicoOnline, Agendamento, Notificacao, Publicacao, ConsultaPublica } from '../types';
 
 const useMockData = <T,>(data: T, delay: number = 500) => {
   const [loading, setLoading] = useState<boolean>(true);
@@ -54,3 +55,19 @@ export const useServicoOnlineById = (id: string | null) => {
 };
 export const useAgendamentos = () => useMockData<Agendamento[]>(MOCK_AGENDAMENTOS);
 export const useNotificacoes = () => useMockData<Notificacao[]>(MOCK_NOTIFICACOES);
+
+// Hooks for Participação Pública
+export const usePublicacoes = () => useMockData<Publicacao[]>(MOCK_PUBLICATIONS);
+export const usePublicacaoById = (id: string | null) => {
+    const publicacoes = MOCK_PUBLICATIONS;
+    const publicacao = publicacoes.find(p => p.id === id) || null;
+    return useMockData<Publicacao | null>(publicacao);
+};
+
+// Hooks for Consultas Públicas
+export const useConsultasPublicas = () => useMockData<ConsultaPublica[]>(MOCK_CONSULTAS_PUBLICAS);
+export const useConsultaPublicaById = (id: string | null) => {
+    const consultas = MOCK_CONSULTAS_PUBLICAS;
+    const consulta = consultas.find(c => c.id === id) || null;
+    return useMockData<ConsultaPublica | null>(consulta);
+};

@@ -12,6 +12,33 @@ interface NoticiasListProps {
   navigateTo: (view: View, params?: { noticiaId?: string }) => void;
 }
 
+const NoticiaSkeletonItem: React.FC = () => (
+    <Card className="!p-0 overflow-hidden">
+        <div className="animate-pulse">
+            <div className="p-4 flex items-center space-x-3">
+                <div className="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-700"></div>
+                <div className="flex-1 space-y-2">
+                    <div className="h-3 bg-slate-200 dark:bg-slate-700 rounded w-1/3"></div>
+                    <div className="h-2 bg-slate-200 dark:bg-slate-700 rounded w-1/4"></div>
+                </div>
+            </div>
+            <div className="w-full h-96 bg-slate-200 dark:bg-slate-700"></div>
+            <div className="p-4 space-y-3">
+                <div className="flex items-center space-x-4">
+                    <div className="w-8 h-8 rounded bg-slate-200 dark:bg-slate-700"></div>
+                    <div className="w-8 h-8 rounded bg-slate-200 dark:bg-slate-700"></div>
+                    <div className="w-8 h-8 rounded bg-slate-200 dark:bg-slate-700"></div>
+                </div>
+                <div className="h-2 bg-slate-200 dark:bg-slate-700 rounded w-1/5"></div>
+                <div className="space-y-2">
+                    <div className="h-2 bg-slate-200 dark:bg-slate-700 rounded"></div>
+                    <div className="h-2 bg-slate-200 dark:bg-slate-700 rounded w-5/6"></div>
+                </div>
+            </div>
+        </div>
+    </Card>
+);
+
 const NoticiaItem: React.FC<{ noticia: Noticia, onNavigate: () => void }> = ({ noticia, onNavigate }) => {
     const [isLiked, setIsLiked] = useState(false);
     const [likeCount, setLikeCount] = useState(noticia.likes);
@@ -106,6 +133,20 @@ const NoticiaItem: React.FC<{ noticia: Noticia, onNavigate: () => void }> = ({ n
 const NoticiasList: React.FC<NoticiasListProps> = ({ navigateTo }) => {
   const { data: noticias, loading } = useNoticias();
 
+  if (loading) {
+      return (
+          <div className="space-y-4">
+              <div className="flex items-center space-x-2 animate-pulse">
+                  <Button variant="ghost" size="icon" className="!bg-slate-200 dark:!bg-slate-700" disabled><Icon name="arrow_back" className="text-transparent" /></Button>
+                  <div className="h-8 w-1/2 rounded bg-slate-200 dark:bg-slate-700"></div>
+              </div>
+              <div className="space-y-6 pt-2">
+                  {[...Array(2)].map((_, i) => <NoticiaSkeletonItem key={i} />)}
+              </div>
+          </div>
+      );
+  }
+
   return (
     <div className="space-y-4">
       <div className="flex items-center space-x-2">
@@ -115,9 +156,7 @@ const NoticiasList: React.FC<NoticiasListProps> = ({ navigateTo }) => {
         <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Últimas Notícias</h2>
       </div>
 
-      {loading ? (
-        <Spinner />
-      ) : noticias && noticias.length > 0 ? (
+      {noticias && noticias.length > 0 ? (
         <div className="space-y-6">
             {noticias.map(noticia => (
               <NoticiaItem key={noticia.id} noticia={noticia} onNavigate={() => navigateTo('NOTICIA_DETAIL', { noticiaId: noticia.id })} />

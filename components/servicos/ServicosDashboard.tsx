@@ -12,6 +12,7 @@ const SERVICOS_ITEMS: { view: View; icon: string; title: string; description: st
     { view: 'SERVICOS_ONLINE_DASHBOARD', icon: 'apps', title: 'Serviços Online', description: 'Acesse serviços digitais' },
     { view: 'AGENDAMENTOS_LIST', icon: 'event_available', title: 'Agenda do Cidadão', description: 'Gerencie seus agendamentos' },
     { view: 'PROTOCOLO_FORM', icon: 'campaign', title: 'Participação Cidadã', description: 'Abra um novo protocolo' },
+    { view: 'CONSULTAS_PUBLICAS_LIST', icon: 'poll', title: 'Consultas Públicas Digitais', description: 'Envolva a população nas decisões da cidade e formule políticas públicas representativas com base em dados e participação popular.' },
 ];
 
 const ServicosDashboard: React.FC<ServicosDashboardProps> = ({ navigateTo }) => {

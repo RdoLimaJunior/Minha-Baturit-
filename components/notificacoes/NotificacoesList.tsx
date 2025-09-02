@@ -12,6 +12,18 @@ interface NotificacoesListProps {
   navigateTo: (view: View, params?: any) => void;
 }
 
+const NotificacaoSkeletonItem: React.FC = () => (
+    <div className="flex items-start space-x-4 p-4 bg-white dark:bg-slate-800 rounded-lg shadow-sm animate-pulse">
+        <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 mt-1"></div>
+        <div className="flex-1 space-y-2">
+            <div className="h-3 bg-slate-200 dark:bg-slate-700 rounded w-1/3"></div>
+            <div className="h-2 bg-slate-200 dark:bg-slate-700 rounded w-full"></div>
+            <div className="h-2 bg-slate-200 dark:bg-slate-700 rounded w-5/6"></div>
+            <div className="h-2 bg-slate-200 dark:bg-slate-700 rounded w-1/4 pt-2"></div>
+        </div>
+    </div>
+);
+
 const getIconForNotificacao = (notificacao: Notificacao) => {
     if (notificacao.titulo.toLowerCase().includes('lembrete')) {
         return { icon: 'event_available', color: 'text-blue-500' };
@@ -71,6 +83,23 @@ const NotificacoesList: React.FC<NotificacoesListProps> = ({ navigateTo }) => {
 
   const unreadCount = listaNotificacoes.filter(n => !n.lida).length;
 
+  if (loading) {
+      return (
+          <div className="space-y-4">
+              <div className="flex justify-between items-center animate-pulse">
+                  <div className="flex items-center space-x-2">
+                      <Button variant="ghost" size="icon" className="!bg-slate-200 dark:!bg-slate-700" disabled><Icon name="arrow_back" className="text-transparent" /></Button>
+                      <div className="h-8 w-40 rounded bg-slate-200 dark:bg-slate-700"></div>
+                  </div>
+                  <div className="h-8 w-32 rounded-lg bg-slate-200 dark:bg-slate-700"></div>
+              </div>
+              <div className="space-y-3 pt-2">
+                  {[...Array(4)].map((_, i) => <NotificacaoSkeletonItem key={i} />)}
+              </div>
+          </div>
+      );
+  }
+
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
@@ -87,9 +116,7 @@ const NotificacoesList: React.FC<NotificacoesListProps> = ({ navigateTo }) => {
         )}
       </div>
 
-      {loading ? (
-        <Spinner />
-      ) : listaNotificacoes.length > 0 ? (
+      {listaNotificacoes.length > 0 ? (
         <div className="space-y-3">
           {listaNotificacoes.map(notificacao => (
             <NotificacaoItem 

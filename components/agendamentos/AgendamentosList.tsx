@@ -12,6 +12,21 @@ interface AgendamentosListProps {
   navigateTo: (view: View) => void;
 }
 
+const AgendamentoSkeletonItem: React.FC = () => (
+    <Card className="animate-pulse">
+        <div className="flex justify-between items-start">
+            <div className="flex items-center space-x-3 w-3/4">
+                <div className="w-7 h-7 rounded-md bg-slate-200 dark:bg-slate-700"></div>
+                <div className="flex-1 space-y-2">
+                    <div className="h-3 bg-slate-200 dark:bg-slate-700 rounded w-3/4"></div>
+                    <div className="h-3 bg-slate-200 dark:bg-slate-700 rounded w-1/2"></div>
+                </div>
+            </div>
+            <div className="h-5 w-20 bg-slate-200 dark:bg-slate-700 rounded-full"></div>
+        </div>
+    </Card>
+);
+
 const getStatusChipStyle = (status: AgendamentoStatus) => {
     switch (status) {
         case AgendamentoStatus.AGENDADO:
@@ -123,7 +138,42 @@ const AgendamentosList: React.FC<AgendamentosListProps> = ({ navigateTo }) => {
     }
   };
 
-  if (loading) return <Spinner />;
+  if (loading) {
+      return (
+          <div className="space-y-6 animate-pulse">
+              <div className="flex justify-between items-center">
+                  <div className="flex items-center space-x-2">
+                      <div className="h-10 w-10 rounded-lg bg-slate-200 dark:bg-slate-700"></div>
+                      <div className="h-8 w-48 rounded bg-slate-200 dark:bg-slate-700"></div>
+                  </div>
+                  <div className="h-10 w-10 rounded-lg bg-slate-200 dark:bg-slate-700"></div>
+              </div>
+              
+              <Card className="!p-4">
+                  <div className="h-6 w-1/3 mx-auto bg-slate-200 dark:bg-slate-700 rounded mb-4"></div>
+                  <div className="grid grid-cols-7 gap-1">
+                      {[...Array(35)].map((_, i) => (
+                          <div key={i} className="w-full h-12 bg-slate-200 dark:bg-slate-700 rounded-full"></div>
+                      ))}
+                  </div>
+              </Card>
+
+              <div>
+                  <div className="h-5 w-1/4 bg-slate-200 dark:bg-slate-700 rounded mb-2 ml-1"></div>
+                  <div className="space-y-3">
+                      <AgendamentoSkeletonItem />
+                  </div>
+              </div>
+              
+              <div>
+                  <div className="h-5 w-1/4 bg-slate-200 dark:bg-slate-700 rounded mb-2 ml-1"></div>
+                  <div className="space-y-3">
+                      <AgendamentoSkeletonItem />
+                  </div>
+              </div>
+          </div>
+      );
+  }
 
   return (
     <div className="space-y-6">

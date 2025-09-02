@@ -1,5 +1,6 @@
 
 
+
 export type Theme = 'light' | 'dark' | 'system';
 export type FontSize = 'sm' | 'base' | 'lg' | 'xl';
 
@@ -23,7 +24,12 @@ export type View =
   | 'SERVICOS_DASHBOARD'
   | 'MAIS_DASHBOARD'
   | 'SEARCH'
-  | 'ACESSIBILIDADE';
+  | 'ACESSIBILIDADE'
+  | 'PARTICIPACAO_FEED'
+  | 'PARTICIPACAO_DETAIL'
+  | 'PARTICIPACAO_FORM'
+  | 'CONSULTAS_PUBLICAS_LIST'
+  | 'CONSULTAS_PUBLICAS_DETAIL';
 
 export enum TipoProtocolo {
   RECLAMACAO = 'Reclamação',
@@ -234,4 +240,106 @@ export interface Notificacao {
     view: View;
     params?: any;
   };
+}
+
+// --- Tipos para Participação Pública ---
+
+export enum TipoPublicacao {
+  IDEIA = 'Ideia',
+  PROBLEMA = 'Problema',
+  ELOGIO = 'Elogio',
+  EVENTO = 'Evento',
+}
+
+export enum StatusPublicacao {
+  ABERTO = 'Aberto',
+  EM_ANALISE = 'Em análise',
+  ENCAMINHADO = 'Encaminhado',
+  CONCLUIDO = 'Concluído',
+  REJEITADO = 'Rejeitado', // Adicionado para moderação
+}
+
+export interface ComentarioPublicacao {
+  id: string;
+  author: {
+    uid: string;
+    name: string;
+    avatar: string;
+  };
+  text: string;
+  date: string;
+  isOfficialReply: boolean;
+}
+
+export interface HistoricoPublicacao {
+  status: StatusPublicacao;
+  data: string;
+  observacao?: string;
+  responsavel?: string; // e.g., "Secretaria de Obras"
+}
+
+
+export interface Publicacao {
+  id: string;
+  tipo: TipoPublicacao;
+  title: string;
+  resumo: string;
+  descricao: string;
+  bairro: string;
+  tags?: string[];
+  fotos?: string[];
+  localizacao?: { lat: number; lng: number };
+  author: {
+    uid: string;
+    name: string;
+    avatar: string;
+    isAnonymous: boolean;
+  };
+  counts: {
+    supports: number;
+    comments: number;
+  };
+  status: StatusPublicacao;
+  createdAt: string;
+  updatedAt: string;
+  comments: ComentarioPublicacao[];
+  historico: HistoricoPublicacao[];
+}
+
+// --- Tipos para Consultas Públicas ---
+
+export enum StatusConsultaPublica {
+  ABERTA = 'Aberta',
+  ENCERRADA = 'Encerrada',
+  EM_ANALISE = 'Resultados em Análise',
+}
+
+export interface OpiniaoConsulta {
+  id: string;
+  author: {
+    uid: string;
+    name: string;
+    avatar: string;
+  };
+  text: string;
+  date: string;
+}
+
+export interface DocumentoConsulta {
+  nome: string;
+  url: string;
+  icon: string; // Material Icon name
+}
+
+export interface ConsultaPublica {
+  id: string;
+  title: string;
+  summary: string;
+  description: string;
+  imageUrl: string;
+  status: StatusConsultaPublica;
+  startDate: string;
+  endDate: string;
+  documentos?: DocumentoConsulta[];
+  opinioes: OpiniaoConsulta[];
 }

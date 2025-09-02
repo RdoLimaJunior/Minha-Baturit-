@@ -95,8 +95,13 @@ export const useChat = (userProfile: UserProfile) => {
           let finalContent = 'Desculpe, não consegui processar a resposta.';
           let action: ChatAction | undefined = undefined;
   
-          const jsonText = response.text.trim();
+          let jsonText = response.text.trim();
           
+          // FIX: The model sometimes wraps the JSON in markdown. This removes it.
+          if (jsonText.startsWith('```json')) {
+            jsonText = jsonText.substring(7, jsonText.length - 3).trim();
+          }
+
           try {
               const parsed = JSON.parse(jsonText);
               if (parsed.responseText) {

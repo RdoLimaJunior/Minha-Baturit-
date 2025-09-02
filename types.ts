@@ -1,6 +1,7 @@
 
 
 
+
 export type Theme = 'light' | 'dark' | 'system';
 export type FontSize = 'sm' | 'base' | 'lg' | 'xl';
 
@@ -160,23 +161,32 @@ export interface TurismoItem {
   imagens: string[];
 }
 
+export type ActionType = 'NAVIGATE' | 'OPEN_URL' | 'CALL';
+
+export interface ActionPayload {
+    view?: View;
+    params?: any;
+    url?: string;
+    phoneNumber?: string;
+}
+
 export interface ChatAction {
-  buttonText: string;
-  view: View;
-  params?: {
-    protocoloId?: string;
-    noticiaId?: string;
-    turismoId?: string;
-    turismoCategoria?: TurismoCategoria;
-    servicoId?: string;
-  };
+    type: ActionType;
+    buttonText: string;
+    payload: ActionPayload;
 }
 
 export interface ChatMessage {
   id: string;
   role: 'user' | 'model';
   content: string;
-  action?: ChatAction;
+  actions?: ChatAction[];
+  structuredContent?: {
+      address?: string;
+      phone?: string;
+      openingHours?: string;
+      documents?: string[];
+  };
   feedback?: 'like' | 'dislike' | null;
 }
 

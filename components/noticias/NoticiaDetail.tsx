@@ -38,14 +38,29 @@ const NoticiaDetail: React.FC<NoticiaDetailProps> = ({ noticiaId, navigateTo }) 
   const handleShare = async () => {
     if (navigator.share && noticia) {
         try {
-            await navigator.share({ title: noticia.title, text: noticia.summary, url: noticia.link });
+            await navigator.share({
+                title: noticia.title,
+                text: noticia.summary,
+                url: noticia.link,
+            });
         } catch (error) {
-            console.error('Error sharing', error);
-            addToast('Não foi possível compartilhar.', 'error');
+            // Don't show an error if the user cancels the share dialog
+            if (error instanceof Error && error.name === 'AbortError') {
+                console.log('Share cancelled by user.');
+            } else {
+                console.error('Error sharing', error);
+                addToast('Não foi possível compartilhar a notícia.', 'error');
+            }
         }
     } else if (noticia) {
-        navigator.clipboard.writeText(noticia.link);
-        addToast('Link copiado!', 'info');
+        // Fallback for browsers that do not support the Web Share API
+        try {
+            await navigator.clipboard.writeText(noticia.link);
+            addToast('Link da notícia copiado para a área de transferência!', 'info');
+        } catch (err) {
+            console.error('Failed to copy link: ', err);
+            addToast('Não foi possível copiar o link.', 'error');
+        }
     }
   };
 

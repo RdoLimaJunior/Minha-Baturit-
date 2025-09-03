@@ -8,18 +8,17 @@ interface ServicosDashboardProps {
 }
 
 const SERVICOS_ITEMS: { view: View; icon: string; title: string; description: string; }[] = [
-    { view: 'PROTOCOLOS_LIST', icon: 'list_alt', title: 'Protocolos', description: 'Acompanhe suas solicitações' },
-    { view: 'SERVICOS_ONLINE_DASHBOARD', icon: 'apps', title: 'Serviços Online', description: 'Acesse serviços digitais' },
     { view: 'AGENDAMENTOS_LIST', icon: 'event_available', title: 'Agenda do Cidadão', description: 'Gerencie seus agendamentos' },
-    { view: 'PROTOCOLO_FORM', icon: 'campaign', title: 'Participação Cidadã', description: 'Abra um novo protocolo' },
-    { view: 'CONSULTAS_PUBLICAS_LIST', icon: 'poll', title: 'Consultas Públicas Digitais', description: 'Envolva a população nas decisões da cidade e formule políticas públicas representativas com base em dados e participação popular.' },
+    { view: 'PROTOCOLO_FORM', icon: 'campaign', title: 'Participação Cidadã', description: 'Abra e acompanhe protocolos' },
+    { view: 'CONSULTAS_PUBLICAS_LIST', icon: 'poll', title: 'Consultas Públicas', description: 'Opine sobre projetos da cidade' },
+    { view: 'SERVICOS_ONLINE_DASHBOARD', icon: 'apps', title: 'Serviços Online', description: 'Acesse serviços digitais' },
 ];
 
 const ServicosDashboard: React.FC<ServicosDashboardProps> = ({ navigateTo }) => {
   return (
     <div className="space-y-4">
-      <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Serviços ao Cidadão</h2>
-      <p className="text-slate-600 dark:text-slate-300">
+      <h2 className="text-2xl font-bold text-gray-800">Serviços ao Cidadão</h2>
+      <p className="text-gray-600">
         Encontre aqui as principais ferramentas para interagir com a prefeitura, solicitar serviços e agendar atendimentos.
       </p>
 
@@ -30,11 +29,11 @@ const ServicosDashboard: React.FC<ServicosDashboardProps> = ({ navigateTo }) => 
             onClick={() => navigateTo(item.view)}
             className="text-center flex flex-col items-center justify-center space-y-2 !p-6"
           >
-            <div className="bg-indigo-100 dark:bg-indigo-900/50 p-4 rounded-full">
-              <Icon name={item.icon} className="text-indigo-700 dark:text-indigo-400 text-4xl" />
+            <div className="bg-indigo-100 p-4 rounded-full">
+              <Icon name={item.icon} className="text-indigo-600 text-4xl" />
             </div>
-            <h3 className="font-bold text-slate-800 dark:text-slate-100 text-lg">{item.title}</h3>
-            <p className="text-sm text-slate-500 dark:text-slate-400">{item.description}</p>
+            <h3 className="font-bold text-gray-800 text-lg">{item.title}</h3>
+            <p className="text-sm text-gray-600">{item.description}</p>
           </Card>
         ))}
       </div>

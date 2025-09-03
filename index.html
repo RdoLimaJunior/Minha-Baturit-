@@ -13,14 +13,12 @@
       // Prevents Flash of Incorrect Theme (FOIT)
       (function() {
         try {
-          const theme = localStorage.getItem('theme');
+          // Dark mode is temporarily disabled for visual adjustments.
+          document.documentElement.classList.remove('dark');
           const fontSize = localStorage.getItem('font-size') || 'base';
-          if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-          }
           document.documentElement.classList.add('font-size-' + fontSize);
         } catch (e) {
-          console.error('Failed to apply initial theme or font size.', e);
+          console.error('Failed to apply initial font size.', e);
         }
       })();
     </script>
@@ -42,8 +40,21 @@
 }
 </script>
 </head>
-  <body class="bg-slate-100 dark:bg-slate-900 antialiased transition-colors duration-300">
+  <body class="bg-gray-50 text-gray-700 antialiased transition-colors duration-300">
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/service-worker.js')
+            .then(registration => {
+              console.log('Service Worker registered with scope:', registration.scope);
+            })
+            .catch(error => {
+              console.error('Service Worker registration failed:', error);
+            });
+        });
+      }
+    </script>
   </body>
 </html>

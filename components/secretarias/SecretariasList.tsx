@@ -37,6 +37,7 @@ const SecretariaItem: React.FC<{ secretaria: Secretaria }> = ({ secretaria }) =>
       src={secretaria.avatarUrl} 
       alt={`Foto de ${secretaria.secretario}`}
       className="w-24 h-24 rounded-full object-cover mb-4 border-4 border-slate-100 dark:border-slate-700 shadow-md"
+      referrerPolicy="no-referrer"
     />
     <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100">{secretaria.nome}</h3>
     <div className="mt-2">
@@ -66,33 +67,34 @@ const SecretariaItem: React.FC<{ secretaria: Secretaria }> = ({ secretaria }) =>
         </div>
     </div>
 
-    {secretaria.link && (
-         <div className="mt-6 border-t border-slate-200 dark:border-slate-700 pt-4 w-full">
-            <a 
-              href={secretaria.link} 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="font-semibold text-green-700 dark:text-green-500 transition-colors hover:text-green-800 dark:hover:text-green-400"
-            >
-                Mais informações
-            </a>
-        </div>
-    )}
+    <div className="mt-6 border-t border-slate-200 dark:border-slate-700 pt-4 w-full flex flex-wrap gap-2 justify-center">
+      {secretaria.link && (
+          <a 
+            href={secretaria.link} 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="inline-flex items-center justify-center px-2.5 py-1.5 text-sm rounded-lg font-semibold transition-colors bg-slate-200 text-slate-800 hover:bg-slate-300 dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600"
+          >
+              Mais informações
+          </a>
+      )}
+      <Button 
+        size="sm" 
+        variant="secondary"
+        iconLeft="map"
+        onClick={(e) => {
+            e.stopPropagation();
+            window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(secretaria.endereco)}`, '_blank');
+        }}
+    >
+        Ver no Mapa
+    </Button>
+    </div>
   </Card>
 );
 
 const SecretariasList: React.FC<SecretariasListProps> = ({ navigateTo }) => {
   const { data: secretarias, loading } = useSecretarias();
-
-  // Ordena para que a Autarquia do Meio Ambiente apareça primeiro, como na referência
-  const sortedSecretarias = React.useMemo(() => {
-    if (!secretarias) return [];
-    return [...secretarias].sort((a, b) => {
-        if (a.nome.includes('Autarquia')) return -1;
-        if (b.nome.includes('Autarquia')) return 1;
-        return 0;
-    });
-  }, [secretarias]);
 
   if (loading) {
       return (
@@ -118,9 +120,9 @@ const SecretariasList: React.FC<SecretariasListProps> = ({ navigateTo }) => {
         <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Secretarias</h2>
       </div>
       
-      {sortedSecretarias && sortedSecretarias.length > 0 ? (
+      {secretarias && secretarias.length > 0 ? (
         <div className="space-y-4">
-          {sortedSecretarias.map(sec => (
+          {secretarias.map(sec => (
             <SecretariaItem key={sec.id} secretaria={sec} />
           ))}
         </div>

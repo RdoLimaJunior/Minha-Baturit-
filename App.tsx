@@ -30,9 +30,12 @@ import ParticipacaoDetail from './components/participacao/ParticipacaoDetail';
 import ParticipacaoForm from './components/participacao/ParticipacaoForm';
 import ConsultasPublicasList from './components/consultas/ConsultasPublicasList';
 import ConsultaPublicaDetail from './components/consultas/ConsultaPublicaDetail';
+import PrediosPorCategoriaList from './components/predios/PrediosPorCategoriaList';
+import Button from './components/ui/Button';
+import Icon from './components/ui/Icon';
 
 
-// As importações abaixo são para componentes de versões futuras e não são usadas na versão inicial.
+// As importações abaixo são для componentes de versões futuras e não são usadas на versão inicial.
 import './components/onibus/OnibusTracker';
 import './components/coleta/ColetaCalendar';
 import './components/admin/AdminDashboard';
@@ -48,9 +51,10 @@ const AppContent: React.FC = () => {
   const [activePublicacaoId, setActivePublicacaoId] = useState<string | null>(null);
   const [activeConsultaId, setActiveConsultaId] = useState<string | null>(null);
   const [activeProfile, setActiveProfile] = useState<UserProfile>(MOCK_USER_PROFILES[0]);
+  const [activeViewParams, setActiveViewParams] = useState<any>(null);
   
 
-  const navigateTo = useCallback((newView: View, params: { protocoloId?: string; noticiaId?: string; turismoId?: string; turismoCategoria?: TurismoCategoria, servicoId?: string; publicacaoId?: string; consultaId?: string; } | null = null) => {
+  const navigateTo = useCallback((newView: View, params: { [key: string]: any } | any = null) => {
     setView(newView);
     setActiveProtocoloId(params?.protocoloId || null);
     setActiveNoticiaId(params?.noticiaId || null);
@@ -59,6 +63,7 @@ const AppContent: React.FC = () => {
     setActiveServicoId(params?.servicoId || null);
     setActivePublicacaoId(params?.publicacaoId || null);
     setActiveConsultaId(params?.consultaId || null);
+    setActiveViewParams(params);
     window.scrollTo(0, 0);
   }, []);
   
@@ -81,7 +86,7 @@ const AppContent: React.FC = () => {
       case 'PROTOCOLO_DETAIL':
         return activeProtocoloId ? <ProtocoloDetail protocoloId={activeProtocoloId} goBack={() => navigateTo('PROTOCOLOS_LIST')} /> : <Dashboard navigateTo={navigateTo} userProfile={activeProfile} />;
       case 'PROTOCOLO_FORM':
-        return <ProtocoloForm goBack={() => navigateTo('SERVICOS_DASHBOARD')} />;
+        return <ProtocoloForm goBack={() => navigateTo('SERVICOS_DASHBOARD')} navigateTo={navigateTo} />;
       case 'NOTICIAS_LIST':
         return <NoticiasList navigateTo={navigateTo} />;
       case 'NOTICIA_DETAIL':
@@ -90,7 +95,7 @@ const AppContent: React.FC = () => {
         return <SecretariasList navigateTo={navigateTo} />;
       // FIX: Corrected typo 'MAPA_SERVICIOS' to 'MAPA_SERVICOS' to match the 'View' type.
       case 'MAPA_SERVICOS':
-        return <MapaServicos navigateTo={navigateTo} />;
+        return <MapaServicos navigateTo={navigateTo} {...activeViewParams} />;
       case 'TURISMO_DASHBOARD':
         return <TurismoDashboard navigateTo={navigateTo} />;
       case 'TURISMO_LIST':
@@ -125,13 +130,17 @@ const AppContent: React.FC = () => {
         return <ConsultasPublicasList navigateTo={navigateTo} />;
       case 'CONSULTAS_PUBLICAS_DETAIL':
         return activeConsultaId ? <ConsultaPublicaDetail consultaId={activeConsultaId} navigateTo={navigateTo} /> : <ConsultasPublicasList navigateTo={navigateTo} />;
+      case 'PREDIOS_POR_CATEGORIA_LIST':
+        return activeViewParams ? <PrediosPorCategoriaList navigateTo={navigateTo} {...activeViewParams} /> : <MoreDashboard navigateTo={navigateTo} />;
       default:
         return <Dashboard navigateTo={navigateTo} userProfile={activeProfile} />;
     }
   };
+  
+  const isDashboard = view === 'DASHBOARD';
 
-  const mainContainerClass = view === 'DASHBOARD' 
-    ? "flex-grow pb-20"
+  const mainContainerClass = isDashboard
+    ? "flex-grow flex flex-col pb-20"
     : "flex-grow container mx-auto p-4 pb-20";
 
   return (

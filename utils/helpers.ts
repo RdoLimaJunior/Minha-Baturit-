@@ -31,3 +31,30 @@ export const timeSince = (date: string) => {
     if (interval > 1) return `${Math.floor(interval)} minutos atrás`;
     return `${Math.floor(seconds)} segundos atrás`;
 };
+
+export const mapWeatherCodeToIcon = (code: string): { icon: string; color: string } => {
+    const codeNum = parseInt(code, 10);
+    switch (codeNum) {
+        case 113: return { icon: 'wb_sunny', color: 'text-amber-500' };
+        case 116: return { icon: 'partly_cloudy_day', color: 'text-sky-600' };
+        case 119: return { icon: 'cloud', color: 'text-gray-500' };
+        case 122: return { icon: 'cloudy', color: 'text-gray-600' };
+        case 143: return { icon: 'foggy', color: 'text-gray-400' };
+        case 176: return { icon: 'rainy', color: 'text-blue-500' };
+        case 179: case 182: case 185: return { icon: 'ac_unit', color: 'text-cyan-400' };
+        case 200: return { icon: 'thunderstorm', color: 'text-yellow-500' };
+        case 227: case 230: return { icon: 'weather_snowy', color: 'text-cyan-300' };
+        case 248: case 260: return { icon: 'foggy', color: 'text-gray-400' };
+        case 263: case 266: case 281: case 284: return { icon: 'grain', color: 'text-gray-500' };
+        case 293: case 296: case 299: case 302: case 305: case 308: return { icon: 'rainy', color: 'text-blue-500' };
+        case 311: case 314: case 317: case 320: return { icon: 'ac_unit', color: 'text-cyan-400' };
+        case 323: case 326: case 329: case 332: case 335: case 338: return { icon: 'weather_snowy', color: 'text-cyan-300' };
+        case 350: return { icon: 'grain', color: 'text-gray-500' };
+        case 353: case 356: case 359: return { icon: 'shower', color: 'text-blue-600' };
+        case 362: case 365: return { icon: 'ac_unit', color: 'text-cyan-400' };
+        case 368: case 371: return { icon: 'weather_snowy', color: 'text-cyan-300' };
+        case 374: case 377: return { icon: 'grain', color: 'text-gray-500' };
+        case 386: case 389: case 392: case 395: return { icon: 'thunderstorm', color: 'text-yellow-500' };
+        default: return { icon: 'thermostat', color: 'text-gray-600' };
+    }
+};

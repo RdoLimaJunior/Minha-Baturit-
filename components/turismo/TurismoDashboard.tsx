@@ -13,6 +13,7 @@ const CATEGORIAS_TURISMO: { id: TurismoCategoria; title: string; icon: string; d
     { id: 'Gastronomia', title: 'Gastronomia', icon: 'restaurant', description: 'Sabores da serra', color: 'bg-red-500' },
     { id: 'Hospedagem', title: 'Hospedagem', icon: 'hotel', description: 'Encontre seu refúgio', color: 'bg-blue-500' },
     { id: 'Lazer e Entretenimento', title: 'Lazer e Entretenimento', icon: 'local_activity', description: 'Aventura e diversão', color: 'bg-green-500' },
+    { id: 'Cultura', title: 'Cultura', icon: 'theater_comedy', description: 'Espaços e eventos', color: 'bg-purple-500' },
 ];
 
 const TurismoDashboard: React.FC<TurismoDashboardProps> = ({ navigateTo }) => {
@@ -22,9 +23,9 @@ const TurismoDashboard: React.FC<TurismoDashboardProps> = ({ navigateTo }) => {
         <Button onClick={() => navigateTo('MAIS_DASHBOARD')} variant="ghost" size="icon">
           <Icon name="arrow_back" />
         </Button>
-        <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Turismo em Baturité</h2>
+        <h2 className="text-2xl font-bold text-gray-800">Cultura e Turismo em Baturité</h2>
       </div>
-      <p className="text-slate-600 dark:text-slate-300">
+      <p className="text-gray-600">
         Explore os encantos da serra. Descubra lugares incríveis, sabores autênticos e a hospitalidade de Baturité.
       </p>
 
@@ -38,8 +39,8 @@ const TurismoDashboard: React.FC<TurismoDashboardProps> = ({ navigateTo }) => {
             <div className={`${cat.color} p-4 rounded-full`}>
               <Icon name={cat.icon} className="text-white text-4xl" />
             </div>
-            <h3 className="font-bold text-slate-800 dark:text-slate-100 text-lg">{cat.title}</h3>
-            <p className="text-sm text-slate-500 dark:text-slate-400">{cat.description}</p>
+            <h3 className="font-bold text-gray-800 text-lg">{cat.title}</h3>
+            <p className="text-sm text-gray-600">{cat.description}</p>
           </Card>
         ))}
       </div>

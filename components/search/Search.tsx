@@ -12,20 +12,20 @@ interface SearchProps {
 
 const ResultSkeletonItem: React.FC = () => (
     <div className="p-4 flex items-center space-x-4 animate-pulse">
-        <div className="w-6 h-6 rounded bg-slate-200 dark:bg-slate-700"></div>
+        <div className="w-6 h-6 rounded bg-gray-200"></div>
         <div className="flex-1 space-y-2">
-            <div className="h-3 w-1/2 bg-slate-200 dark:bg-slate-700 rounded"></div>
-            <div className="h-2 w-full bg-slate-200 dark:bg-slate-700 rounded"></div>
+            <div className="h-3 w-1/2 bg-gray-200 rounded"></div>
+            <div className="h-2 w-full bg-gray-200 rounded"></div>
         </div>
     </div>
 );
 
 const ResultItem: React.FC<{ icon: string, title: string, subtitle: string, onClick: () => void }> = ({ icon, title, subtitle, onClick }) => (
-    <div onClick={onClick} className="p-4 flex items-center space-x-4 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg">
-        <Icon name={icon} className="text-2xl text-slate-500 dark:text-slate-400" />
+    <div onClick={onClick} className="p-4 flex items-center space-x-4 cursor-pointer hover:bg-gray-100 rounded-lg">
+        <Icon name={icon} className="text-2xl text-gray-500" />
         <div>
-            <h4 className="font-semibold text-slate-800 dark:text-slate-100">{title}</h4>
-            <p className="text-sm text-slate-600 dark:text-slate-300 truncate">{subtitle}</p>
+            <h4 className="font-semibold text-gray-800">{title}</h4>
+            <p className="text-sm text-gray-600 truncate">{subtitle}</p>
         </div>
     </div>
 );
@@ -82,18 +82,18 @@ const Search: React.FC<SearchProps> = ({ navigateTo }) => {
                 <Button onClick={() => navigateTo('DASHBOARD')} variant="ghost" size="icon" aria-label="Voltar para o início">
                     <Icon name="arrow_back" />
                 </Button>
-                <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Busca Global</h2>
+                <h2 className="text-2xl font-bold text-gray-800">Busca Global</h2>
             </div>
 
-            <div className="sticky top-[70px] bg-slate-100 dark:bg-slate-900 py-2 z-5">
+            <div className="sticky top-[70px] bg-gray-50 py-2 z-5">
                 <div className="relative">
-                    <Icon name="search" className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <Icon name="search" className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
                     <input
                         type="search"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         placeholder="Buscar em protocolos, notícias, etc."
-                        className="w-full p-4 pl-12 bg-white text-slate-900 border border-slate-300 rounded-full focus:ring-indigo-600 focus:border-indigo-600 text-base dark:bg-slate-800 dark:border-slate-600 dark:text-white"
+                        className="w-full p-4 pl-12 bg-white text-gray-900 border border-gray-300 rounded-full focus:ring-indigo-600 focus:border-indigo-600 text-base"
                         autoFocus
                     />
                 </div>
@@ -104,7 +104,7 @@ const Search: React.FC<SearchProps> = ({ navigateTo }) => {
                     <div className="space-y-4">
                         {[...Array(2)].map((_, i) => (
                             <section key={i}>
-                                <div className="h-6 w-1/4 bg-slate-100 dark:bg-slate-700 rounded-md my-2 animate-pulse"></div>
+                                <div className="h-6 w-1/4 bg-gray-100 rounded-md my-2 animate-pulse"></div>
                                 <ResultSkeletonItem />
                                 <ResultSkeletonItem />
                             </section>
@@ -115,12 +115,12 @@ const Search: React.FC<SearchProps> = ({ navigateTo }) => {
 
             {!isLoading && searchResults && (
                 <Card>
-                    <h3 className="font-bold text-slate-800 dark:text-slate-100 mb-2 px-4">
+                    <h3 className="font-bold text-gray-800 mb-2 px-4">
                         {totalResults} {totalResults === 1 ? 'resultado encontrado' : 'resultados encontrados'}
                     </h3>
                     {searchResults.protocolos.length > 0 && (
                         <section>
-                            <h4 className="font-semibold text-sm text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-700 p-2 rounded-md my-2">Protocolos</h4>
+                            <h4 className="font-semibold text-sm text-gray-500 bg-gray-100 p-2 rounded-md my-2">Protocolos</h4>
                             {searchResults.protocolos.map(p => (
                                 <ResultItem 
                                     key={`p-${p.id}`}
@@ -134,7 +134,7 @@ const Search: React.FC<SearchProps> = ({ navigateTo }) => {
                     )}
                     {searchResults.noticias.length > 0 && (
                         <section>
-                            <h4 className="font-semibold text-sm text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-700 p-2 rounded-md my-2">Notícias</h4>
+                            <h4 className="font-semibold text-sm text-gray-500 bg-gray-100 p-2 rounded-md my-2">Notícias</h4>
                             {searchResults.noticias.map(n => (
                                 <ResultItem 
                                     key={`n-${n.id}`}
@@ -148,7 +148,7 @@ const Search: React.FC<SearchProps> = ({ navigateTo }) => {
                     )}
                     {searchResults.turismo.length > 0 && (
                         <section>
-                            <h4 className="font-semibold text-sm text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-700 p-2 rounded-md my-2">Turismo</h4>
+                            <h4 className="font-semibold text-sm text-gray-500 bg-gray-100 p-2 rounded-md my-2">Turismo</h4>
                             {searchResults.turismo.map(t => (
                                 <ResultItem 
                                     key={`t-${t.id}`}
@@ -162,7 +162,7 @@ const Search: React.FC<SearchProps> = ({ navigateTo }) => {
                     )}
                     {searchResults.servicos.length > 0 && (
                         <section>
-                            <h4 className="font-semibold text-sm text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-700 p-2 rounded-md my-2">Serviços Online</h4>
+                            <h4 className="font-semibold text-sm text-gray-500 bg-gray-100 p-2 rounded-md my-2">Serviços Online</h4>
                             {searchResults.servicos.map(s => (
                                 <ResultItem 
                                     key={`s-${s.id}`}
@@ -179,16 +179,16 @@ const Search: React.FC<SearchProps> = ({ navigateTo }) => {
 
             {!isLoading && !searchResults && (
                 <Card className="text-center py-10">
-                    <Icon name="search" className="text-5xl text-slate-400 dark:text-slate-500 mx-auto" />
-                    <p className="text-slate-600 dark:text-slate-300 mt-4">Digite pelo menos 3 caracteres para iniciar a busca.</p>
+                    <Icon name="search" className="text-5xl text-gray-400 mx-auto" />
+                    <p className="text-gray-600 mt-4">Digite pelo menos 3 caracteres para iniciar a busca.</p>
                 </Card>
             )}
 
             {!isLoading && searchResults && totalResults === 0 && (
                  <Card className="text-center py-10">
-                    <Icon name="search_off" className="text-5xl text-slate-400 dark:text-slate-500 mx-auto" />
-                    <p className="text-slate-600 dark:text-slate-300 mt-4">Nenhum resultado encontrado para "<span className="font-semibold">{searchTerm}</span>".</p>
-                    <p className="text-sm text-slate-500 dark:text-slate-400 mt-2">Tente usar palavras-chave diferentes.</p>
+                    <Icon name="search_off" className="text-5xl text-gray-400 mx-auto" />
+                    <p className="text-gray-600 mt-4">Nenhum resultado encontrado para "<span className="font-semibold">{searchTerm}</span>".</p>
+                    <p className="text-sm text-gray-500 mt-2">Tente usar palavras-chave diferentes.</p>
                 </Card>
             )}
         </div>

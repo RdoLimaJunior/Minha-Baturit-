@@ -13,10 +13,17 @@ interface ChatMessageProps {
 }
 
 const UirapuruAvatar = () => (
-    <div className="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center flex-shrink-0 mr-3">
-      <Icon name="flutter_dash" className="text-indigo-700 dark:text-indigo-400 !text-xl" />
+    <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0">
+      <Icon name="flutter_dash" className="text-indigo-600 !text-xl" />
     </div>
 );
+
+const UserAvatar = () => (
+    <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">
+      <Icon name="person" className="text-gray-500 !text-xl" />
+    </div>
+);
+
 
 const ChatMessageComponent: React.FC<ChatMessageProps> = ({ message, isLastMessage, isLoading, onActionClick, onFeedback, onCopy }) => {
     const showFeedbackActions = message.role === 'model' && message.content && !(isLoading && isLastMessage);
@@ -45,52 +52,56 @@ const ChatMessageComponent: React.FC<ChatMessageProps> = ({ message, isLastMessa
 
     if (message.role === 'user') {
         return (
-            <div className="flex flex-col items-end animate-fade-slide-in">
-                <div className="max-w-xs md:max-w-md lg:max-w-lg px-4 py-2 rounded-2xl bg-indigo-700 text-white rounded-br-lg">
-                    <p className="whitespace-pre-wrap text-sm">{message.content}</p>
+             <div className="flex justify-end items-start gap-4 animate-fade-slide-in">
+                <div className="flex flex-col items-end">
+                    <p className="font-semibold text-gray-800 pt-1.5">Você</p>
+                    <div className="mt-1 bg-indigo-600 text-white p-3 rounded-2xl rounded-br-lg max-w-prose">
+                        <p className="whitespace-pre-wrap">{message.content}</p>
+                    </div>
                 </div>
-                <div className="flex items-center space-x-2 mt-2 h-8">
-                    {(!isLastMessage || !isLoading) && (
-                        <Icon name="check" className="text-base text-slate-400 dark:text-slate-500" />
-                    )}
-                </div>
+                <UserAvatar />
             </div>
         );
     }
 
     return (
-        <div className="flex flex-col items-start animate-fade-slide-in">
-            <div className="flex items-end">
-                <UirapuruAvatar />
-                <div className="max-w-xs md:max-w-md lg:max-w-lg px-4 py-3 rounded-2xl bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-200 rounded-bl-lg">
-                    <p className="whitespace-pre-wrap text-sm">{message.content}</p>
+        <div className="flex items-start gap-4 animate-fade-slide-in">
+            <UirapuruAvatar />
+            <div className="flex-grow w-full min-w-0">
+                <p className="font-semibold text-gray-800 pt-1.5">Assistente Uirapuru</p>
+                <div className="mt-2 space-y-4">
+                    {message.content && (
+                         <div className="bg-gray-100 p-3 rounded-2xl rounded-bl-lg max-w-prose inline-block">
+                            <p className="whitespace-pre-wrap text-gray-700">{message.content}</p>
+                        </div>
+                    )}
 
                     {message.structuredContent && (
-                        <div className="mt-3 pt-3 border-t border-slate-300 dark:border-slate-600 space-y-2 text-sm">
+                        <div className="p-4 border border-gray-200 rounded-lg space-y-3 text-sm max-w-prose">
                             {message.structuredContent.address && (
                                 <div className="flex items-start">
-                                    <Icon name="location_on" className="text-base mr-2 mt-0.5 text-slate-500 dark:text-slate-400" />
+                                    <Icon name="location_on" className="text-base mr-3 mt-0.5 text-gray-500 flex-shrink-0" />
                                     <span>{message.structuredContent.address}</span>
                                 </div>
                             )}
                             {message.structuredContent.phone && (
                                 <div className="flex items-start">
-                                    <Icon name="phone" className="text-base mr-2 mt-0.5 text-slate-500 dark:text-slate-400" />
+                                    <Icon name="phone" className="text-base mr-3 mt-0.5 text-gray-500 flex-shrink-0" />
                                     <span>{message.structuredContent.phone}</span>
                                 </div>
                             )}
                             {message.structuredContent.openingHours && (
                                 <div className="flex items-start">
-                                    <Icon name="schedule" className="text-base mr-2 mt-0.5 text-slate-500 dark:text-slate-400" />
+                                    <Icon name="schedule" className="text-base mr-3 mt-0.5 text-gray-500 flex-shrink-0" />
                                     <span>{message.structuredContent.openingHours}</span>
                                 </div>
                             )}
                             {message.structuredContent.documents && message.structuredContent.documents.length > 0 && (
                                 <div className="flex items-start">
-                                    <Icon name="description" className="text-base mr-2 mt-0.5 text-slate-500 dark:text-slate-400" />
+                                    <Icon name="description" className="text-base mr-3 mt-0.5 text-gray-500 flex-shrink-0" />
                                     <div>
-                                        <span className="font-semibold">Documentos:</span>
-                                        <ul className="list-disc list-inside">
+                                        <span className="font-semibold text-gray-600">Documentos:</span>
+                                        <ul className="list-disc list-inside text-gray-600">
                                             {message.structuredContent.documents.map((doc, i) => <li key={i}>{doc}</li>)}
                                         </ul>
                                     </div>
@@ -99,14 +110,14 @@ const ChatMessageComponent: React.FC<ChatMessageProps> = ({ message, isLastMessa
                         </div>
                     )}
                      {message.actions && message.actions.length > 0 && !(isLoading && isLastMessage) && (
-                        <div className="flex flex-wrap gap-2 mt-3 pt-3 border-t border-slate-300 dark:border-slate-600">
+                        <div className="flex flex-wrap gap-2 max-w-prose">
                             {message.actions.map((action, index) => (
                                 <Button
                                     key={index}
                                     onClick={() => handleActionClick(action)}
                                     size="sm"
                                     variant='secondary'
-                                    className="!font-semibold !bg-indigo-100 dark:!bg-indigo-900/50 !text-indigo-800 dark:!text-indigo-300 hover:!bg-indigo-200 dark:hover:!bg-indigo-900"
+                                    className="!font-semibold !bg-white !border !border-gray-200 hover:!bg-gray-50"
                                 >
                                     {action.buttonText}
                                 </Button>
@@ -114,28 +125,26 @@ const ChatMessageComponent: React.FC<ChatMessageProps> = ({ message, isLastMessa
                         </div>
                     )}
                 </div>
-            </div>
-            <div className="flex items-center space-x-2 mt-2 h-8 pl-11">
-                {showFeedbackActions && (
-                    <div className="flex items-center space-x-1">
+                 {showFeedbackActions && (
+                    <div className="mt-3 flex items-center space-x-1">
                         <button
                             onClick={() => onFeedback(message.id, 'like')}
                             title="Gostei"
-                            className={`p-1 rounded-full text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-600 transition-colors ${message.feedback === 'like' ? '!text-green-600 !bg-green-100 dark:!bg-green-900/50' : ''}`}
+                            className={`p-1.5 rounded-full text-gray-500 hover:bg-gray-100 transition-colors ${message.feedback === 'like' ? '!text-emerald-600 !bg-emerald-100' : ''}`}
                         >
                             <Icon name="thumb_up" className="text-lg" />
                         </button>
                         <button
                             onClick={() => onFeedback(message.id, 'dislike')}
                             title="Não Gostei"
-                            className={`p-1 rounded-full text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-600 transition-colors ${message.feedback === 'dislike' ? '!text-red-600 !bg-red-100 dark:!bg-red-900/50' : ''}`}
+                            className={`p-1.5 rounded-full text-gray-500 hover:bg-gray-100 transition-colors ${message.feedback === 'dislike' ? '!text-rose-600 !bg-rose-100' : ''}`}
                         >
                             <Icon name="thumb_down" className="text-lg" />
                         </button>
                         <button
                             onClick={() => onCopy(message.content)}
                             title="Copiar"
-                            className="p-1 rounded-full text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-600 transition-colors"
+                            className="p-1.5 rounded-full text-gray-500 hover:bg-gray-100 transition-colors"
                         >
                             <Icon name="content_copy" className="text-lg" />
                         </button>

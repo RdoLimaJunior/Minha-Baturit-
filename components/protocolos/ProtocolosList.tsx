@@ -1,5 +1,3 @@
-
-
 import React, { useState, useMemo } from 'react';
 import { useProtocolos } from '../../hooks/useMockData';
 import { Protocolo, StatusProtocolo, View, TipoProtocolo } from '../../types';
@@ -17,16 +15,16 @@ const ProtocoloSkeletonItem: React.FC = () => (
         <div className="animate-pulse flex flex-col space-y-3">
             <div className="flex justify-between items-start">
                 <div className="flex items-center space-x-3 w-3/4">
-                    <div className="w-6 h-6 bg-slate-200 dark:bg-slate-700 rounded-md"></div>
+                    <div className="w-6 h-6 bg-gray-200 rounded-md"></div>
                     <div className="flex-1 space-y-2">
-                        <div className="h-2 bg-slate-200 dark:bg-slate-700 rounded w-1/4"></div>
-                        <div className="h-3 bg-slate-200 dark:bg-slate-700 rounded w-1/2"></div>
+                        <div className="h-2 bg-gray-200 rounded w-1/4"></div>
+                        <div className="h-3 bg-gray-200 rounded w-1/2"></div>
                     </div>
                 </div>
-                <div className="h-5 w-20 bg-slate-200 dark:bg-slate-700 rounded-full"></div>
+                <div className="h-5 w-20 bg-gray-200 rounded-full"></div>
             </div>
-            <div className="h-2 bg-slate-200 dark:bg-slate-700 rounded w-full"></div>
-            <div className="h-2 bg-slate-200 dark:bg-slate-700 rounded w-1/3 pt-2"></div>
+            <div className="h-2 bg-gray-200 rounded w-full"></div>
+            <div className="h-2 bg-gray-200 rounded w-1/3 pt-2"></div>
         </div>
     </Card>
 );
@@ -34,30 +32,30 @@ const ProtocoloSkeletonItem: React.FC = () => (
 const getStatusChipStyle = (status: StatusProtocolo) => {
     switch (status) {
         case StatusProtocolo.RECEBIDO:
-            return 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300';
+            return 'bg-sky-100 text-sky-800';
         case StatusProtocolo.EM_ANDAMENTO:
-            return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300';
+            return 'bg-amber-100 text-amber-800';
         case StatusProtocolo.RESOLVIDO:
-            return 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300';
+            return 'bg-emerald-100 text-emerald-800';
         case StatusProtocolo.REJEITADO:
-            return 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300';
+            return 'bg-rose-100 text-rose-800';
         default:
-            return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
+            return 'bg-gray-100 text-gray-800';
     }
 };
 
 const getProtocoloTypeStyle = (tipo: TipoProtocolo) => {
     switch (tipo) {
         case TipoProtocolo.RECLAMACAO:
-            return { icon: 'report_problem', color: 'text-red-500' };
+            return { icon: 'report_problem', color: 'text-rose-500' };
         case TipoProtocolo.SUGESTAO:
-            return { icon: 'lightbulb', color: 'text-yellow-500' };
+            return { icon: 'lightbulb', color: 'text-amber-500' };
         case TipoProtocolo.ELOGIO:
-            return { icon: 'thumb_up', color: 'text-green-500' };
+            return { icon: 'thumb_up', color: 'text-emerald-500' };
         case TipoProtocolo.DENUNCIA:
-            return { icon: 'security', color: 'text-slate-600 dark:text-slate-400' };
+            return { icon: 'security', color: 'text-gray-600' };
         default:
-            return { icon: 'article', color: 'text-slate-500' };
+            return { icon: 'article', color: 'text-gray-500' };
     }
 };
 
@@ -70,17 +68,17 @@ const ProtocoloItem: React.FC<{ protocolo: Protocolo, onClick: () => void }> = (
                 <div className="flex items-center space-x-3">
                     <Icon name={typeStyle.icon} className={`text-2xl ${typeStyle.color}`} />
                     <div>
-                        <p className="text-sm font-semibold text-slate-500 dark:text-slate-400">{protocolo.protocolo}</p>
-                        <h3 className="font-bold text-slate-800 dark:text-slate-100">{protocolo.tipo}</h3>
-                        {protocolo.categoria && <p className="text-xs text-slate-500 dark:text-slate-400">{protocolo.categoria}</p>}
+                        <p className="text-sm font-semibold text-gray-600">{protocolo.protocolo}</p>
+                        <h3 className="font-bold text-gray-800">{protocolo.tipo}</h3>
+                        {protocolo.categoria && <p className="text-xs text-gray-500">{protocolo.categoria}</p>}
                     </div>
                 </div>
                 <span className={`text-xs font-medium px-2.5 py-0.5 rounded-full ${getStatusChipStyle(protocolo.status)}`}>
                     {protocolo.status}
                 </span>
             </div>
-            <p className="text-sm text-slate-600 dark:text-slate-300 mt-2 truncate">{protocolo.descricao}</p>
-            <div className="text-xs text-slate-400 dark:text-slate-500 mt-4 flex items-center">
+            <p className="text-sm text-gray-600 mt-2 truncate">{protocolo.descricao}</p>
+            <div className="text-xs text-gray-500 mt-4 flex items-center">
                 <Icon name="schedule" className="text-base mr-1" />
                 <span>Aberto em: {new Date(protocolo.dataAbertura).toLocaleDateString('pt-BR')}</span>
             </div>
@@ -119,14 +117,14 @@ const ProtocolosList: React.FC<ProtocolosListProps> = ({ navigateTo }) => {
       return (
           <div className="space-y-4">
               <div className="flex justify-between items-center">
-                  <div className="h-8 bg-slate-200 dark:bg-slate-700 rounded w-1/3 animate-pulse"></div>
+                  <div className="h-8 bg-gray-200 rounded w-1/3 animate-pulse"></div>
               </div>
               <Card className="!p-3">
                   <div className="flex items-center space-x-2 flex-wrap animate-pulse">
-                      <div className="h-6 w-20 bg-slate-200 dark:bg-slate-700 rounded"></div>
-                      <div className="h-8 w-24 bg-slate-200 dark:bg-slate-700 rounded-lg"></div>
-                      <div className="h-8 w-24 bg-slate-200 dark:bg-slate-700 rounded-lg"></div>
-                      <div className="h-8 w-24 bg-slate-200 dark:bg-slate-700 rounded-lg"></div>
+                      <div className="h-6 w-20 bg-gray-200 rounded"></div>
+                      <div className="h-8 w-24 bg-gray-200 rounded-lg"></div>
+                      <div className="h-8 w-24 bg-gray-200 rounded-lg"></div>
+                      <div className="h-8 w-24 bg-gray-200 rounded-lg"></div>
                   </div>
               </Card>
               <div className="space-y-4">
@@ -139,12 +137,12 @@ const ProtocolosList: React.FC<ProtocolosListProps> = ({ navigateTo }) => {
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Meus Protocolos</h2>
+        <h2 className="text-2xl font-bold text-gray-800">Meus Protocolos</h2>
       </div>
 
       <Card className="!p-3">
         <div className="flex items-center space-x-2 flex-wrap">
-            <span className="text-sm font-medium text-slate-600 dark:text-slate-300 mr-2">Ordenar por:</span>
+            <span className="text-sm font-medium text-gray-600 mr-2">Ordenar por:</span>
             <Button size="sm" onClick={() => setSortBy('date-desc')} variant={sortBy === 'date-desc' ? 'primary' : 'ghost'}>Recentes</Button>
             <Button size="sm" onClick={() => setSortBy('date-asc')} variant={sortBy === 'date-asc' ? 'primary' : 'ghost'}>Antigos</Button>
             <Button size="sm" onClick={() => setSortBy('status')} variant={sortBy === 'status' ? 'primary' : 'ghost'}>Status</Button>
@@ -157,7 +155,7 @@ const ProtocolosList: React.FC<ProtocolosListProps> = ({ navigateTo }) => {
         ))
       ) : (
         <Card className="text-center">
-          <p className="text-slate-600 dark:text-slate-300">Você ainda não abriu nenhum protocolo.</p>
+          <p className="text-gray-600">Você ainda não abriu nenhum protocolo.</p>
           <Button onClick={() => navigateTo('PROTOCOLO_FORM')} className="mt-4">
             Abrir primeiro protocolo
           </Button>

@@ -9,7 +9,7 @@ import Button from '../ui/Button';
 interface TurismoDetailProps {
   turismoId: string;
   categoria: TurismoCategoria;
-  navigateTo: (view: View, params?: { turismoCategoria?: TurismoCategoria }) => void;
+  navigateTo: (view: View, params?: any) => void;
 }
 
 const TurismoDetail: React.FC<TurismoDetailProps> = ({ turismoId, categoria, navigateTo }) => {
@@ -18,8 +18,8 @@ const TurismoDetail: React.FC<TurismoDetailProps> = ({ turismoId, categoria, nav
   if (loading) return <Spinner />;
   if (!item) return <Card><p>Item não encontrado.</p></Card>;
   
-  const handleMapRedirect = () => {
-      window.open(`https://www.google.com/maps/search/?api=1&query=${item.localizacao.latitude},${item.localizacao.longitude}`, '_blank');
+  const handleVerNoMapa = () => {
+      navigateTo('MAPA_SERVICOS', { turismoId: item.id });
   };
 
   return (
@@ -59,8 +59,8 @@ const TurismoDetail: React.FC<TurismoDetailProps> = ({ turismoId, categoria, nav
 
            <div className="pt-4 mt-4 border-t border-slate-200 dark:border-slate-700 flex items-center flex-wrap gap-3">
                 <Button
-                    iconLeft="directions"
-                    onClick={handleMapRedirect}
+                    iconLeft="map"
+                    onClick={handleVerNoMapa}
                     variant="primary"
                 >
                     Ver no mapa

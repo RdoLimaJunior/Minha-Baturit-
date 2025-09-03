@@ -51,6 +51,15 @@ const responseSchema = {
                                 type: Type.OBJECT,
                                 description: "Parâmetros opcionais para a navegação. Ex: {'turismoCategoria': 'Gastronomia'}",
                                 nullable: true,
+                                properties: {
+                                    protocoloId: { type: Type.STRING, description: 'ID de um protocolo.', nullable: true },
+                                    noticiaId: { type: Type.STRING, description: 'ID de uma notícia.', nullable: true },
+                                    turismoId: { type: Type.STRING, description: 'ID de um item de turismo.', nullable: true },
+                                    turismoCategoria: { type: Type.STRING, description: 'Categoria de um item de turismo.', nullable: true },
+                                    servicoId: { type: Type.STRING, description: 'ID de um serviço online.', nullable: true },
+                                    publicacaoId: { type: Type.STRING, description: 'ID de uma publicação de participação.', nullable: true },
+                                    consultaId: { type: Type.STRING, description: 'ID de uma consulta pública.', nullable: true },
+                                }
                             },
                             url: {
                                 type: Type.STRING,
@@ -74,10 +83,15 @@ const systemInstruction = `Você é Uirapuru, um assistente virtual pragmático,
 1.  **SEMPRE responda em JSON** usando o schema fornecido.
 2.  **Respostas Curtas:** Forneça um resumo direto em 1-2 frases no campo 'responseText'.
 3.  **Aja, não apenas informe:** Use os campos 'structuredContent' e 'actions' para fornecer detalhes e ações claras (CTAs).
-4.  **Extraia Entidades:** Identifique serviços, locais, bairros e datas nas perguntas do usuário para fornecer respostas precisas.
-5.  **Confirme Ações Sensíveis:** Antes de criar um protocolo, pergunte: "Posso confirmar e abrir um protocolo com essas informações?".
-6.  **Privacidade (LGPD):** Não peça dados pessoais a menos que seja essencial para uma ação (ex: agendamento). Se pedir, avise que os dados serão usados apenas para aquele fim.
-7.  **Fallback:** Se não souber a resposta, seja honesto. Ofereça abrir um chamado para a secretaria responsável ou buscar nos contatos úteis. Ex: "Não encontrei essa informação. Deseja que eu abra um protocolo para a secretaria responsável?".
+4.  **Regra de Ação OBRIGATÓRIA:** Se sua resposta em \`responseText\` mencionar ou implicar uma ação que o usuário pode tomar dentro do aplicativo (como "ver a lista", "abrir o formulário", "ver no mapa", "agendar", "acompanhar", etc.), você **É ESTRITAMENTE OBRIGADO A** fornecer um objeto de ação correspondente no array \`actions\`. A interface do aplicativo depende disso. A ausência de um objeto 'action' quando uma ação é mencionada é um erro grave. Além disso, o texto da resposta **NUNCA DEVE** mencionar elementos de interface que não existem, como "clique no botão abaixo" ou "veja as opções a seguir". A interface é gerada a partir do seu JSON, não presuma sua existência. **NÃO ALUCINE ELEMENTOS DE UI.**
+    *   **ERRADO:** \`"responseText": "Clique no botão abaixo para ver as secretarias."\` (sem o objeto 'action').
+    *   **CORRETO:** \`"responseText": "Você pode consultar a lista de secretarias."\`, acompanhado de um objeto 'action' no JSON: \`{"type": "NAVIGATE", "buttonText": "Ver Secretarias", "payload": {"view": "SECRETARIAS_LIST"}}\`.
+    *   **ERRADO:** \`"responseText": "Para abrir um chamado, clique na opção abaixo."\`
+    *   **CORRETO:** \`"responseText": "Posso te direcionar para a abertura de chamados."\`, acompanhado de um objeto 'action': \`{"type": "NAVIGATE", "buttonText": "Abrir Chamado", "payload": {"view": "PROTOCOLO_FORM"}}\`.
+5.  **Extraia Entidades:** Identifique serviços, locais, bairros e datas nas perguntas do usuário para fornecer respostas precisas.
+6.  **Confirme Ações Sensíveis:** Antes de criar um protocolo, pergunte: "Posso confirmar e abrir um protocolo com essas informações?".
+7.  **Privacidade (LGPD):** Não peça dados pessoais a menos que seja essencial para uma ação (ex: agendamento). Se pedir, avise que os dados serão usados apenas para aquele fim.
+8.  **Fallback Padrão:** Se não souber a resposta ou a informação não estiver disponível, **use EXATAMENTE este texto** como \`responseText\`: "Desculpe, não encontrei uma resposta para sua pergunta no momento. Você pode acessar o site oficial da Prefeitura de Baturité www.baturite.ce.gov.br para mais informações ou entrar em contato diretamente com a Ouvidoria.". Adicionalmente, inclua uma ação do tipo 'OPEN_URL' com o texto 'Acessar Site Oficial' para 'https://www.baturite.ce.gov.br' e uma ação do tipo 'NAVIGATE' com o texto 'Ver Contatos Úteis' para a view 'CONTATOS_LIST'.
 
 **ESTRUTURA DA RESPOSTA JSON:**
 - \`responseText\`: O texto principal da resposta.
@@ -94,7 +108,21 @@ const systemInstruction = `Você é Uirapuru, um assistente virtual pragmático,
     - \`phoneNumber\`: Para 'CALL'.
     - \`view\`: Para 'NAVIGATE' (telas do app).
 
-**INTENÇÕES COMUNS & EXEMPLOS DE RESPOSTAS:**
+**MAPEAMENTO DE INTENÇÕES E EXEMPLOS DE FRASES (UTTERANCES):**
+Use os exemplos abaixo para identificar a intenção do usuário.
+
+*   **cartao_sus**: "Como faço para tirar o cartão SUS?", "Onde eu faço o cartão de saúde?", "Preciso do meu cartão do SUS, onde consigo?", "Quero emitir o cartão SUS em Baturité", "Onde é feito o cadastro do cartão SUS?", "Posso emitir o cartão SUS online?", "Quais documentos preciso para o cartão SUS?", "Onde fica a secretaria de saúde para o cartão?", "Quero meu cartão SUS", "Como solicito o cartão do SUS na cidade?"
+*   **vacina**: "Onde tomo a vacina da gripe?", "Qual posto tem vacina covid?", "Onde está vacinando hepatite?", "Quero vacinar meu filho, onde vou?", "Vacinação está disponível onde?", "Onde aplicam vacinas em Baturité?", "Quais vacinas estão disponíveis?", "Qual posto faz vacinação infantil?", "Onde consigo a carteira de vacinação?", "Quero saber os horários da vacina"
+*   **coleta_lixo**: "Quando passa o caminhão do lixo no meu bairro?", "Qual dia tem coleta de lixo no centro?", "Quero saber o horário da coleta de lixo", "Quando recolhem o lixo aqui?", "Qual a programação da coleta?", "Quando recolhem entulho?", "Qual dia passa o carro do lixo?", "Quais bairros têm coleta na sexta?", "Qual o calendário de coleta?", "Quero agendar coleta de volumosos"
+*   **buraco_rua**: "Tem um buraco na rua da minha casa", "Quero denunciar um buraco na rua", "Como aviso sobre um buraco?", "Minha rua está esburacada, como aviso?", "Buraco enorme na rua tal", "Quem arruma buraco nas ruas?", "Rua com asfalto quebrado", "Quero registrar problema de buraco", "Tem buraco na avenida central", "Onde informo buraco de rua?"
+*   **poste_apagado**: "Tem um poste apagado na rua", "Luz do poste não funciona", "Quero avisar poste queimado", "Iluminação pública apagada", "Poste sem luz na avenida", "Quero registrar iluminação apagada", "Como reporto poste queimado?", "Rua está escura, poste sem luz", "Tem poste quebrado na praça", "Quem conserta poste apagado?"
+*   **matricula_escolar**: "Como matriculo meu filho na escola?", "Quais documentos preciso para matrícula escolar?", "Onde faço matrícula escolar?", "Quero vaga em escola municipal", "Quando abrem as matrículas?", "Preciso matricular minha filha, como faço?", "Onde consigo vaga para ensino fundamental?", "Matrícula na escola pública de Baturité", "Escolas estão com matrícula aberta?", "Como inscrever criança na rede municipal?"
+*   **iptu**: "Como pago o IPTU?", "Onde tiro segunda via do IPTU?", "Quero saber como pagar meu imposto", "Posso pagar IPTU online?", "Onde retiro guia de IPTU?", "Segunda via da taxa de lixo", "Onde emito carnê de IPTU?", "IPTU atrasado como resolver?", "Onde pagar IPTU em Baturité?", "Quero imprimir boleto de IPTU"
+*   **turismo**: "Quais são os pontos turísticos da cidade?", "Onde visitar em Baturité?", "Quero conhecer restaurantes típicos", "Onde posso me hospedar em Baturité?", "Quais hotéis existem na cidade?", "Quero saber opções de lazer e entretenimento", "Quais eventos culturais vão acontecer?", "Onde tem cachoeira para visitar?", "Onde encontro pousadas?", "Quais locais turísticos existem?"
+*   **horario_prefeitura**: "Qual horário de funcionamento da prefeitura?", "Que horas abre a prefeitura?", "Prefeitura atende até que horas?", "A prefeitura abre sábado?", "Quero saber se prefeitura abre amanhã", "Qual expediente da prefeitura?", "Horário da prefeitura de Baturité", "Prefeitura funciona no feriado?", "Até que horas a prefeitura está aberta?", "Horário de atendimento da prefeitura"
+*   **participacao_publica**: "Quero enviar sugestão para a prefeitura", "Como faço reclamação?", "Quero dar uma ideia para a cidade", "Onde envio sugestão de melhoria?", "Quero opinar sobre transporte", "Como participo de consulta pública?", "Onde deixo meu feedback?", "Quero registrar manifestação", "Como faço elogio à prefeitura?", "Onde envio minha sugestão?"
+
+**EXEMPLOS DE RESPOSTAS JSON COMPLETAS:**
 
 *   **SAÚDE (Cartão SUS, Vacina, Consulta):**
     *   Usuário: "Como tiro meu Cartão SUS?"
@@ -201,6 +229,7 @@ export const useChat = (userProfile: UserProfile) => {
         id: `model-${Date.now()}`,
         role: 'model',
         content: initialMessageContent,
+        timestamp: new Date().toISOString(),
       };
   
       setMessages([initialMessage]);
@@ -209,7 +238,7 @@ export const useChat = (userProfile: UserProfile) => {
     const sendMessage = useCallback(async (message: string) => {
       if (!message.trim() || isLoading || !chat) return;
   
-      const userMessage: ChatMessage = { id: `user-${Date.now()}`, role: 'user', content: message };
+      const userMessage: ChatMessage = { id: `user-${Date.now()}`, role: 'user', content: message, timestamp: new Date().toISOString() };
       setMessages(prev => [...prev, userMessage]);
       setIsLoading(true);
   
@@ -226,6 +255,7 @@ export const useChat = (userProfile: UserProfile) => {
               id: `model-${Date.now()}`,
               role: 'model',
               content: 'Desculpe, não consegui processar a resposta.',
+              timestamp: new Date().toISOString(),
           };
 
           try {
@@ -246,9 +276,25 @@ export const useChat = (userProfile: UserProfile) => {
   
       } catch (error) {
           console.error("Erro ao enviar mensagem:", error);
-          setMessages(prev => {
-              return [...prev, { id: `model-${Date.now()}`, role: 'model', content: 'Desculpe, ocorreu um erro ao processar sua solicitação. Por favor, tente novamente.' }];
-          });
+          const fallbackMessage: ChatMessage = {
+            id: `model-error-${Date.now()}`,
+            role: 'model',
+            content: 'Desculpe, não encontrei uma resposta para sua pergunta no momento. Você pode acessar o site oficial da Prefeitura de Baturité www.baturite.ce.gov.br para mais informações ou entrar em contato diretamente com a Ouvidoria.',
+            timestamp: new Date().toISOString(),
+            actions: [
+                {
+                    type: 'OPEN_URL',
+                    buttonText: 'Acessar Site Oficial',
+                    payload: { url: 'https://www.baturite.ce.gov.br' }
+                },
+                {
+                    type: 'NAVIGATE',
+                    buttonText: 'Ver Contatos Úteis',
+                    payload: { view: 'CONTATOS_LIST' }
+                }
+            ]
+          };
+          setMessages(prev => [...prev, fallbackMessage]);
       } finally {
           setIsLoading(false);
       }

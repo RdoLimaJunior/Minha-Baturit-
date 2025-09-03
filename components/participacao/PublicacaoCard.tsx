@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Publicacao, StatusPublicacao, TipoPublicacao } from '../../types';
 import Card from '../ui/Card';
@@ -12,30 +11,30 @@ interface PublicacaoCardProps {
 const getStatusStyle = (status: StatusPublicacao) => {
   switch (status) {
     case StatusPublicacao.ABERTO:
-      return { text: 'Aberto', classes: 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300' };
+      return { text: 'Aberto', classes: 'bg-sky-100 text-sky-800' };
     case StatusPublicacao.EM_ANALISE:
-      return { text: 'Em análise', classes: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300' };
+      return { text: 'Em análise', classes: 'bg-amber-100 text-amber-800' };
     case StatusPublicacao.ENCAMINHADO:
-      return { text: 'Encaminhado', classes: 'bg-purple-100 text-purple-800 dark:bg-purple-900/50 dark:text-purple-300' };
+      return { text: 'Encaminhado', classes: 'bg-violet-100 text-violet-800' };
     case StatusPublicacao.CONCLUIDO:
-      return { text: 'Concluído', classes: 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300' };
+      return { text: 'Concluído', classes: 'bg-emerald-100 text-emerald-800' };
     default:
-      return { text: 'Status', classes: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' };
+      return { text: 'Status', classes: 'bg-gray-100 text-gray-800' };
   }
 };
 
 const getTypeStyle = (tipo: TipoPublicacao) => {
     switch (tipo) {
         case TipoPublicacao.PROBLEMA:
-            return { icon: 'report_problem', color: 'text-red-400' };
+            return { icon: 'report_problem', color: 'text-rose-400' };
         case TipoPublicacao.IDEIA:
-            return { icon: 'lightbulb', color: 'text-yellow-400' };
+            return { icon: 'lightbulb', color: 'text-amber-400' };
         case TipoPublicacao.ELOGIO:
-            return { icon: 'thumb_up', color: 'text-green-400' };
+            return { icon: 'thumb_up', color: 'text-emerald-400' };
         case TipoPublicacao.EVENTO:
-            return { icon: 'event', color: 'text-blue-400' };
+            return { icon: 'event', color: 'text-sky-400' };
         default:
-            return { icon: 'forum', color: 'text-slate-400' };
+            return { icon: 'forum', color: 'text-gray-400' };
     }
 };
 
@@ -52,7 +51,7 @@ const PublicacaoCard: React.FC<PublicacaoCardProps> = ({ publicacao, onClick }) 
           <img 
             src={publicacao.fotos[0]} 
             alt={publicacao.title} 
-            className="w-full h-56 object-cover bg-slate-200 dark:bg-slate-700"
+            className="w-full h-56 object-cover bg-gray-200"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
           
@@ -69,7 +68,7 @@ const PublicacaoCard: React.FC<PublicacaoCardProps> = ({ publicacao, onClick }) 
           </span>
         </div>
       ) : (
-        <div className="p-4 border-b border-slate-100 dark:border-slate-800">
+        <div className="p-4 border-b border-gray-100">
             <div className="flex justify-between items-start mb-2">
                 <div className="flex items-center space-x-2">
                     <Icon name={typeStyle.icon} className={`text-xl ${typeStyle.color.replace('-400', '-500')}`} />
@@ -79,24 +78,24 @@ const PublicacaoCard: React.FC<PublicacaoCardProps> = ({ publicacao, onClick }) 
                     {statusStyle.text}
                 </span>
             </div>
-            <h3 className="font-bold text-lg text-slate-800 dark:text-slate-100 leading-tight">{publicacao.title}</h3>
+            <h3 className="font-bold text-lg text-gray-800 leading-tight">{publicacao.title}</h3>
         </div>
       )}
 
       <div className="p-4">
-        <p className="text-sm text-slate-600 dark:text-slate-300 line-clamp-2">{publicacao.resumo}</p>
+        <p className="text-sm text-gray-600 line-clamp-2">{publicacao.resumo}</p>
         
         <div className="mt-3">
-          <div className="inline-flex items-center space-x-1 px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300">
+          <div className="inline-flex items-center space-x-1 px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
               <Icon name="location_on" className="!text-sm" />
               <span>{publicacao.bairro}</span>
           </div>
         </div>
       
-        <div className="flex items-center justify-between text-sm text-slate-500 dark:text-slate-400 mt-4 pt-3 border-t border-slate-100 dark:border-slate-800">
+        <div className="flex items-center justify-between text-sm text-gray-600 mt-4 pt-3 border-t border-gray-100">
           <div className="flex items-center space-x-2">
               <img src={publicacao.author.avatar} alt="Avatar do autor" className="w-6 h-6 rounded-full"/>
-              <span className="font-semibold text-slate-700 dark:text-slate-200">{publicacao.author.isAnonymous ? 'Anônimo' : publicacao.author.name}</span>
+              <span className="font-semibold text-gray-700">{publicacao.author.isAnonymous ? 'Anônimo' : publicacao.author.name}</span>
           </div>
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-1">

@@ -1,10 +1,10 @@
-
 import React, { ReactNode } from 'react';
 import Icon from './Icon';
 
 interface ButtonProps {
   children: ReactNode;
-  onClick?: () => void;
+  // FIX: Update the onClick prop type to correctly handle mouse events, allowing the event object to be passed to handlers.
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
   variant?: 'primary' | 'secondary' | 'ghost';
   type?: 'button' | 'submit' | 'reset';
   className?: string;
@@ -29,9 +29,9 @@ const Button: React.FC<ButtonProps> = ({
   const disabledClasses = 'disabled:opacity-50 disabled:cursor-not-allowed';
 
   const variantClasses = {
-    primary: 'bg-indigo-700 text-white hover:bg-indigo-800 focus:ring-indigo-600',
-    secondary: 'bg-slate-200 text-slate-800 hover:bg-slate-300 dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600 focus:ring-slate-400 dark:focus:ring-slate-500',
-    ghost: 'bg-transparent text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700 focus:ring-slate-400 dark:focus:ring-slate-500',
+    primary: 'bg-indigo-600 text-white hover:bg-indigo-700 focus:ring-indigo-500',
+    secondary: 'bg-gray-100 text-gray-700 hover:bg-gray-200 focus:ring-indigo-500 border border-gray-200',
+    ghost: 'bg-transparent text-gray-600 hover:bg-gray-100 focus:ring-indigo-500',
   };
   
   const sizeClasses = {

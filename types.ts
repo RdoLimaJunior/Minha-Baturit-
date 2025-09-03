@@ -1,7 +1,3 @@
-
-
-
-
 export type Theme = 'light' | 'dark' | 'system';
 export type FontSize = 'sm' | 'base' | 'lg' | 'xl';
 
@@ -30,7 +26,8 @@ export type View =
   | 'PARTICIPACAO_DETAIL'
   | 'PARTICIPACAO_FORM'
   | 'CONSULTAS_PUBLICAS_LIST'
-  | 'CONSULTAS_PUBLICAS_DETAIL';
+  | 'CONSULTAS_PUBLICAS_DETAIL'
+  | 'PREDIOS_POR_CATEGORIA_LIST';
 
 export enum TipoProtocolo {
   RECLAMACAO = 'Reclamação',
@@ -126,11 +123,19 @@ export interface Secretaria {
 
 export type CategoriaPredioPublico = 'Saúde' | 'Educação' | 'Assistência Social' | 'Administração';
 
+export interface Profissional {
+  nome: string;
+  cargo: string;
+  cargaHoraria: string;
+}
+
 export interface PredioPublico {
   id: string;
   nome: string;
   endereco: string;
+  bairro: string;
   telefone: string;
+  email?: string;
   categoria: CategoriaPredioPublico;
   horario: string;
   servicos: string[];
@@ -140,10 +145,11 @@ export interface PredioPublico {
   };
   isOpenNow: boolean;
   busyness?: string;
-  imageUrl?: string;
+  imagens?: string[];
+  profissionais?: Profissional[];
 }
 
-export type TurismoCategoria = 'Gastronomia' | 'Lazer e Entretenimento' | 'Hospedagem' | 'Pontos Turísticos';
+export type TurismoCategoria = 'Gastronomia' | 'Lazer e Entretenimento' | 'Hospedagem' | 'Pontos Turísticos' | 'Cultura';
 
 export interface TurismoItem {
   id: string;
@@ -180,6 +186,7 @@ export interface ChatMessage {
   id: string;
   role: 'user' | 'model';
   content: string;
+  timestamp: string;
   actions?: ChatAction[];
   structuredContent?: {
       address?: string;
@@ -327,12 +334,13 @@ export enum StatusConsultaPublica {
 export interface OpiniaoConsulta {
   id: string;
   author: {
-    uid: string;
+    uid:string;
     name: string;
     avatar: string;
   };
   text: string;
   date: string;
+  supports: number;
 }
 
 export interface DocumentoConsulta {

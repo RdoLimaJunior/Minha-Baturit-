@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import { usePublicacoes } from '../../hooks/useMockData';
 import { View, Publicacao, TipoPublicacao } from '../../types';
@@ -14,24 +13,24 @@ interface ParticipacaoFeedProps {
 
 const SkeletonCard: React.FC = () => (
     <Card className="!p-0 animate-pulse">
-        <div className="w-full h-40 bg-slate-200 dark:bg-slate-700"></div>
+        <div className="w-full h-40 bg-gray-200"></div>
         <div className="p-4">
             <div className="flex justify-between items-start mb-2">
                 <div className="w-2/3 space-y-2">
-                    <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-1/4"></div>
-                    <div className="h-5 bg-slate-200 dark:bg-slate-700 rounded w-full"></div>
+                    <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+                    <div className="h-5 bg-gray-200 rounded w-full"></div>
                 </div>
-                <div className="h-6 w-1/4 bg-slate-200 dark:bg-slate-700 rounded-full"></div>
+                <div className="h-6 w-1/4 bg-gray-200 rounded-full"></div>
             </div>
             <div className="space-y-2 my-4">
-                <div className="h-3 bg-slate-200 dark:bg-slate-700 rounded"></div>
-                <div className="h-3 bg-slate-200 dark:bg-slate-700 rounded w-5/6"></div>
+                <div className="h-3 bg-gray-200 rounded"></div>
+                <div className="h-3 bg-gray-200 rounded w-5/6"></div>
             </div>
-            <div className="flex items-center justify-between text-sm text-slate-500 dark:text-slate-400 pt-2 border-t border-slate-100 dark:border-slate-800">
-                <div className="h-4 w-1/3 bg-slate-200 dark:bg-slate-700 rounded"></div>
+            <div className="flex items-center justify-between text-sm text-gray-500 pt-2 border-t border-gray-100">
+                <div className="h-4 w-1/3 bg-gray-200 rounded"></div>
                 <div className="flex space-x-4">
-                    <div className="h-4 w-12 bg-slate-200 dark:bg-slate-700 rounded"></div>
-                    <div className="h-4 w-12 bg-slate-200 dark:bg-slate-700 rounded"></div>
+                    <div className="h-4 w-12 bg-gray-200 rounded"></div>
+                    <div className="h-4 w-12 bg-gray-200 rounded"></div>
                 </div>
             </div>
         </div>
@@ -86,9 +85,9 @@ const ParticipacaoFeed: React.FC<ParticipacaoFeedProps> = ({ navigateTo }) => {
     if (filteredAndSortedPublicacoes.length === 0) {
       return (
         <Card className="text-center py-10">
-          <Icon name="forum" className="text-5xl text-slate-400 dark:text-slate-500 mx-auto" />
-          <p className="text-slate-600 dark:text-slate-300 mt-4 font-semibold">Ainda sem publicações</p>
-          <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">Seja o primeiro a participar e compartilhar suas ideias!</p>
+          <Icon name="forum" className="text-5xl text-gray-400 mx-auto" />
+          <p className="text-gray-700 mt-4 font-semibold">Ainda sem publicações</p>
+          <p className="text-gray-600 text-sm mt-1">Seja o primeiro a participar e compartilhar suas ideias!</p>
           <Button onClick={() => navigateTo('PARTICIPACAO_FORM')} className="mt-6" iconLeft="add_comment">Criar Publicação</Button>
         </Card>
       );
@@ -109,19 +108,19 @@ const ParticipacaoFeed: React.FC<ParticipacaoFeedProps> = ({ navigateTo }) => {
   return (
     <div className="space-y-4">
         <div className="text-center">
-            <h1 className="text-3xl font-bold text-slate-800 dark:text-slate-100">Participação Pública</h1>
-            <p className="text-slate-600 dark:text-slate-300 mt-1">Um espaço para ideias, problemas e elogios da nossa comunidade.</p>
+            <h1 className="text-3xl font-bold text-gray-800">Participação Pública</h1>
+            <p className="text-gray-600 mt-1">Um espaço para ideias, problemas e elogios da nossa comunidade.</p>
         </div>
       
-        <div className="sticky top-[68px] bg-slate-100 dark:bg-slate-900 z-10 py-2 space-y-3">
+        <div className="sticky top-[68px] bg-gray-50 z-10 py-2 space-y-3">
              <div className="relative">
-                <Icon name="search" className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                <Icon name="search" className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                 <input
                     type="search"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     placeholder="Buscar por título, resumo ou bairro..."
-                    className="w-full p-3 pl-10 bg-white text-slate-900 border border-slate-300 rounded-full focus:ring-indigo-600 focus:border-indigo-600 text-sm dark:bg-slate-800 dark:border-slate-600 dark:text-white"
+                    className="w-full p-3 pl-10 bg-white text-gray-900 border border-gray-300 rounded-full focus:ring-indigo-600 focus:border-indigo-600 text-sm"
                 />
             </div>
             <div className="flex items-center justify-between gap-2 flex-wrap">
@@ -131,16 +130,16 @@ const ParticipacaoFeed: React.FC<ParticipacaoFeedProps> = ({ navigateTo }) => {
                          <Button key={tipo} size="sm" onClick={() => setFiltroTipo(tipo)} variant={filtroTipo === tipo ? 'primary' : 'secondary'} className="!rounded-full whitespace-nowrap">{tipo}</Button>
                     ))}
                 </div>
-                <div className="p-1 bg-slate-200 dark:bg-slate-700 rounded-lg flex text-sm">
+                <div className="p-1 bg-gray-200 rounded-lg flex text-sm">
                     <button
                         onClick={() => setSortBy('relevancia')}
-                        className={`px-3 py-1 rounded-md transition-colors ${sortBy === 'relevancia' ? 'bg-white dark:bg-slate-800 shadow-sm text-slate-800 dark:text-slate-100 font-semibold' : 'text-slate-600 dark:text-slate-300'}`}
+                        className={`px-3 py-1 rounded-md transition-colors ${sortBy === 'relevancia' ? 'bg-white shadow-sm text-gray-800 font-semibold' : 'text-gray-600'}`}
                     >
                         Relevantes
                     </button>
                     <button
                         onClick={() => setSortBy('recentes')}
-                        className={`px-3 py-1 rounded-md transition-colors ${sortBy === 'recentes' ? 'bg-white dark:bg-slate-800 shadow-sm text-slate-800 dark:text-slate-100 font-semibold' : 'text-slate-600 dark:text-slate-300'}`}
+                        className={`px-3 py-1 rounded-md transition-colors ${sortBy === 'recentes' ? 'bg-white shadow-sm text-gray-800 font-semibold' : 'text-gray-600'}`}
                     >
                         Recentes
                     </button>

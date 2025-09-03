@@ -23,13 +23,9 @@ export const useAccessibility = () => {
 const FONT_SIZES: FontSize[] = ['sm', 'base', 'lg', 'xl'];
 
 export const AccessibilityProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [theme, setThemeState] = useState<Theme>(() => {
-    if (typeof window !== 'undefined') {
-      return (localStorage.getItem('theme') as Theme) || 'system';
-    }
-    return 'system';
-  });
-
+  // Theme is temporarily locked to 'light' mode.
+  const theme: Theme = 'light';
+  
   const [fontSize, setFontSizeState] = useState<FontSize>(() => {
     if (typeof window !== 'undefined') {
       return (localStorage.getItem('font-size') as FontSize) || 'base';
@@ -39,22 +35,10 @@ export const AccessibilityProvider: React.FC<{ children: ReactNode }> = ({ child
 
   useEffect(() => {
     const root = window.document.documentElement;
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    
-    const applyTheme = () => {
-        const isDark =
-          theme === 'dark' ||
-          (theme === 'system' && mediaQuery.matches);
-        root.classList.toggle('dark', isDark);
-    };
-
-    applyTheme();
-    localStorage.setItem('theme', theme);
-    
-    mediaQuery.addEventListener('change', applyTheme);
-    return () => mediaQuery.removeEventListener('change', applyTheme);
-
-  }, [theme]);
+    // Forcibly remove dark mode class and set storage to light.
+    root.classList.remove('dark');
+    localStorage.setItem('theme', 'light');
+  }, []);
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -63,9 +47,8 @@ export const AccessibilityProvider: React.FC<{ children: ReactNode }> = ({ child
     localStorage.setItem('font-size', fontSize);
   }, [fontSize]);
 
-  const setTheme = (newTheme: Theme) => {
-    setThemeState(newTheme);
-  };
+  // Dark mode controls are disabled.
+  const setTheme = () => {};
 
   const increaseFontSize = useCallback(() => {
     const currentIndex = FONT_SIZES.indexOf(fontSize);

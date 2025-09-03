@@ -65,27 +65,27 @@ interface ToastProps extends ToastMessage {
 }
 
 const Toast: React.FC<ToastProps> = ({ message, type, onClose }) => {
-  const baseClasses = 'flex items-center w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow-lg dark:text-gray-400 dark:bg-slate-800';
+  const baseClasses = 'flex items-center w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow-lg border';
   const typeClasses = {
-    success: 'text-green-500 bg-green-100 dark:bg-green-800 dark:text-green-200',
-    error: 'text-red-500 bg-red-100 dark:bg-red-800 dark:text-red-200',
-    info: 'text-blue-500 bg-blue-100 dark:bg-blue-800 dark:text-blue-200',
+    success: 'bg-emerald-100 text-emerald-600 border-emerald-200',
+    error: 'bg-rose-100 text-rose-600 border-rose-200',
+    info: 'bg-sky-100 text-sky-600 border-sky-200',
   };
   const iconClasses = {
-    success: 'text-green-500 dark:text-green-200',
-    error: 'text-red-500 dark:text-red-200',
-    info: 'text-blue-500 dark:text-blue-200',
+    success: 'text-emerald-500',
+    error: 'text-rose-500',
+    info: 'text-sky-500',
   }
 
   return (
-    <div className={baseClasses} role="alert">
-      <div className={`inline-flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-lg ${typeClasses[type]}`}>
+    <div className={`${baseClasses} ${typeClasses[type]}`} role="alert">
+      <div className={`inline-flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-lg`}>
         {type === 'success' && <span className={iconClasses[type]}>✓</span>}
         {type === 'error' && <span className={iconClasses[type]}>✕</span>}
         {type === 'info' && <span className={`${iconClasses[type]} font-bold italic`}>i</span>}
       </div>
-      <div className="ml-3 text-sm font-normal text-slate-700 dark:text-slate-300">{message}</div>
-      <button type="button" className="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-slate-800 dark:hover:bg-slate-700" onClick={onClose}>
+      <div className="ml-3 text-sm font-normal text-gray-700">{message}</div>
+      <button type="button" className="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8" onClick={onClose}>
         <span className="sr-only">Close</span>
         &times;
       </button>

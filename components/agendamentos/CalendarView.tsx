@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react';
 import { Agendamento } from '../../types';
 import Icon from '../ui/Icon';
-// FIX: Import the 'Card' component to resolve reference errors.
 import Card from '../ui/Card';
 
 // Funções auxiliares para manipulação de datas
@@ -57,15 +56,15 @@ const CalendarView: React.FC<CalendarViewProps> = ({ agendamentos, currentDate, 
   return (
     <Card className="!p-4">
       <div className="flex justify-between items-center mb-4">
-        <button onClick={() => onMonthChange('prev')} className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700" aria-label="Mês anterior">
+        <button onClick={() => onMonthChange('prev')} className="p-2 rounded-full hover:bg-gray-100" aria-label="Mês anterior">
           <Icon name="chevron_left" />
         </button>
-        <h3 className="font-bold text-slate-800 dark:text-slate-100 capitalize">{monthName}</h3>
-        <button onClick={() => onMonthChange('next')} className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700" aria-label="Próximo mês">
+        <h3 className="font-bold text-gray-800 capitalize">{monthName}</h3>
+        <button onClick={() => onMonthChange('next')} className="p-2 rounded-full hover:bg-gray-100" aria-label="Próximo mês">
           <Icon name="chevron_right" />
         </button>
       </div>
-      <div className="grid grid-cols-7 gap-1 text-center text-xs text-slate-500 dark:text-slate-400 font-medium">
+      <div className="grid grid-cols-7 gap-1 text-center text-xs text-gray-500 font-medium">
         {weekdays.map((day, i) => <div key={`${day}-${i}`}>{day}</div>)}
       </div>
       <div className="grid grid-cols-7 gap-1 mt-2">
@@ -79,18 +78,18 @@ const CalendarView: React.FC<CalendarViewProps> = ({ agendamentos, currentDate, 
 
           let buttonClasses = "w-full h-12 flex flex-col justify-center items-center rounded-full transition-colors text-sm ";
           if (isSelected) {
-            buttonClasses += "bg-indigo-700 text-white dark:bg-indigo-600 font-bold";
+            buttonClasses += "bg-indigo-600 text-white font-bold";
           } else if (isToday) {
-            buttonClasses += "bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 font-bold";
+            buttonClasses += "bg-indigo-100 text-indigo-700 font-bold";
           } else {
-            buttonClasses += "hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200";
+            buttonClasses += "hover:bg-gray-100 text-gray-700";
           }
 
           return (
             <div key={date.toISOString()}>
               <button onClick={() => onDateSelect(date)} className={buttonClasses}>
                 <span>{date.getDate()}</span>
-                {hasAppointment && <div className={`w-1.5 h-1.5 rounded-full mt-1 ${isSelected ? 'bg-white' : 'bg-blue-500 dark:bg-blue-400'}`}></div>}
+                {hasAppointment && <div className={`w-1.5 h-1.5 rounded-full mt-1 ${isSelected ? 'bg-white' : 'bg-sky-500'}`}></div>}
               </button>
             </div>
           );

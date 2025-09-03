@@ -16,13 +16,13 @@ const AgendamentoSkeletonItem: React.FC = () => (
     <Card className="animate-pulse">
         <div className="flex justify-between items-start">
             <div className="flex items-center space-x-3 w-3/4">
-                <div className="w-7 h-7 rounded-md bg-gray-200"></div>
+                <div className="w-7 h-7 rounded-md bg-slate-200"></div>
                 <div className="flex-1 space-y-2">
-                    <div className="h-3 bg-gray-200 rounded w-3/4"></div>
-                    <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                    <div className="h-3 bg-slate-200 rounded w-3/4"></div>
+                    <div className="h-3 bg-slate-200 rounded w-1/2"></div>
                 </div>
             </div>
-            <div className="h-5 w-20 bg-gray-200 rounded-full"></div>
+            <div className="h-5 w-20 bg-slate-200 rounded-full"></div>
         </div>
     </Card>
 );
@@ -36,7 +36,7 @@ const getStatusChipStyle = (status: AgendamentoStatus) => {
         case AgendamentoStatus.CANCELADO:
             return 'bg-rose-100 text-rose-800';
         default:
-            return 'bg-gray-100 text-gray-800';
+            return 'bg-slate-100 text-slate-800';
     }
 };
 
@@ -51,8 +51,8 @@ const AgendamentoItem: React.FC<{ agendamento: Agendamento; onCancel: (id: strin
                 <div className="flex items-center space-x-3">
                     <Icon name={agendamento.servicoIcon} className="text-2xl text-indigo-600" />
                     <div>
-                        <h3 className="font-bold text-gray-800">{agendamento.servicoNome}</h3>
-                        <p className="text-sm text-gray-500">{dataFormatada} às {horaFormatada}</p>
+                        <h3 className="font-bold text-slate-800">{agendamento.servicoNome}</h3>
+                        <p className="text-sm text-slate-500">{dataFormatada} às {horaFormatada}</p>
                     </div>
                 </div>
                 <span className={`text-xs font-medium px-2.5 py-0.5 rounded-full ${getStatusChipStyle(agendamento.status)}`}>
@@ -60,7 +60,7 @@ const AgendamentoItem: React.FC<{ agendamento: Agendamento; onCancel: (id: strin
                 </span>
             </div>
             {isCancellable && agendamento.status === AgendamentoStatus.AGENDADO && (
-                <div className="mt-4 pt-4 border-t border-gray-100 text-right">
+                <div className="mt-4 pt-4 border-t border-slate-100 text-right">
                     <Button size="sm" variant="secondary" onClick={() => onCancel(agendamento.id)}>
                         Cancelar
                     </Button>
@@ -143,30 +143,30 @@ const AgendamentosList: React.FC<AgendamentosListProps> = ({ navigateTo }) => {
           <div className="space-y-6 animate-pulse">
               <div className="flex justify-between items-center">
                   <div className="flex items-center space-x-2">
-                      <div className="h-10 w-10 rounded-lg bg-gray-200"></div>
-                      <div className="h-8 w-48 rounded bg-gray-200"></div>
+                      <div className="h-10 w-10 rounded-lg bg-slate-200"></div>
+                      <div className="h-8 w-48 rounded bg-slate-200"></div>
                   </div>
-                  <div className="h-10 w-10 rounded-lg bg-gray-200"></div>
+                  <div className="h-10 w-10 rounded-lg bg-slate-200"></div>
               </div>
               
               <Card className="!p-4">
-                  <div className="h-6 w-1/3 mx-auto bg-gray-200 rounded mb-4"></div>
+                  <div className="h-6 w-1/3 mx-auto bg-slate-200 rounded mb-4"></div>
                   <div className="grid grid-cols-7 gap-1">
                       {[...Array(35)].map((_, i) => (
-                          <div key={i} className="w-full h-12 bg-gray-200 rounded-full"></div>
+                          <div key={i} className="w-full h-12 bg-slate-200 rounded-full"></div>
                       ))}
                   </div>
               </Card>
 
               <div>
-                  <div className="h-5 w-1/4 bg-gray-200 rounded mb-2 ml-1"></div>
+                  <div className="h-5 w-1/4 bg-slate-200 rounded mb-2 ml-1"></div>
                   <div className="space-y-3">
                       <AgendamentoSkeletonItem />
                   </div>
               </div>
               
               <div>
-                  <div className="h-5 w-1/4 bg-gray-200 rounded mb-2 ml-1"></div>
+                  <div className="h-5 w-1/4 bg-slate-200 rounded mb-2 ml-1"></div>
                   <div className="space-y-3">
                       <AgendamentoSkeletonItem />
                   </div>
@@ -182,7 +182,7 @@ const AgendamentosList: React.FC<AgendamentosListProps> = ({ navigateTo }) => {
             <Button onClick={() => navigateTo('SERVICOS_DASHBOARD')} variant="ghost" size="icon">
               <Icon name="arrow_back" />
             </Button>
-            <h2 className="text-2xl font-bold text-gray-800">Agenda do Cidadão</h2>
+            <h2 className="text-2xl font-bold text-slate-800">Agenda do Cidadão</h2>
         </div>
         <Button
             onClick={() => setIsCalendarOpen(!isCalendarOpen)}
@@ -212,7 +212,7 @@ const AgendamentosList: React.FC<AgendamentosListProps> = ({ navigateTo }) => {
       {selectedDate ? (
         <div>
           <div className="flex justify-between items-center mb-2">
-            <h3 className="text-lg font-bold text-gray-700 pl-1">
+            <h3 className="text-lg font-bold text-slate-700 pl-1">
               Agendamentos de {selectedDate.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long' })}
             </h3>
             <Button size="sm" variant="ghost" onClick={() => setSelectedDate(null)}>Limpar</Button>
@@ -224,13 +224,13 @@ const AgendamentosList: React.FC<AgendamentosListProps> = ({ navigateTo }) => {
               ))}
             </div>
           ) : (
-            <Card><p className="text-center text-gray-500">Nenhum agendamento para este dia.</p></Card>
+            <Card><p className="text-center text-slate-500">Nenhum agendamento para este dia.</p></Card>
           )}
         </div>
       ) : (
         <>
           <div>
-            <h3 className="text-lg font-bold text-gray-700 mb-2 pl-1">Próximos</h3>
+            <h3 className="text-lg font-bold text-slate-700 mb-2 pl-1">Próximos</h3>
             {proximos.length > 0 ? (
               <div className="space-y-3">
                 {proximos.map(ag => (
@@ -238,12 +238,12 @@ const AgendamentosList: React.FC<AgendamentosListProps> = ({ navigateTo }) => {
                 ))}
               </div>
             ) : (
-              <Card><p className="text-center text-gray-500">Nenhum agendamento futuro.</p></Card>
+              <Card><p className="text-center text-slate-500">Nenhum agendamento futuro.</p></Card>
             )}
           </div>
 
           <div>
-            <h3 className="text-lg font-bold text-gray-700 mb-2 pl-1">Anteriores</h3>
+            <h3 className="text-lg font-bold text-slate-700 mb-2 pl-1">Anteriores</h3>
             {anteriores.length > 0 ? (
               <div className="space-y-3">
                 {anteriores.map(ag => (
@@ -251,7 +251,7 @@ const AgendamentosList: React.FC<AgendamentosListProps> = ({ navigateTo }) => {
                 ))}
               </div>
             ) : (
-              <Card><p className="text-center text-gray-500">Nenhum agendamento anterior.</p></Card>
+              <Card><p className="text-center text-slate-500">Nenhum agendamento anterior.</p></Card>
             )}
           </div>
         </>

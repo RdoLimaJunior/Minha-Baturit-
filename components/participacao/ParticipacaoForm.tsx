@@ -82,16 +82,16 @@ const ParticipacaoForm: React.FC<ParticipacaoFormProps> = ({ goBack }) => {
                 <Button onClick={goBack} variant="ghost" iconLeft="arrow_back">Voltar</Button>
                 <Card>
                     <div className="text-center mb-6">
-                        <h1 className="text-2xl font-bold text-gray-800">Criar Publicação</h1>
-                        <p className="text-gray-600 mt-1">O que você gostaria de compartilhar?</p>
+                        <h1 className="text-2xl font-bold text-slate-800">Criar Publicação</h1>
+                        <p className="text-slate-600 mt-1">O que você gostaria de compartilhar?</p>
                     </div>
                     <div className="space-y-3">
                         {Object.values(TipoPublicacao).map(type => (
                             <Card key={type} onClick={() => handleTypeSelect(type)} className="flex items-center space-x-4 text-left !p-4 border-2 border-transparent hover:border-indigo-500 hover:shadow-lg">
                                 <Icon name={TIPO_PUBLICACAO_METADATA[type].icon} className="text-3xl text-indigo-600" />
                                 <div>
-                                    <h3 className="font-bold text-gray-800">{TIPO_PUBLICACAO_METADATA[type].title}</h3>
-                                    <p className="text-sm text-gray-600">{TIPO_PUBLICACAO_METADATA[type].description}</p>
+                                    <h3 className="font-bold text-slate-800">{TIPO_PUBLICACAO_METADATA[type].title}</h3>
+                                    <p className="text-sm text-slate-600">{TIPO_PUBLICACAO_METADATA[type].description}</p>
                                 </div>
                             </Card>
                         ))}
@@ -106,28 +106,28 @@ const ParticipacaoForm: React.FC<ParticipacaoFormProps> = ({ goBack }) => {
             <Button onClick={() => setStep(1)} variant="ghost" iconLeft="arrow_back">Mudar tipo</Button>
             <Card>
                 <form onSubmit={handleSubmit} className="space-y-6">
-                    <h1 className="text-2xl font-bold text-gray-800">{TIPO_PUBLICACAO_METADATA[tipo!]?.title}</h1>
+                    <h1 className="text-2xl font-bold text-slate-800">{TIPO_PUBLICACAO_METADATA[tipo!]?.title}</h1>
                     
                     <div>
-                        <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">Título *</label>
-                        <input id="title" type="text" value={title} onChange={e => setTitle(e.target.value)} placeholder="Resuma em poucas palavras..." className="w-full p-2 bg-white text-gray-900 border border-gray-300 rounded-md focus:ring-indigo-600 focus:border-indigo-600" />
+                        <label htmlFor="title" className="block text-sm font-medium text-slate-700 mb-1">Título *</label>
+                        <input id="title" type="text" value={title} onChange={e => setTitle(e.target.value)} placeholder="Resuma em poucas palavras..." className="w-full p-2 bg-white text-slate-900 border border-slate-300 rounded-md focus:ring-indigo-600 focus:border-indigo-600" />
                     </div>
 
                     <div>
-                        <label htmlFor="descricao" className="block text-sm font-medium text-gray-700 mb-1">Descrição *</label>
-                        <textarea id="descricao" rows={5} value={descricao} onChange={e => setDescricao(e.target.value)} placeholder="Conte os detalhes que ajudam a entender..." className="w-full p-2 bg-white text-gray-900 border border-gray-300 rounded-md focus:ring-indigo-600 focus:border-indigo-600"></textarea>
+                        <label htmlFor="descricao" className="block text-sm font-medium text-slate-700 mb-1">Descrição *</label>
+                        <textarea id="descricao" rows={5} value={descricao} onChange={e => setDescricao(e.target.value)} placeholder="Conte os detalhes que ajudam a entender..." className="w-full p-2 bg-white text-slate-900 border border-slate-300 rounded-md focus:ring-indigo-600 focus:border-indigo-600"></textarea>
                     </div>
 
                      <div>
-                        <label htmlFor="bairro" className="block text-sm font-medium text-gray-700 mb-1">Bairro *</label>
-                        <select id="bairro" value={bairro} onChange={(e) => setBairro(e.target.value)} className="w-full p-2 bg-white text-gray-900 border border-gray-300 rounded-md focus:ring-indigo-600 focus:border-indigo-600">
+                        <label htmlFor="bairro" className="block text-sm font-medium text-slate-700 mb-1">Bairro *</label>
+                        <select id="bairro" value={bairro} onChange={(e) => setBairro(e.target.value)} className="w-full p-2 bg-white text-slate-900 border border-slate-300 rounded-md focus:ring-indigo-600 focus:border-indigo-600">
                             <option value="" disabled>Selecione seu bairro</option>
                             {BAIRROS_BATURITE.map(b => <option key={b} value={b}>{b}</option>)}
                         </select>
                     </div>
 
                     <div className="space-y-2">
-                        <label className="block text-sm font-medium text-gray-700">Fotos (Opcional, até {MAX_FOTOS})</label>
+                        <label className="block text-sm font-medium text-slate-700">Fotos (Opcional, até {MAX_FOTOS})</label>
                         <div className="grid grid-cols-4 gap-2">
                             {Array.from({ length: MAX_FOTOS }).map((_, index) => {
                                 if (fotoPreviews[index]) {
@@ -142,8 +142,8 @@ const ParticipacaoForm: React.FC<ParticipacaoFormProps> = ({ goBack }) => {
                                 }
                                 if (index === fotos.length) {
                                     return (
-                                        <label key="add-photo" htmlFor="foto-upload" className="aspect-square w-full flex items-center justify-center rounded-md border-2 border-dashed border-gray-300 cursor-pointer hover:bg-gray-50">
-                                            <div className="text-center text-gray-400">
+                                        <label key="add-photo" htmlFor="foto-upload" className="aspect-square w-full flex items-center justify-center rounded-md border-2 border-dashed border-slate-300 cursor-pointer hover:bg-slate-50">
+                                            <div className="text-center text-slate-400">
                                                 <Icon name="add_a_photo" className="mx-auto text-3xl" />
                                                 <span className="text-xs mt-1 block">Adicionar</span>
                                             </div>
@@ -151,8 +151,8 @@ const ParticipacaoForm: React.FC<ParticipacaoFormProps> = ({ goBack }) => {
                                     );
                                 }
                                 return (
-                                    <div key={`placeholder-${index}`} className="aspect-square w-full flex items-center justify-center rounded-md bg-gray-100 border-2 border-dashed border-gray-200">
-                                        <Icon name="image" className="text-3xl text-gray-300" />
+                                    <div key={`placeholder-${index}`} className="aspect-square w-full flex items-center justify-center rounded-md bg-slate-100 border-2 border-dashed border-slate-200">
+                                        <Icon name="image" className="text-3xl text-slate-300" />
                                     </div>
                                 );
                             })}
@@ -160,16 +160,16 @@ const ParticipacaoForm: React.FC<ParticipacaoFormProps> = ({ goBack }) => {
                         <input id="foto-upload" type="file" className="sr-only" accept="image/*" multiple onChange={handleFotoChange} disabled={fotos.length >= MAX_FOTOS} />
                     </div>
 
-                    <div className="space-y-3 pt-4 border-t border-gray-200">
+                    <div className="space-y-3 pt-4 border-t border-slate-200">
                         <div className="flex items-center justify-between">
-                            <label htmlFor="anonymous" className="text-sm font-medium text-gray-700">Publicar como anônimo?</label>
-                            <button type="button" onClick={() => setIsAnonymous(!isAnonymous)} className={`${isAnonymous ? 'bg-indigo-600' : 'bg-gray-300'} relative inline-flex h-6 w-11 items-center rounded-full transition-colors`}>
+                            <label htmlFor="anonymous" className="text-sm font-medium text-slate-700">Publicar como anônimo?</label>
+                            <button type="button" onClick={() => setIsAnonymous(!isAnonymous)} className={`${isAnonymous ? 'bg-indigo-600' : 'bg-slate-300'} relative inline-flex h-6 w-11 items-center rounded-full transition-colors`}>
                                 <span className={`${isAnonymous ? 'translate-x-6' : 'translate-x-1'} inline-block h-4 w-4 transform rounded-full bg-white transition-transform`} />
                             </button>
                         </div>
                         <div className="flex items-start space-x-2">
-                            <input id="lgpd" type="checkbox" checked={lgpdConsent} onChange={e => setLgpdConsent(e.target.checked)} className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 mt-1" />
-                            <label htmlFor="lgpd" className="text-xs text-gray-600">
+                            <input id="lgpd" type="checkbox" checked={lgpdConsent} onChange={e => setLgpdConsent(e.target.checked)} className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 mt-1" />
+                            <label htmlFor="lgpd" className="text-xs text-slate-600">
                                 Concordo que as informações fornecidas (exceto dados pessoais, se anônimo) serão públicas e podem ser utilizadas pela prefeitura para análise.
                             </label>
                         </div>

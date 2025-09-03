@@ -21,7 +21,7 @@ const getStatusStyle = (status: StatusPublicacao) => {
         case StatusPublicacao.ENCAMINHADO: return { icon: 'send', color: 'text-violet-500' };
         case StatusPublicacao.CONCLUIDO: return { icon: 'check_circle', color: 'text-emerald-500' };
         case StatusPublicacao.REJEITADO: return { icon: 'gpp_bad', color: 'text-rose-500' };
-        default: return { icon: 'article', color: 'text-gray-500' };
+        default: return { icon: 'article', color: 'text-slate-500' };
     }
 };
 
@@ -31,7 +31,7 @@ const getTypeStyle = (tipo: TipoPublicacao) => {
         case TipoPublicacao.IDEIA: return { icon: 'lightbulb', color: 'text-amber-500' };
         case TipoPublicacao.ELOGIO: return { icon: 'thumb_up', color: 'text-emerald-500' };
         case TipoPublicacao.EVENTO: return { icon: 'event', color: 'text-sky-500' };
-        default: return { icon: 'forum', color: 'text-gray-500' };
+        default: return { icon: 'forum', color: 'text-slate-500' };
     }
 };
 
@@ -39,19 +39,19 @@ const TimelineItem: React.FC<{ item: HistoricoPublicacao, isLast: boolean }> = (
     const statusStyle = getStatusStyle(item.status);
     return (
         <li className="relative pb-8">
-            {!isLast && <span className="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>}
+            {!isLast && <span className="absolute top-4 left-4 -ml-px h-full w-0.5 bg-slate-200" aria-hidden="true"></span>}
             <div className="relative flex items-start space-x-3">
                 <div className="h-8 w-8 bg-white rounded-full ring-4 ring-white flex items-center justify-center">
                     <Icon name={statusStyle.icon} className={`text-2xl ${statusStyle.color}`} />
                 </div>
                 <div className="min-w-0 flex-1 py-1.5">
-                    <div className="text-sm text-gray-600">
+                    <div className="text-sm text-slate-600">
                         Status alterado para <span className={`font-semibold ${statusStyle.color}`}>{item.status}</span>
                     </div>
-                    <div className="text-xs text-gray-400">
+                    <div className="text-xs text-slate-400">
                         {new Date(item.data).toLocaleString('pt-BR')}
                     </div>
-                    {item.observacao && <p className="text-sm mt-1 p-2 bg-gray-100 rounded-md text-gray-700">{item.observacao}</p>}
+                    {item.observacao && <p className="text-sm mt-1 p-2 bg-slate-100 rounded-md text-slate-700">{item.observacao}</p>}
                 </div>
             </div>
         </li>
@@ -108,7 +108,7 @@ const ParticipacaoDetail: React.FC<ParticipacaoDetailProps> = ({ publicacaoId, n
       
       <Card className="!p-0 overflow-hidden">
         {publicacao.fotos && publicacao.fotos.length > 0 && (
-            <div className="grid grid-cols-2 gap-1 bg-gray-200">
+            <div className="grid grid-cols-2 gap-1 bg-slate-200">
                 {publicacao.fotos.map((foto, index) => (
                     <img key={index} src={foto} alt={`Foto ${index+1}`} className="w-full h-48 object-cover" />
                 ))}
@@ -118,8 +118,8 @@ const ParticipacaoDetail: React.FC<ParticipacaoDetailProps> = ({ publicacaoId, n
             <div className="flex items-center space-x-3">
                 <img src={publicacao.author.avatar} alt="Avatar do autor" className="w-10 h-10 rounded-full" />
                 <div>
-                    <p className="font-bold text-gray-800">{publicacao.author.isAnonymous ? 'Anônimo' : publicacao.author.name}</p>
-                    <div className="flex items-center space-x-2 text-xs text-gray-500">
+                    <p className="font-bold text-slate-800">{publicacao.author.isAnonymous ? 'Anônimo' : publicacao.author.name}</p>
+                    <div className="flex items-center space-x-2 text-xs text-slate-500">
                         <span>{timeSince(publicacao.createdAt)}</span>
                         <span>•</span>
                         <div className="flex items-center space-x-1">
@@ -130,16 +130,16 @@ const ParticipacaoDetail: React.FC<ParticipacaoDetailProps> = ({ publicacaoId, n
                 </div>
             </div>
 
-            <div className="mt-4 pt-4 border-t border-gray-200">
+            <div className="mt-4 pt-4 border-t border-slate-200">
                 <div className="flex items-center space-x-2">
                     <Icon name={typeStyle.icon} className={`text-xl ${typeStyle.color}`} />
                     <span className={`font-bold text-sm ${typeStyle.color}`}>{publicacao.tipo}</span>
                 </div>
-                <h1 className="text-2xl font-bold text-gray-800 mt-2">{publicacao.title}</h1>
-                <p className="text-gray-700 leading-relaxed my-4">{publicacao.descricao}</p>
+                <h1 className="text-2xl font-bold text-slate-800 mt-2">{publicacao.title}</h1>
+                <p className="text-slate-700 leading-relaxed my-4">{publicacao.descricao}</p>
             </div>
             
-            <div className="mt-6 pt-4 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-around gap-2">
+            <div className="mt-6 pt-4 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-around gap-2">
                 <Button onClick={handleSupport} variant={isSupported ? 'primary' : 'secondary'} iconLeft="thumb_up" className="w-full sm:w-auto flex-1">
                     {isSupported ? 'Apoiado' : 'Apoiar'} ({supportCount})
                 </Button>
@@ -150,7 +150,7 @@ const ParticipacaoDetail: React.FC<ParticipacaoDetailProps> = ({ publicacaoId, n
       </Card>
 
       <Card>
-        <h2 className="text-lg font-bold text-gray-800 mb-4">Histórico</h2>
+        <h2 className="text-lg font-bold text-slate-800 mb-4">Histórico</h2>
         <ul>
             {[...publicacao.historico].reverse().map((item, index, arr) => (
                 <TimelineItem key={index} item={item} isLast={index === arr.length - 1} />
@@ -159,20 +159,20 @@ const ParticipacaoDetail: React.FC<ParticipacaoDetailProps> = ({ publicacaoId, n
       </Card>
         
       <Card>
-        <h2 className="text-lg font-bold text-gray-800 mb-4">Comentários ({comments.length})</h2>
+        <h2 className="text-lg font-bold text-slate-800 mb-4">Comentários ({comments.length})</h2>
         <div className="space-y-4">
             {comments.map(comment => (
                 <div key={comment.id} className={`flex items-start space-x-3 p-3 rounded-lg ${comment.isOfficialReply ? 'bg-indigo-50 border-l-4 border-indigo-500' : ''}`}>
                     <img src={comment.author.avatar} alt={comment.author.name} className="w-9 h-9 rounded-full"/>
                     <div className="flex-1">
                         <div className="flex items-center justify-between">
-                            <span className="font-semibold text-gray-800 text-sm">{comment.author.name}</span>
-                            <span className="text-xs text-gray-400">{timeSince(comment.date)}</span>
+                            <span className="font-semibold text-slate-800 text-sm">{comment.author.name}</span>
+                            <span className="text-xs text-slate-400">{timeSince(comment.date)}</span>
                         </div>
                          {comment.isOfficialReply && (
                             <div className="text-xs font-bold text-indigo-700 mt-0.5">RESPOSTA OFICIAL</div>
                          )}
-                        <p className="text-sm text-gray-600 mt-1">{comment.text}</p>
+                        <p className="text-sm text-slate-600 mt-1">{comment.text}</p>
                     </div>
                 </div>
             ))}
@@ -184,7 +184,7 @@ const ParticipacaoDetail: React.FC<ParticipacaoDetailProps> = ({ publicacaoId, n
                     value={newComment}
                     onChange={(e) => setNewComment(e.target.value)}
                     placeholder="Adicione um comentário..."
-                    className="w-full p-2 bg-white text-gray-900 border border-gray-300 rounded-lg focus:ring-indigo-600 focus:border-indigo-600 text-sm"
+                    className="w-full p-2 bg-white text-slate-900 border border-slate-300 rounded-lg focus:ring-indigo-600 focus:border-indigo-600 text-sm"
                     rows={2}
                 />
                 <Button type="submit" size="sm" disabled={!newComment.trim()} className="mt-2">

@@ -100,28 +100,28 @@ const ConsultaPublicaDetail: React.FC<ConsultaPublicaDetailProps> = ({ consultaI
       </Button>
 
       <Card className="!p-0 overflow-hidden">
-        <img src={consulta.imageUrl} alt={consulta.title} className="w-full h-56 object-cover bg-gray-200" />
+        <img src={consulta.imageUrl} alt={consulta.title} className="w-full h-56 object-cover bg-slate-200" />
         <div className="p-4">
-            <h1 className="text-2xl font-bold text-gray-800">{consulta.title}</h1>
-            <div className="mt-2 text-sm text-gray-600">
+            <h1 className="text-2xl font-bold text-slate-800">{consulta.title}</h1>
+            <div className="mt-2 text-sm text-slate-600">
                 <p><strong>Período de participação:</strong> {new Date(consulta.startDate).toLocaleDateString('pt-BR')} a {endDate.toLocaleDateString('pt-BR')}</p>
             </div>
             
-            <div className="mt-4 pt-4 border-t border-gray-200">
-                <p className="text-gray-700 leading-relaxed whitespace-pre-line">{consulta.description}</p>
+            <div className="mt-4 pt-4 border-t border-slate-200">
+                <p className="text-slate-700 leading-relaxed whitespace-pre-line">{consulta.description}</p>
             </div>
         </div>
       </Card>
       
       {consulta.documentos && consulta.documentos.length > 0 && (
           <Card>
-              <h2 className="text-lg font-bold text-gray-800 mb-3">Documentos e Anexos</h2>
+              <h2 className="text-lg font-bold text-slate-800 mb-3">Documentos e Anexos</h2>
               <div className="space-y-2">
                   {consulta.documentos.map(doc => (
-                      <a href={doc.url} key={doc.nome} target="_blank" rel="noopener noreferrer" className="flex items-center p-2 rounded-md bg-gray-100 hover:bg-gray-200 transition-colors">
+                      <a href={doc.url} key={doc.nome} target="_blank" rel="noopener noreferrer" className="flex items-center p-2 rounded-md bg-slate-100 hover:bg-slate-200 transition-colors">
                           <Icon name={doc.icon} className="text-2xl text-indigo-600" />
-                          <span className="ml-3 font-medium text-sm text-gray-800">{doc.nome}</span>
-                          <Icon name="download" className="ml-auto text-xl text-gray-500" />
+                          <span className="ml-3 font-medium text-sm text-slate-800">{doc.nome}</span>
+                          <Icon name="download" className="ml-auto text-xl text-slate-500" />
                       </a>
                   ))}
               </div>
@@ -130,14 +130,14 @@ const ConsultaPublicaDetail: React.FC<ConsultaPublicaDetailProps> = ({ consultaI
 
       {isAberta ? (
         <Card>
-            <h2 className="text-lg font-bold text-gray-800 mb-1">Deixe sua Opinião</h2>
-            <p className="text-sm text-gray-500 mb-4">A consulta encerra em {daysRemaining} {daysRemaining === 1 ? 'dia' : 'dias'}.</p>
+            <h2 className="text-lg font-bold text-slate-800 mb-1">Deixe sua Opinião</h2>
+            <p className="text-sm text-slate-500 mb-4">A consulta encerra em {daysRemaining} {daysRemaining === 1 ? 'dia' : 'dias'}.</p>
             <form onSubmit={handleSubmitOpinion} className="space-y-3">
                  <textarea
                     value={newOpinion}
                     onChange={(e) => setNewOpinion(e.target.value)}
                     placeholder="Escreva sua sugestão, crítica ou apoio ao projeto..."
-                    className="w-full p-2 bg-white text-gray-900 border border-gray-300 rounded-lg focus:ring-indigo-600 focus:border-indigo-600 text-sm"
+                    className="w-full p-2 bg-white text-slate-900 border border-slate-300 rounded-lg focus:ring-indigo-600 focus:border-indigo-600 text-sm"
                     rows={4}
                     disabled={isSubmitting}
                 />
@@ -148,33 +148,33 @@ const ConsultaPublicaDetail: React.FC<ConsultaPublicaDetailProps> = ({ consultaI
         </Card>
       ) : (
         <Card className="text-center">
-            <Icon name="lock_clock" className="text-4xl text-gray-400 mx-auto" />
-            <p className="font-semibold text-gray-700 mt-2">Período de participação encerrado.</p>
+            <Icon name="lock_clock" className="text-4xl text-slate-400 mx-auto" />
+            <p className="font-semibold text-slate-700 mt-2">Período de participação encerrado.</p>
         </Card>
       )}
 
        <Card>
-        <h2 className="text-lg font-bold text-gray-800 mb-4">Opiniões da Comunidade ({opinioes.length})</h2>
+        <h2 className="text-lg font-bold text-slate-800 mb-4">Opiniões da Comunidade ({opinioes.length})</h2>
         <div className="space-y-4">
             {opinioes.map(op => {
                 const isSupported = supportedOpinions.has(op.id);
                 return (
-                    <div key={op.id} className="p-3 rounded-lg bg-gray-50">
+                    <div key={op.id} className="p-3 rounded-lg bg-slate-50">
                         <div className="flex items-start space-x-3">
                             <img src={op.author.avatar} alt={op.author.name} className="w-9 h-9 rounded-full"/>
                             <div className="flex-1">
-                                <span className="font-semibold text-gray-800 text-sm">{op.author.name}</span>
-                                <p className="text-sm text-gray-600 mt-1">{op.text}</p>
+                                <span className="font-semibold text-slate-800 text-sm">{op.author.name}</span>
+                                <p className="text-sm text-slate-600 mt-1">{op.text}</p>
                             </div>
                         </div>
                         <div className="flex items-center justify-between mt-2 pl-12">
-                            <span className="text-xs text-gray-500">{timeSince(op.date)}</span>
+                            <span className="text-xs text-slate-500">{timeSince(op.date)}</span>
                             <Button
                                 size="sm"
                                 variant="ghost"
                                 onClick={() => handleSupport(op.id)}
                                 iconLeft="thumb_up"
-                                className={`transition-colors !py-1 ${isSupported ? '!text-indigo-600 font-bold' : 'text-gray-500'}`}
+                                className={`transition-colors !py-1 ${isSupported ? '!text-indigo-600 font-bold' : 'text-slate-500'}`}
                             >
                                 {op.supports}
                             </Button>
@@ -205,10 +205,10 @@ const ConsultaPublicaDetail: React.FC<ConsultaPublicaDetailProps> = ({ consultaI
           >
               <div
                   onClick={(e) => e.stopPropagation()}
-                  className="relative w-80 max-w-[calc(100vw-2rem)] bg-white rounded-lg shadow-2xl p-4 text-sm text-gray-700 mb-20 animate-slide-in-up"
+                  className="relative w-80 max-w-[calc(100vw-2rem)] bg-white rounded-lg shadow-2xl p-4 text-sm text-slate-700 mb-20 animate-slide-in-up"
               >
                   <div className="flex justify-between items-center mb-2">
-                      <h4 className="font-bold text-base text-gray-800 flex items-center">
+                      <h4 className="font-bold text-base text-slate-800 flex items-center">
                           <Icon name="flutter_dash" className="mr-2 text-indigo-600" />
                           Assistente Uirapuru
                       </h4>

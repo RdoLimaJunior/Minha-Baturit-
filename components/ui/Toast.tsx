@@ -65,7 +65,7 @@ interface ToastProps extends ToastMessage {
 }
 
 const Toast: React.FC<ToastProps> = ({ message, type, onClose }) => {
-  const baseClasses = 'flex items-center w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow-lg border';
+  const baseClasses = 'flex items-center w-full max-w-xs p-4 text-slate-600 bg-white rounded-lg shadow-lg border';
   const typeClasses = {
     success: 'bg-emerald-100 text-emerald-600 border-emerald-200',
     error: 'bg-rose-100 text-rose-600 border-rose-200',
@@ -84,8 +84,8 @@ const Toast: React.FC<ToastProps> = ({ message, type, onClose }) => {
         {type === 'error' && <span className={iconClasses[type]}>✕</span>}
         {type === 'info' && <span className={`${iconClasses[type]} font-bold italic`}>i</span>}
       </div>
-      <div className="ml-3 text-sm font-normal text-gray-700">{message}</div>
-      <button type="button" className="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8" onClick={onClose}>
+      <div className="ml-3 text-sm font-normal text-slate-700">{message}</div>
+      <button type="button" className="ml-auto -mx-1.5 -my-1.5 bg-white text-slate-400 hover:text-slate-900 rounded-lg focus:ring-2 focus:ring-slate-300 p-1.5 hover:bg-slate-100 inline-flex h-8 w-8" onClick={onClose}>
         <span className="sr-only">Close</span>
         &times;
       </button>

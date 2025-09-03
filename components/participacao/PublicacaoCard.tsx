@@ -19,7 +19,7 @@ const getStatusStyle = (status: StatusPublicacao) => {
     case StatusPublicacao.CONCLUIDO:
       return { text: 'Concluído', classes: 'bg-emerald-100 text-emerald-800' };
     default:
-      return { text: 'Status', classes: 'bg-gray-100 text-gray-800' };
+      return { text: 'Status', classes: 'bg-slate-100 text-slate-800' };
   }
 };
 
@@ -34,7 +34,7 @@ const getTypeStyle = (tipo: TipoPublicacao) => {
         case TipoPublicacao.EVENTO:
             return { icon: 'event', color: 'text-sky-400' };
         default:
-            return { icon: 'forum', color: 'text-gray-400' };
+            return { icon: 'forum', color: 'text-slate-400' };
     }
 };
 
@@ -51,7 +51,7 @@ const PublicacaoCard: React.FC<PublicacaoCardProps> = ({ publicacao, onClick }) 
           <img 
             src={publicacao.fotos[0]} 
             alt={publicacao.title} 
-            className="w-full h-56 object-cover bg-gray-200"
+            className="w-full h-56 object-cover bg-slate-200"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
           
@@ -68,7 +68,7 @@ const PublicacaoCard: React.FC<PublicacaoCardProps> = ({ publicacao, onClick }) 
           </span>
         </div>
       ) : (
-        <div className="p-4 border-b border-gray-100">
+        <div className="p-4 border-b border-slate-100">
             <div className="flex justify-between items-start mb-2">
                 <div className="flex items-center space-x-2">
                     <Icon name={typeStyle.icon} className={`text-xl ${typeStyle.color.replace('-400', '-500')}`} />
@@ -78,24 +78,24 @@ const PublicacaoCard: React.FC<PublicacaoCardProps> = ({ publicacao, onClick }) 
                     {statusStyle.text}
                 </span>
             </div>
-            <h3 className="font-bold text-lg text-gray-800 leading-tight">{publicacao.title}</h3>
+            <h3 className="font-bold text-lg text-slate-800 leading-tight">{publicacao.title}</h3>
         </div>
       )}
 
       <div className="p-4">
-        <p className="text-sm text-gray-600 line-clamp-2">{publicacao.resumo}</p>
+        <p className="text-sm text-slate-600 line-clamp-2">{publicacao.resumo}</p>
         
         <div className="mt-3">
-          <div className="inline-flex items-center space-x-1 px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+          <div className="inline-flex items-center space-x-1 px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700">
               <Icon name="location_on" className="!text-sm" />
               <span>{publicacao.bairro}</span>
           </div>
         </div>
       
-        <div className="flex items-center justify-between text-sm text-gray-600 mt-4 pt-3 border-t border-gray-100">
+        <div className="flex items-center justify-between text-sm text-slate-600 mt-4 pt-3 border-t border-slate-100">
           <div className="flex items-center space-x-2">
               <img src={publicacao.author.avatar} alt="Avatar do autor" className="w-6 h-6 rounded-full"/>
-              <span className="font-semibold text-gray-700">{publicacao.author.isAnonymous ? 'Anônimo' : publicacao.author.name}</span>
+              <span className="font-semibold text-slate-700">{publicacao.author.isAnonymous ? 'Anônimo' : publicacao.author.name}</span>
           </div>
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-1">

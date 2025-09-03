@@ -23,25 +23,25 @@ const PredioPublicoSkeletonItem: React.FC = () => (
     <Card className="!p-4 space-y-3 animate-pulse">
         <div className="flex justify-between items-start">
             <div className="w-3/4 space-y-2">
-                <div className="h-4 bg-gray-200 rounded w-full"></div>
-                <div className="h-5 bg-gray-200 rounded w-1/3"></div>
+                <div className="h-4 bg-slate-200 rounded w-full"></div>
+                <div className="h-5 bg-slate-200 rounded w-1/3"></div>
             </div>
-            <div className="h-5 w-1/5 bg-gray-200 rounded-full"></div>
+            <div className="h-5 w-1/5 bg-slate-200 rounded-full"></div>
         </div>
         <div className="space-y-2">
-            <div className="h-3 bg-gray-200 rounded w-full"></div>
-            <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+            <div className="h-3 bg-slate-200 rounded w-full"></div>
+            <div className="h-3 bg-slate-200 rounded w-1/2"></div>
         </div>
-        <div className="flex items-center space-x-2 pt-3 border-t border-gray-100">
-            <div className="h-9 bg-gray-200 rounded-lg w-full"></div>
-            <div className="h-9 bg-gray-200 rounded-lg w-full"></div>
+        <div className="flex items-center space-x-2 pt-3 border-t border-slate-100">
+            <div className="h-9 bg-slate-200 rounded-lg w-full"></div>
+            <div className="h-9 bg-slate-200 rounded-lg w-full"></div>
         </div>
     </Card>
 );
 
 const getCategoryIcon = (category: CategoriaPredioPublico, isSelected: boolean = false) => {
     const detail = CATEGORY_DETAILS[category] || { icon: 'location_on' };
-    let bgColorClass = 'bg-gray-500';
+    let bgColorClass = 'bg-slate-500';
     if(category === 'Saúde') bgColorClass = 'bg-rose-500';
     if(category === 'Educação') bgColorClass = 'bg-sky-500';
     if(category === 'Assistência Social') bgColorClass = 'bg-violet-500';
@@ -210,7 +210,7 @@ const MapaServicos: React.FC<MapaServicosProps> = ({ navigateTo, predioId, turis
         const popupContent = `
           <div class="font-sans">
               <h4 class="font-bold text-base mb-1">${item.nome}</h4>
-              <p class="text-xs text-gray-600 mb-2">${item.endereco}</p>
+              <p class="text-xs text-slate-600 mb-2">${item.endereco}</p>
               <button id="popup-details-btn-${item.id}" class="w-full text-center px-2 py-1 bg-indigo-600 text-white text-xs font-semibold rounded-md hover:bg-indigo-700">
                   Ver Detalhes
               </button>
@@ -285,7 +285,7 @@ const MapaServicos: React.FC<MapaServicosProps> = ({ navigateTo, predioId, turis
         <Button onClick={() => navigateTo('DASHBOARD')} variant="ghost" size="icon">
           <Icon name="arrow_back" />
         </Button>
-        <h2 className="text-2xl font-bold text-gray-800">Mapa de Serviços</h2>
+        <h2 className="text-2xl font-bold text-slate-800">Mapa de Serviços</h2>
       </div>
       
       <Card className="!p-3">
@@ -303,7 +303,7 @@ const MapaServicos: React.FC<MapaServicosProps> = ({ navigateTo, predioId, turis
         ) : (
           <>
             <div ref={mapContainerRef} className="h-96 w-full z-0" />
-            <Button size="icon" onClick={handleCenterOnUser} className="absolute bottom-4 right-4 z-[1000] bg-white !text-gray-700 shadow-lg hover:!bg-gray-100" aria-label="Centralizar na minha localização">
+            <Button size="icon" onClick={handleCenterOnUser} className="absolute bottom-4 right-4 z-[1000] bg-white !text-slate-700 shadow-lg hover:!bg-slate-100" aria-label="Centralizar na minha localização">
               <Icon name="my_location" />
             </Button>
           </>
@@ -311,7 +311,7 @@ const MapaServicos: React.FC<MapaServicosProps> = ({ navigateTo, predioId, turis
       </Card>
 
       <div className="space-y-3 pt-4">
-        <h3 className="text-xl font-bold text-gray-800 px-1">Locais Encontrados</h3>
+        <h3 className="text-xl font-bold text-slate-800 px-1">Locais Encontrados</h3>
         {loading ? (
             <div className="space-y-3">
                 {[...Array(3)].map((_, i) => <PredioPublicoSkeletonItem key={i} />)}
@@ -323,7 +323,7 @@ const MapaServicos: React.FC<MapaServicosProps> = ({ navigateTo, predioId, turis
                 <Card key={predio.id} className="!p-4 space-y-3">
                     <div className="flex justify-between items-start">
                        <div>
-                          <h3 className="font-bold text-lg text-gray-800">{predio.nome}</h3>
+                          <h3 className="font-bold text-lg text-slate-800">{predio.nome}</h3>
                           <div className={`inline-flex items-center space-x-1.5 px-2 py-0.5 rounded-full text-xs font-medium ${catDetails.bgColor} ${catDetails.color} mt-1`}>
                             <Icon name={catDetails.icon} className="!text-sm" />
                             <span>{predio.categoria}</span>
@@ -334,11 +334,11 @@ const MapaServicos: React.FC<MapaServicosProps> = ({ navigateTo, predioId, turis
                           <span>{predio.isOpenNow ? 'Aberto' : 'Fechado'}</span>
                        </div>
                     </div>
-                    <div className="text-sm text-gray-600 space-y-1">
-                       <p className="flex items-center"><Icon name="location_on" className="text-base mr-2 text-gray-400" />{predio.endereco}</p>
-                       {predio.distance !== null && <p className="flex items-center"><Icon name="near_me" className="text-base mr-2 text-gray-400" />{`~${predio.distance.toFixed(1)} km de distância`}</p>}
+                    <div className="text-sm text-slate-600 space-y-1">
+                       <p className="flex items-center"><Icon name="location_on" className="text-base mr-2 text-slate-400" />{predio.endereco}</p>
+                       {predio.distance !== null && <p className="flex items-center"><Icon name="near_me" className="text-base mr-2 text-slate-400" />{`~${predio.distance.toFixed(1)} km de distância`}</p>}
                     </div>
-                    <div className="flex items-center space-x-2 pt-3 border-t border-gray-100">
+                    <div className="flex items-center space-x-2 pt-3 border-t border-slate-100">
                        <Button size="sm" onClick={() => setSelectedItem(predio)} variant="secondary" className="w-full">Detalhes</Button>
                        <Button size="sm" onClick={() => handleMapFocus(predio)} variant="primary" className="w-full">Ver no Mapa</Button>
                     </div>
@@ -346,7 +346,7 @@ const MapaServicos: React.FC<MapaServicosProps> = ({ navigateTo, predioId, turis
               )
             })
         ) : (
-            <Card><p className="text-center text-gray-600">Nenhum local encontrado para os filtros selecionados.</p></Card>
+            <Card><p className="text-center text-slate-600">Nenhum local encontrado para os filtros selecionados.</p></Card>
         )}
       </div>
 
@@ -354,45 +354,45 @@ const MapaServicos: React.FC<MapaServicosProps> = ({ navigateTo, predioId, turis
         <Modal isOpen={!!selectedItem} onClose={() => setSelectedItem(null)} title={selectedItem.nome}>
             {isPredioPublico(selectedItem) ? (
                 <>
-                  {mainImage && <img src={mainImage} alt={`Foto de ${selectedItem.nome}`} className="w-full h-56 object-cover bg-gray-200" />}
+                  {mainImage && <img src={mainImage} alt={`Foto de ${selectedItem.nome}`} className="w-full h-56 object-cover bg-slate-200" />}
                   {selectedItem.imagens && selectedItem.imagens.length > 1 && (
-                    <div className="p-2 flex space-x-2 overflow-x-auto bg-gray-100">
+                    <div className="p-2 flex space-x-2 overflow-x-auto bg-slate-100">
                         {selectedItem.imagens.map((img, index) => (
                             <img key={index} src={img} alt={`Miniatura ${index + 1}`} className={`w-16 h-16 object-cover rounded-md cursor-pointer border-2 flex-shrink-0 ${mainImage === img ? 'border-indigo-500' : 'border-transparent'}`} onClick={() => setMainImage(img)} />
                         ))}
                     </div>
                   )}
-                  <div className="p-6 space-y-4 text-gray-700">
-                      <p className="text-base text-gray-600">{selectedItem.endereco}</p>
-                      <div className="pt-4 border-t border-gray-200 space-y-2.5">
+                  <div className="p-6 space-y-4 text-slate-700">
+                      <p className="text-base text-slate-600">{selectedItem.endereco}</p>
+                      <div className="pt-4 border-t border-slate-200 space-y-2.5">
                           <p className={`flex items-center font-semibold ${selectedItem.isOpenNow ? 'text-emerald-600' : 'text-rose-600'}`}><Icon name="fiber_manual_record" className="text-base mr-3" />{selectedItem.isOpenNow ? 'Aberto agora' : 'Fechado agora'}</p>
-                          {selectedItem.busyness && (<p className="flex items-center"><Icon name="show_chart" className="text-xl mr-2 text-gray-500" />{selectedItem.busyness}</p>)}
-                          <p className="flex items-center"><Icon name="schedule" className="text-xl mr-2 text-gray-500" />{selectedItem.horario}</p>
-                          <p className="flex items-center"><Icon name="phone" className="text-xl mr-2 text-gray-500" />{selectedItem.telefone}</p>
+                          {selectedItem.busyness && (<p className="flex items-center"><Icon name="show_chart" className="text-xl mr-2 text-slate-500" />{selectedItem.busyness}</p>)}
+                          <p className="flex items-center"><Icon name="schedule" className="text-xl mr-2 text-slate-500" />{selectedItem.horario}</p>
+                          <p className="flex items-center"><Icon name="phone" className="text-xl mr-2 text-slate-500" />{selectedItem.telefone}</p>
                       </div>
-                      <div className="pt-4 border-t border-gray-200"><h5 className="font-bold text-gray-800 mb-2">Serviços oferecidos:</h5><ul className="list-disc list-inside space-y-1 pl-1">{selectedItem.servicos.map((s, i) => <li key={i}>{s}</li>)}</ul></div>
-                      {selectedItem.profissionais && selectedItem.profissionais.length > 0 && (<div className="pt-4 border-t border-gray-200"><h5 className="font-bold text-gray-800 mb-3">Profissionais</h5><div className="space-y-3">{selectedItem.profissionais.map((prof, i) => (<div key={i} className="text-sm"><p className="font-semibold text-gray-700">{prof.nome}</p><p className="text-gray-600">{prof.cargo}</p><p className="text-xs text-gray-500 uppercase">{prof.cargaHoraria}</p></div>))}</div></div>)}
-                      <div className="pt-4 mt-4 border-t border-gray-200 flex items-center flex-wrap gap-3"><Button iconLeft="call" onClick={() => window.location.href = `tel:${selectedItem.telefone.replace(/\D/g, '')}`} variant="secondary" className="bg-emerald-600 hover:bg-emerald-700 text-white">Ligar</Button><Button iconLeft="directions" onClick={() => window.open(`https://www.google.com/maps/dir/?api=1&destination=${selectedItem.localizacao.latitude},${selectedItem.localizacao.longitude}`, '_blank')} variant="primary" className="bg-sky-600 hover:bg-sky-700 text-white">Google Maps</Button><Button iconLeft="navigation" onClick={() => window.open(`waze://?ll=${selectedItem.localizacao.latitude},${selectedItem.localizacao.longitude}&navigate=yes`, '_blank')} variant="secondary" className="bg-cyan-500 hover:bg-cyan-600 text-white">Waze</Button></div>
+                      <div className="pt-4 border-t border-slate-200"><h5 className="font-bold text-slate-800 mb-2">Serviços oferecidos:</h5><ul className="list-disc list-inside space-y-1 pl-1">{selectedItem.servicos.map((s, i) => <li key={i}>{s}</li>)}</ul></div>
+                      {selectedItem.profissionais && selectedItem.profissionais.length > 0 && (<div className="pt-4 border-t border-slate-200"><h5 className="font-bold text-slate-800 mb-3">Profissionais</h5><div className="space-y-3">{selectedItem.profissionais.map((prof, i) => (<div key={i} className="text-sm"><p className="font-semibold text-slate-700">{prof.nome}</p><p className="text-slate-600">{prof.cargo}</p><p className="text-xs text-slate-500 uppercase">{prof.cargaHoraria}</p></div>))}</div></div>)}
+                      <div className="pt-4 mt-4 border-t border-slate-200 flex items-center flex-wrap gap-3"><Button iconLeft="call" onClick={() => window.location.href = `tel:${selectedItem.telefone.replace(/\D/g, '')}`} variant="secondary" className="bg-emerald-600 hover:bg-emerald-700 text-white">Ligar</Button><Button iconLeft="directions" onClick={() => window.open(`https://www.google.com/maps/dir/?api=1&destination=${selectedItem.localizacao.latitude},${selectedItem.localizacao.longitude}`, '_blank')} variant="primary" className="bg-sky-600 hover:bg-sky-700 text-white">Google Maps</Button><Button iconLeft="navigation" onClick={() => window.open(`waze://?ll=${selectedItem.localizacao.latitude},${selectedItem.localizacao.longitude}&navigate=yes`, '_blank')} variant="secondary" className="bg-cyan-500 hover:bg-cyan-600 text-white">Waze</Button></div>
                   </div>
                 </>
             ) : (
                 <>
-                  {mainImage && <img src={mainImage} alt={`Foto de ${selectedItem.nome}`} className="w-full h-56 object-cover bg-gray-200" />}
+                  {mainImage && <img src={mainImage} alt={`Foto de ${selectedItem.nome}`} className="w-full h-56 object-cover bg-slate-200" />}
                   {selectedItem.imagens && selectedItem.imagens.length > 1 && (
-                    <div className="p-2 flex space-x-2 overflow-x-auto bg-gray-100">
+                    <div className="p-2 flex space-x-2 overflow-x-auto bg-slate-100">
                         {selectedItem.imagens.map((img, index) => (
                             <img key={index} src={img} alt={`Miniatura ${index + 1}`} className={`w-16 h-16 object-cover rounded-md cursor-pointer border-2 flex-shrink-0 ${mainImage === img ? 'border-indigo-500' : 'border-transparent'}`} onClick={() => setMainImage(img)} />
                         ))}
                     </div>
                   )}
-                  <div className="p-6 space-y-4 text-gray-700">
-                    <p className="text-base text-gray-600">{selectedItem.descricao}</p>
-                    <div className="pt-4 border-t border-gray-200 space-y-3">
-                        <p className="flex items-start"><Icon name="location_on" className="text-xl mr-2 text-gray-500 flex-shrink-0" /><span>{selectedItem.endereco}</span></p>
-                        {selectedItem.contato && <p className="flex items-center"><Icon name="phone" className="text-xl mr-2 text-gray-500" />{selectedItem.contato}</p>}
-                        {selectedItem.site && <p className="flex items-start"><Icon name="language" className="text-xl mr-2 text-gray-500 flex-shrink-0" /><a href={selectedItem.site} target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline break-all">{selectedItem.site}</a></p>}
+                  <div className="p-6 space-y-4 text-slate-700">
+                    <p className="text-base text-slate-600">{selectedItem.descricao}</p>
+                    <div className="pt-4 border-t border-slate-200 space-y-3">
+                        <p className="flex items-start"><Icon name="location_on" className="text-xl mr-2 text-slate-500 flex-shrink-0" /><span>{selectedItem.endereco}</span></p>
+                        {selectedItem.contato && <p className="flex items-center"><Icon name="phone" className="text-xl mr-2 text-slate-500" />{selectedItem.contato}</p>}
+                        {selectedItem.site && <p className="flex items-start"><Icon name="language" className="text-xl mr-2 text-slate-500 flex-shrink-0" /><a href={selectedItem.site} target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline break-all">{selectedItem.site}</a></p>}
                     </div>
-                    <div className="pt-4 mt-4 border-t border-gray-200 flex items-center flex-wrap gap-3"><Button iconLeft="directions" onClick={() => window.open(`https://www.google.com/maps/dir/?api=1&destination=${selectedItem.localizacao.latitude},${selectedItem.localizacao.longitude}`, '_blank')} variant="primary">Rotas</Button>{selectedItem.contato && <Button iconLeft="call" onClick={() => window.location.href = `tel:${selectedItem.contato?.replace(/\D/g, '')}`} variant="secondary">Ligar</Button>}</div>
+                    <div className="pt-4 mt-4 border-t border-slate-200 flex items-center flex-wrap gap-3"><Button iconLeft="directions" onClick={() => window.open(`https://www.google.com/maps/dir/?api=1&destination=${selectedItem.localizacao.latitude},${selectedItem.localizacao.longitude}`, '_blank')} variant="primary">Rotas</Button>{selectedItem.contato && <Button iconLeft="call" onClick={() => window.location.href = `tel:${selectedItem.contato?.replace(/\D/g, '')}`} variant="secondary">Ligar</Button>}</div>
                   </div>
                 </>
             )}

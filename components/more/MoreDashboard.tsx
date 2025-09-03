@@ -51,12 +51,12 @@ const settingsItems: { view: View; icon: string; title: string }[] = [
 ];
 
 const ListItem: React.FC<{ icon: string; title: string; onClick: () => void }> = ({ icon, title, onClick }) => (
-    <button onClick={onClick} className="w-full flex items-center justify-between p-3 text-left hover:bg-gray-50 rounded-lg transition-colors">
+    <button onClick={onClick} className="w-full flex items-center justify-between p-3 text-left hover:bg-slate-50 rounded-lg transition-colors">
         <div className="flex items-center space-x-4">
-            <Icon name={icon} className="text-2xl text-gray-600" />
-            <h3 className="font-semibold text-gray-800">{title}</h3>
+            <Icon name={icon} className="text-2xl text-slate-600" />
+            <h3 className="font-semibold text-slate-800">{title}</h3>
         </div>
-        <Icon name="chevron_right" className="text-gray-400" />
+        <Icon name="chevron_right" className="text-slate-400" />
     </button>
 );
 
@@ -85,40 +85,40 @@ interface MoreDashboardProps {
 const MoreDashboard: React.FC<MoreDashboardProps> = ({ navigateTo }) => {
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-gray-800">Mais Opções</h2>
+      <h2 className="text-2xl font-bold text-slate-800">Mais Opções</h2>
       
       <div className="space-y-4 pt-2">
         <Card>
-            <h3 className="text-sm font-bold text-gray-700 uppercase tracking-wider px-3 pb-2">Informações</h3>
-            <div className="divide-y divide-gray-100">
+            <h3 className="text-sm font-bold text-slate-700 uppercase tracking-wider px-3 pb-2">Informações</h3>
+            <div className="divide-y divide-slate-100">
                 {infoItems.map(item => <ListItem key={item.title} {...item} onClick={() => navigateTo(item.view)} />)}
             </div>
         </Card>
         
         <Card>
-            <h3 className="text-sm font-bold text-gray-700 uppercase tracking-wider px-3 pb-2">Serviços Públicos</h3>
-            <div className="divide-y divide-gray-100">
+            <h3 className="text-sm font-bold text-slate-700 uppercase tracking-wider px-3 pb-2">Serviços Públicos</h3>
+            <div className="divide-y divide-slate-100">
                 {servicosPublicosItems.map(item => <ListItem key={item.title} {...item} onClick={() => navigateTo(item.view, item.params)} />)}
             </div>
         </Card>
         
         <Card>
-            <h3 className="text-sm font-bold text-gray-700 uppercase tracking-wider px-3 pb-2">Configurações</h3>
-            <div className="divide-y divide-gray-100">
+            <h3 className="text-sm font-bold text-slate-700 uppercase tracking-wider px-3 pb-2">Configurações</h3>
+            <div className="divide-y divide-slate-100">
                 {settingsItems.map(item => <ListItem key={item.title} {...item} onClick={() => navigateTo(item.view)} />)}
             </div>
         </Card>
 
         <Card>
-            <h3 className="text-lg font-bold text-gray-800 mb-4 text-center">Redes Sociais</h3>
+            <h3 className="text-lg font-bold text-slate-800 mb-4 text-center">Redes Sociais</h3>
             <div className="flex justify-center flex-wrap gap-x-8 gap-y-4">
-                <a href="https://www.facebook.com/Governo-Municipal-de-Baturit%C3%A9-104660501581546" target="_blank" rel="noopener noreferrer" title="Facebook" className="text-gray-500 hover:text-gray-800 transition-colors">
+                <a href="https://www.facebook.com/Governo-Municipal-de-Baturit%C3%A9-104660501581546" target="_blank" rel="noopener noreferrer" title="Facebook" className="text-slate-500 hover:text-slate-800 transition-colors">
                     <FacebookIcon />
                 </a>
-                <a href="https://www.instagram.com/prefeitura.baturite/" target="_blank" rel="noopener noreferrer" title="Instagram" className="text-gray-500 hover:text-gray-800 transition-colors">
+                <a href="https://www.instagram.com/prefeitura.baturite/" target="_blank" rel="noopener noreferrer" title="Instagram" className="text-slate-500 hover:text-slate-800 transition-colors">
                     <InstagramIcon />
                 </a>
-                <a href="https://www.youtube.com/channel/UCyuBX70YG6fs4aN-cwKfECA" target="_blank" rel="noopener noreferrer" title="YouTube" className="text-gray-500 hover:text-gray-800 transition-colors">
+                <a href="https://www.youtube.com/channel/UCyuBX70YG6fs4aN-cwKfECA" target="_blank" rel="noopener noreferrer" title="YouTube" className="text-slate-500 hover:text-slate-800 transition-colors">
                     <YouTubeIcon />
                 </a>
             </div>

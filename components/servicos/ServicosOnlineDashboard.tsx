@@ -15,8 +15,8 @@ const ServicoItem: React.FC<{ servico: ServicoOnline; onAgendar: () => void; }> 
     <div className="flex items-center space-x-4">
       <Icon name={servico.icon} className="text-3xl text-indigo-600" />
       <div className="flex-1">
-        <h3 className="font-bold text-gray-800">{servico.nome}</h3>
-        <p className="text-sm text-gray-600">{servico.descricao}</p>
+        <h3 className="font-bold text-slate-800">{servico.nome}</h3>
+        <p className="text-sm text-slate-600">{servico.descricao}</p>
       </div>
       <Button size="sm" onClick={onAgendar} className="whitespace-nowrap">Agendar</Button>
     </div>
@@ -57,9 +57,9 @@ const ServicoExternoItem: React.FC<{ title: string; link: string; icon: string; 
         <Card onClick={handleOpenLink} className="!p-4 flex items-center justify-between">
             <div className="flex items-center space-x-4">
                 <Icon name={icon} className="text-3xl text-indigo-600" />
-                <h3 className="font-bold text-gray-800">{title}</h3>
+                <h3 className="font-bold text-slate-800">{title}</h3>
             </div>
-            <Icon name="open_in_new" className="text-gray-400" />
+            <Icon name="open_in_new" className="text-slate-400" />
         </Card>
     );
 };
@@ -92,10 +92,10 @@ const ServicosOnlineDashboard: React.FC<ServicosOnlineDashboardProps> = ({ navig
         <Button onClick={() => navigateTo('SERVICOS_DASHBOARD')} variant="ghost" size="icon">
           <Icon name="arrow_back" />
         </Button>
-        <h2 className="text-2xl font-bold text-gray-800">Serviços Online</h2>
+        <h2 className="text-2xl font-bold text-slate-800">Serviços Online</h2>
       </div>
       
-      <p className="text-gray-600 px-1">
+      <p className="text-slate-600 px-1">
         Agende atendimentos presenciais ou acesse portais e informações importantes da prefeitura.
       </p>
 
@@ -105,7 +105,7 @@ const ServicosOnlineDashboard: React.FC<ServicosOnlineDashboardProps> = ({ navig
             if (groupedServicos[category]?.length > 0) {
               return (
                 <section key={category}>
-                  <h3 className="text-lg font-bold text-gray-700 mb-2 pl-1">{category}</h3>
+                  <h3 className="text-lg font-bold text-slate-700 mb-2 pl-1">{category}</h3>
                   <div className="space-y-3">
                     {groupedServicos[category].map(servico => (
                       <ServicoItem key={servico.id} servico={servico} onAgendar={() => navigateTo('SERVICO_FORM', { servicoId: servico.id })} />
@@ -120,7 +120,7 @@ const ServicosOnlineDashboard: React.FC<ServicosOnlineDashboardProps> = ({ navig
       )}
 
       <section className="pt-4">
-          <h3 className="text-lg font-bold text-gray-700 mb-2 pl-1">Acesso Rápido</h3>
+          <h3 className="text-lg font-bold text-slate-700 mb-2 pl-1">Acesso Rápido</h3>
           <div className="space-y-3">
             {servicosExternos.map(servico => (
               <ServicoExternoItem 

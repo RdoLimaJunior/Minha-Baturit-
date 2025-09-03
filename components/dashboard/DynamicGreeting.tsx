@@ -18,16 +18,16 @@ const DynamicGreeting: React.FC<DynamicGreetingProps> = ({ userName }) => {
     if (isLoading && !greeting.subtitle) {
         return (
             <div className="animate-pulse">
-                <div className="h-7 bg-gray-200 rounded w-1/2 mb-2"></div>
-                <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                <div className="h-7 bg-slate-200 rounded w-1/2 mb-2"></div>
+                <div className="h-4 bg-slate-200 rounded w-3/4"></div>
             </div>
         );
     }
     
     return (
         <div>
-            <h1 className="text-2xl font-bold text-gray-800">{greeting.title}</h1>
-            <p className="text-gray-600">{greeting.subtitle}</p>
+            <h1 className="text-2xl font-bold text-slate-800">{greeting.title}</h1>
+            <p className="text-slate-600">{greeting.subtitle}</p>
         </div>
     );
 };

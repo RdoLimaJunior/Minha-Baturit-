@@ -14,8 +14,8 @@ const TypingIndicator = () => (
             <Icon name="flutter_dash" className="text-indigo-600 !text-xl" />
         </div>
         <div className="pt-1.5 w-full">
-             <p className="font-semibold text-gray-800">Assistente Uirapuru</p>
-            <div className="mt-2 inline-block px-4 py-3 rounded-2xl bg-gray-100 text-gray-800 rounded-bl-lg">
+             <p className="font-semibold text-slate-800">Assistente Uirapuru</p>
+            <div className="mt-2 inline-block px-4 py-3 rounded-2xl bg-slate-100 text-slate-800 rounded-bl-lg">
                 <div className="flex items-center space-x-1.5">
                     <span className="typing-dot"></span>
                     <span className="typing-dot" style={{ animationDelay: '0.2s' }}></span>
@@ -187,8 +187,8 @@ const Dashboard: React.FC<DashboardProps> = ({ navigateTo, userProfile }) => {
   if (userProfile.role === UserRole.GESTOR) {
     return (
         <div className="container mx-auto p-4">
-            <h2 className="text-2xl font-bold text-gray-800">Painel do Gestor</h2>
-            <p className="text-gray-600">Bem-vindo, {userProfile.name}. Funcionalidades de gestão em breve.</p>
+            <h2 className="text-2xl font-bold text-slate-800">Painel do Gestor</h2>
+            <p className="text-slate-600">Bem-vindo, {userProfile.name}. Funcionalidades de gestão em breve.</p>
         </div>
     );
   }
@@ -203,7 +203,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigateTo, userProfile }) => {
         .typing-dot {
             width: 8px;
             height: 8px;
-            background-color: #9ca3af;
+            background-color: #94a3b8;
             border-radius: 50%;
             display: inline-block;
             animation: bounce 1.4s infinite ease-in-out both;
@@ -263,7 +263,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigateTo, userProfile }) => {
                       <button
                           key={i}
                           onClick={() => handleSendMessage(q)}
-                          className="px-4 py-2 bg-white border border-gray-200 text-gray-600 rounded-full text-sm font-medium hover:bg-gray-100 hover:border-gray-300 transition-colors"
+                          className="px-4 py-2 bg-white border border-slate-200 text-slate-600 rounded-full text-sm font-medium hover:bg-slate-100 hover:border-slate-300 transition-colors"
                       >
                       {q}
                       </button>
@@ -272,13 +272,13 @@ const Dashboard: React.FC<DashboardProps> = ({ navigateTo, userProfile }) => {
             </div>
           )}
           <form onSubmit={handleSend} className="w-full">
-              <div className="bg-white border border-gray-200 rounded-2xl p-2 flex items-center gap-2 shadow-sm focus-within:ring-2 focus-within:ring-indigo-500">
+              <div className="bg-white border border-slate-200 rounded-2xl p-2 flex items-center gap-2 shadow-sm focus-within:ring-2 focus-within:ring-indigo-500">
                 <input
                     type="text"
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     placeholder={isListening ? "Ouvindo..." : "Pergunte ao assistente..."}
-                    className="bg-transparent focus:ring-0 border-0 w-full text-gray-800 placeholder-gray-400"
+                    className="bg-transparent focus:ring-0 border-0 w-full text-slate-800 placeholder-slate-400"
                     disabled={isLoading || isListening}
                     aria-label="Caixa de texto para perguntas ao assistente virtual"
                 />

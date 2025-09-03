@@ -9,7 +9,7 @@ interface BottomNavProps {
 
 const NavItem: React.FC<{ icon: string; label: string; view: View; isActive: boolean; onClick: (view: View) => void; }> = ({ icon, label, view, isActive, onClick }) => {
   const activeClasses = 'text-indigo-600';
-  const inactiveClasses = 'text-gray-500 hover:text-gray-800';
+  const inactiveClasses = 'text-slate-500 hover:text-slate-800';
   return (
     <button onClick={() => onClick(view)} className={`flex flex-col items-center justify-center space-y-1 w-full transition-colors ${isActive ? activeClasses : inactiveClasses}`}>
       <Icon name={icon} className="text-2xl" />
@@ -51,7 +51,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ navigateTo, currentView }) => {
   };
 
   return (
-    <footer className="bg-white/80 backdrop-blur-sm border-t border-gray-200 fixed bottom-0 left-0 right-0 z-10">
+    <footer className="bg-white/80 backdrop-blur-sm border-t border-slate-200 fixed bottom-0 left-0 right-0 z-10">
       <div className="container mx-auto px-4 flex justify-around items-center h-16">
         {mainNavItems.map((item, index) => {
           if (index === 2) { // Central button

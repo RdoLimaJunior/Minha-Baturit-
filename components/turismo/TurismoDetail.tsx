@@ -24,10 +24,6 @@ const TurismoDetail: React.FC<TurismoDetailProps> = ({ turismoId, categoria, nav
 
   return (
     <div className="space-y-4">
-      <Button onClick={() => navigateTo('TURISMO_LIST', { turismoCategoria: categoria })} variant="ghost" iconLeft="arrow_back">
-        Voltar para {categoria}
-      </Button>
-
       <Card className="!p-0">
         <img 
           src={item.imagens[0]} 

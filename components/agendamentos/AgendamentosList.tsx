@@ -177,13 +177,7 @@ const AgendamentosList: React.FC<AgendamentosListProps> = ({ navigateTo }) => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div className="flex items-center space-x-2">
-            <Button onClick={() => navigateTo('SERVICOS_DASHBOARD')} variant="ghost" size="icon">
-              <Icon name="arrow_back" />
-            </Button>
-            <h2 className="text-2xl font-bold text-slate-800">Agenda do Cidadão</h2>
-        </div>
+      <div className="flex justify-end items-center">
         <Button
             onClick={() => setIsCalendarOpen(!isCalendarOpen)}
             variant="ghost"

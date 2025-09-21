@@ -116,11 +116,7 @@ const NotificacoesList: React.FC<NotificacoesListProps> = ({ navigateTo }) => {
   if (loading) {
       return (
           <div className="space-y-4">
-              <div className="flex justify-between items-center animate-pulse">
-                  <div className="flex items-center space-x-2">
-                      <Button variant="ghost" size="icon" className="!bg-gray-200" disabled><Icon name="arrow_back" className="text-transparent" /></Button>
-                      <div className="h-8 w-40 rounded bg-gray-200"></div>
-                  </div>
+              <div className="flex justify-end items-center animate-pulse">
                   <div className="h-8 w-32 rounded-lg bg-gray-200"></div>
               </div>
               <div className="space-y-3 pt-2">
@@ -132,13 +128,7 @@ const NotificacoesList: React.FC<NotificacoesListProps> = ({ navigateTo }) => {
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <div className="flex items-center space-x-2">
-            <Button onClick={() => navigateTo('DASHBOARD')} variant="ghost" size="icon">
-              <Icon name="arrow_back" />
-            </Button>
-            <h2 className="text-2xl font-bold text-gray-800">Notificações</h2>
-        </div>
+      <div className="flex justify-end items-center">
         {unreadCount > 0 && (
             <Button size="sm" variant="ghost" onClick={markAllAsRead}>
                 Marcar todas como lidas

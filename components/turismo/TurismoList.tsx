@@ -54,10 +54,6 @@ const TurismoList: React.FC<TurismoListProps> = ({ categoria, navigateTo }) => {
   if (loading) {
       return (
           <div className="space-y-4">
-              <div className="flex items-center space-x-2 animate-pulse">
-                  <Button variant="ghost" size="icon" className="!bg-slate-200 dark:!bg-slate-700" disabled><Icon name="arrow_back" className="text-transparent" /></Button>
-                  <div className="h-8 w-1/3 rounded bg-slate-200 dark:bg-slate-700"></div>
-              </div>
               <div className="space-y-4 pt-2">
                   {[...Array(3)].map((_, i) => <TurismoSkeletonItem key={i} />)}
               </div>
@@ -67,13 +63,6 @@ const TurismoList: React.FC<TurismoListProps> = ({ categoria, navigateTo }) => {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center space-x-2">
-        <Button onClick={() => navigateTo('TURISMO_DASHBOARD')} variant="ghost" size="icon">
-          <Icon name="arrow_back" />
-        </Button>
-        <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">{categoria}</h2>
-      </div>
-
       {itensFiltrados.length > 0 ? (
         <div className="space-y-4">
           {itensFiltrados.map(item => (

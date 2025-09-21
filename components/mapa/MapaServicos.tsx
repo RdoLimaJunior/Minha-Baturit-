@@ -137,7 +137,7 @@ const MapaServicos: React.FC<MapaServicosProps> = ({ navigateTo, predioId, turis
     return enriched;
   }, [prediosFiltrados, userLocation]);
 
-  const handleMapFocus = useCallback((item: PredioPublico | TurismoItem) => {
+  const handleProgrammaticFocus = useCallback((item: PredioPublico | TurismoItem) => {
     mapContainerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
     if (mapInstanceRef.current) {
@@ -169,26 +169,6 @@ const MapaServicos: React.FC<MapaServicosProps> = ({ navigateTo, predioId, turis
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       }).addTo(map);
       
-      map.on('popupopen', (e: any) => {
-        const popupNode = e.popup.getElement();
-        if (!popupNode) return;
-
-        const detailsButton = popupNode.querySelector('[id^="popup-details-btn-"]');
-        if (detailsButton) {
-            const currentItemId = detailsButton.id.replace('popup-details-btn-', '');
-            const allItems = [...(predios || []), ...(focusedTurismoItem ? [focusedTurismoItem] : [])];
-            const item = allItems.find(p => p.id === currentItemId);
-            if (item) {
-                const clickHandler = () => setSelectedItem(item);
-                // Attach a named property to the element to avoid duplicate listeners
-                if (!(detailsButton as any)._clickHandler) {
-                  (detailsButton as any)._clickHandler = clickHandler;
-                  detailsButton.addEventListener('click', clickHandler);
-                }
-            }
-        }
-      });
-      
       mapInstanceRef.current = map;
       markersLayerRef.current = L.layerGroup().addTo(map);
     }
@@ -208,31 +188,30 @@ const MapaServicos: React.FC<MapaServicosProps> = ({ navigateTo, predioId, turis
       itemsToDisplay.forEach(item => {
         const icon = isPredioPublico(item) ? getCategoryIcon(item.categoria) : getTurismoIcon();
         const popupContent = `
-          <div class="font-sans">
-              <h4 class="font-bold text-base mb-1">${item.nome}</h4>
-              <p class="text-xs text-slate-600 mb-2">${item.endereco}</p>
-              <button id="popup-details-btn-${item.id}" class="w-full text-center px-2 py-1 bg-indigo-600 text-white text-xs font-semibold rounded-md hover:bg-indigo-700">
-                  Ver Detalhes
-              </button>
+          <div class="font-sans font-bold text-center">
+              ${item.nome}
           </div>
         `;
         const marker = L.marker([item.localizacao.latitude, item.localizacao.longitude], { icon })
          .addTo(markersLayer)
          .bindPopup(popupContent, { closeButton: false })
-         .on('click', () => handleMapFocus(item));
+         .on('click', () => {
+            setSelectedMarkerId(item.id);
+            setSelectedItem(item);
+         });
         markerRefs.current[item.id] = marker;
       });
     }
-  }, [prediosFiltrados, focusedTurismoItem, handleMapFocus]);
+  }, [prediosFiltrados, focusedTurismoItem, setSelectedItem]);
 
   useEffect(() => {
       if (predioId && predios) {
           const itemToFocus = predios.find(p => p.id === predioId);
-          if (itemToFocus) setTimeout(() => handleMapFocus(itemToFocus), 300);
+          if (itemToFocus) setTimeout(() => handleProgrammaticFocus(itemToFocus), 300);
       } else if (turismoId && focusedTurismoItem) {
-          setTimeout(() => handleMapFocus(focusedTurismoItem), 300);
+          setTimeout(() => handleProgrammaticFocus(focusedTurismoItem), 300);
       }
-  }, [predioId, turismoId, predios, focusedTurismoItem, handleMapFocus]);
+  }, [predioId, turismoId, predios, focusedTurismoItem, handleProgrammaticFocus]);
   
   useEffect(() => {
     const markers = markerRefs.current;
@@ -320,7 +299,7 @@ const MapaServicos: React.FC<MapaServicosProps> = ({ navigateTo, predioId, turis
             prediosComDistancia.map(predio => {
               const catDetails = CATEGORY_DETAILS[predio.categoria];
               return (
-                <Card key={predio.id} className="!p-4 space-y-3">
+                <Card key={predio.id} className="!p-4 space-y-3" onClick={() => setSelectedItem(predio)}>
                     <div className="flex justify-between items-start">
                        <div>
                           <h3 className="font-bold text-lg text-slate-800">{predio.nome}</h3>
@@ -340,7 +319,7 @@ const MapaServicos: React.FC<MapaServicosProps> = ({ navigateTo, predioId, turis
                     </div>
                     <div className="flex items-center space-x-2 pt-3 border-t border-slate-100">
                        <Button size="sm" onClick={() => setSelectedItem(predio)} variant="secondary" className="w-full">Detalhes</Button>
-                       <Button size="sm" onClick={() => handleMapFocus(predio)} variant="primary" className="w-full">Ver no Mapa</Button>
+                       <Button size="sm" onClick={(e) => { e.stopPropagation(); handleProgrammaticFocus(predio); }} variant="primary" className="w-full">Ver no Mapa</Button>
                     </div>
                 </Card>
               )

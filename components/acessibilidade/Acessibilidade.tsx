@@ -1,13 +1,8 @@
 import React from 'react';
-import { View } from '../../types';
 import { useAccessibility } from '../../contexts/AccessibilityContext';
 import Card from '../ui/Card';
 import Icon from '../ui/Icon';
 import Button from '../ui/Button';
-
-interface AcessibilidadeProps {
-  navigateTo: (view: View) => void;
-}
 
 const FONT_SIZES = ['sm', 'base', 'lg', 'xl'];
 
@@ -18,18 +13,11 @@ const FONT_SIZE_LABELS: Record<string, string> = {
   xl: 'Extra Grande',
 };
 
-const Acessibilidade: React.FC<AcessibilidadeProps> = ({ navigateTo }) => {
+const Acessibilidade: React.FC = () => {
   const { fontSize, increaseFontSize, decreaseFontSize, resetFontSize } = useAccessibility();
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center space-x-2">
-        <Button onClick={() => navigateTo('MAIS_DASHBOARD')} variant="ghost" size="icon">
-          <Icon name="arrow_back" />
-        </Button>
-        <h2 className="text-2xl font-bold text-slate-800">Acessibilidade</h2>
-      </div>
-
       <Card>
         <h3 className="text-lg font-bold text-slate-800 mb-3">Tamanho da Fonte</h3>
         <div className="text-center mb-4">

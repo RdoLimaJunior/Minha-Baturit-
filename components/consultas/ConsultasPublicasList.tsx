@@ -75,13 +75,6 @@ const ConsultasPublicasList: React.FC<ConsultasPublicasListProps> = ({ navigateT
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center space-x-2">
-        <Button onClick={() => navigateTo('SERVICOS_DASHBOARD')} variant="ghost" size="icon">
-          <Icon name="arrow_back" />
-        </Button>
-        <h2 className="text-2xl font-bold text-slate-800">Consultas Públicas</h2>
-      </div>
-
       <p className="text-slate-600">
         Sua voz é fundamental para construir o futuro de Baturité. Participe, opine e ajude a tomar as melhores decisões para nossa cidade.
       </p>

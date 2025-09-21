@@ -19,12 +19,6 @@ const CATEGORIAS_TURISMO: { id: TurismoCategoria; title: string; icon: string; d
 const TurismoDashboard: React.FC<TurismoDashboardProps> = ({ navigateTo }) => {
   return (
     <div className="space-y-4">
-      <div className="flex items-center space-x-2">
-        <Button onClick={() => navigateTo('MAIS_DASHBOARD')} variant="ghost" size="icon">
-          <Icon name="arrow_back" />
-        </Button>
-        <h2 className="text-2xl font-bold text-slate-800">Cultura e Turismo em Baturité</h2>
-      </div>
       <p className="text-slate-600">
         Explore os encantos da serra. Descubra lugares incríveis, sabores autênticos e a hospitalidade de Baturité.
       </p>

@@ -45,10 +45,6 @@ const ServicoForm: React.FC<ServicoFormProps> = ({ servicoId, goBack }) => {
 
   return (
     <div className="space-y-4">
-      <Button onClick={goBack} variant="ghost" iconLeft="arrow_back">
-        Voltar para Serviços
-      </Button>
-
       <Card>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="text-center">

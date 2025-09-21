@@ -69,10 +69,6 @@ const ContatosList: React.FC<ContatosListProps> = ({ navigateTo }) => {
   if (loading) {
       return (
           <div className="space-y-4">
-              <div className="flex items-center space-x-2 animate-pulse">
-                  <Button variant="ghost" size="icon" className="!bg-slate-200 dark:!bg-slate-700" disabled><Icon name="arrow_back" className="text-transparent" /></Button>
-                  <div className="h-8 w-1/2 rounded bg-slate-200 dark:bg-slate-700"></div>
-              </div>
               <div className="space-y-6 pt-2">
                   {[...Array(2)].map((_, section) => (
                       <div key={section} className="space-y-3">
@@ -88,13 +84,6 @@ const ContatosList: React.FC<ContatosListProps> = ({ navigateTo }) => {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center space-x-2">
-        <Button onClick={() => navigateTo('MAIS_DASHBOARD')} variant="ghost" size="icon" aria-label="Voltar para o início">
-          <Icon name="arrow_back" />
-        </Button>
-        <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Contatos Úteis</h2>
-      </div>
-      
       {groupedContatos ? (
         <div className="space-y-6">
           {categoryOrder.map(category => {

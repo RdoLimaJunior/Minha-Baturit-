@@ -86,7 +86,6 @@ const NoticiaDetail: React.FC<NoticiaDetailProps> = ({ noticiaId, navigateTo }) 
 
   return (
     <div className="space-y-4">
-        <Button onClick={() => navigateTo('NOTICIAS_LIST')} variant="ghost" iconLeft="arrow_back">Voltar para Notícias</Button>
         <Card className="!p-0">
             <div className="p-4 flex items-center space-x-3">
                  <img src="https://www.baturite.ce.gov.br/imagens/logo-prefeitura-de-baturite.png" alt="Logo" className="w-10 h-10 rounded-full border-2 border-slate-200 dark:border-slate-700" />

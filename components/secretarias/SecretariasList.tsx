@@ -99,10 +99,6 @@ const SecretariasList: React.FC<SecretariasListProps> = ({ navigateTo }) => {
   if (loading) {
       return (
           <div className="space-y-4">
-              <div className="flex items-center space-x-2 animate-pulse">
-                  <Button variant="ghost" size="icon" className="!bg-slate-200 dark:!bg-slate-700" disabled><Icon name="arrow_back" className="text-transparent" /></Button>
-                  <div className="h-8 w-1/3 rounded bg-slate-200 dark:bg-slate-700"></div>
-              </div>
               <div className="space-y-4 pt-2">
                   <SecretariaSkeletonItem />
                   <SecretariaSkeletonItem />
@@ -113,13 +109,6 @@ const SecretariasList: React.FC<SecretariasListProps> = ({ navigateTo }) => {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center space-x-2">
-        <Button onClick={() => navigateTo('MAIS_DASHBOARD')} variant="ghost" size="icon">
-          <Icon name="arrow_back" />
-        </Button>
-        <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Secretarias</h2>
-      </div>
-      
       {secretarias && secretarias.length > 0 ? (
         <div className="space-y-4">
           {secretarias.map(sec => (

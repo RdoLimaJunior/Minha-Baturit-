@@ -3,7 +3,6 @@ import Icon from './Icon';
 
 interface ButtonProps {
   children: ReactNode;
-  // FIX: Update the onClick prop type to correctly handle mouse events, allowing the event object to be passed to handlers.
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   variant?: 'primary' | 'secondary' | 'ghost';
   type?: 'button' | 'submit' | 'reset';

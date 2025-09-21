@@ -104,8 +104,6 @@ const ParticipacaoDetail: React.FC<ParticipacaoDetailProps> = ({ publicacaoId, n
 
   return (
     <div className="space-y-4">
-      <Button onClick={() => navigateTo('PARTICIPACAO_FEED')} variant="ghost" iconLeft="arrow_back">Voltar para o Feed</Button>
-      
       <Card className="!p-0 overflow-hidden">
         {publicacao.fotos && publicacao.fotos.length > 0 && (
             <div className="grid grid-cols-2 gap-1 bg-slate-200">

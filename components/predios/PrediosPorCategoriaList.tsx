@@ -209,16 +209,6 @@ const PrediosPorCategoriaList: React.FC<PrediosPorCategoriaListProps> = ({ navig
 
     return (
         <div className="space-y-4">
-            <div className="flex items-center space-x-2">
-                <Button onClick={() => navigateTo(goBackView)} variant="ghost" size="icon">
-                    <Icon name="arrow_back" />
-                </Button>
-                <h2 className="text-2xl font-bold text-slate-800 flex items-center space-x-2">
-                    <Icon name={icon} />
-                    <span>{titulo}</span>
-                </h2>
-            </div>
-            
             <div className="sticky top-[68px] bg-gray-50 z-10 py-2 space-y-3">
                 <div className="relative">
                     <Icon name="search" className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />

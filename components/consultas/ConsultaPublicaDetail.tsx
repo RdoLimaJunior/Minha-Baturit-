@@ -95,10 +95,6 @@ const ConsultaPublicaDetail: React.FC<ConsultaPublicaDetailProps> = ({ consultaI
         .animate-slide-in-up { animation: slide-in-up 0.3s ease-out forwards; }
       `}</style>
 
-      <Button onClick={() => navigateTo('CONSULTAS_PUBLICAS_LIST')} variant="ghost" iconLeft="arrow_back">
-        Todas as Consultas
-      </Button>
-
       <Card className="!p-0 overflow-hidden">
         <img src={consulta.imageUrl} alt={consulta.title} className="w-full h-56 object-cover bg-slate-200" />
         <div className="p-4">

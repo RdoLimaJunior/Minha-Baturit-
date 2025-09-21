@@ -121,13 +121,6 @@ const NoticiasList: React.FC<NoticiasListProps> = ({ navigateTo }) => {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center space-x-2">
-        <Button onClick={() => navigateTo('MAIS_DASHBOARD')} variant="ghost" size="icon">
-          <Icon name="arrow_back" />
-        </Button>
-        <h2 className="text-2xl font-bold text-slate-800">Últimas Notícias</h2>
-      </div>
-      
       {loading ? (
         <div className="space-y-4">
           <NoticiaSkeletonItem />

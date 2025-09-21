@@ -224,8 +224,7 @@ const ProtocoloForm: React.FC<ProtocoloFormProps> = ({ goBack, navigateTo }) => 
         return (
             <div className="space-y-6">
                  <div>
-                    <Button onClick={goBack} variant="ghost" iconLeft="arrow_back">Voltar</Button>
-                    <Card className="mt-4">
+                    <Card>
                         <div className="text-center mb-6">
                             <h2 className="text-2xl font-bold text-slate-800">Participação Cidadã</h2>
                             <p className="text-slate-600 mt-1">Qual tipo de protocolo você deseja abrir?</p>

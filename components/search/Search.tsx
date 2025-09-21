@@ -78,14 +78,7 @@ const Search: React.FC<SearchProps> = ({ navigateTo }) => {
 
     return (
         <div className="space-y-4">
-            <div className="flex items-center space-x-2">
-                <Button onClick={() => navigateTo('DASHBOARD')} variant="ghost" size="icon" aria-label="Voltar para o início">
-                    <Icon name="arrow_back" />
-                </Button>
-                <h2 className="text-2xl font-bold text-slate-800">Busca Global</h2>
-            </div>
-
-            <div className="sticky top-[70px] bg-gray-50 py-2 z-5">
+            <div className="sticky top-[68px] bg-gray-50 py-2 z-5">
                 <div className="relative">
                     <Icon name="search" className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
                     <input

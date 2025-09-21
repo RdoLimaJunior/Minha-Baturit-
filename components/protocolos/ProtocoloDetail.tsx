@@ -8,7 +8,6 @@ import Button from '../ui/Button';
 
 interface ProtocoloDetailProps {
   protocoloId: string;
-  goBack: () => void;
 }
 
 const getStatusIcon = (status: StatusProtocolo) => {
@@ -45,7 +44,7 @@ const TimelineItem: React.FC<{ item: HistoricoProtocolo, isLast: boolean }> = ({
     </li>
 );
 
-const ProtocoloDetail: React.FC<ProtocoloDetailProps> = ({ protocoloId, goBack }) => {
+const ProtocoloDetail: React.FC<ProtocoloDetailProps> = ({ protocoloId }) => {
   const { data: protocolo, loading } = useProtocoloById(protocoloId);
 
   if (loading) return <Spinner />;
@@ -53,8 +52,6 @@ const ProtocoloDetail: React.FC<ProtocoloDetailProps> = ({ protocoloId, goBack }
 
   return (
     <div className="space-y-4">
-      <Button onClick={goBack} variant="ghost" iconLeft="arrow_back">Voltar</Button>
-      
       <Card>
         <h2 className="text-xl font-bold text-slate-800 mb-1">{protocolo.tipo}</h2>
         {protocolo.tipo === TipoProtocolo.RECLAMACAO && protocolo.categoria && (
@@ -80,7 +77,7 @@ const ProtocoloDetail: React.FC<ProtocoloDetailProps> = ({ protocoloId, goBack }
         <h3 className="text-lg font-bold text-slate-800 mb-4">Histórico de Atualizações</h3>
         <ul>
             {[...protocolo.historico].reverse().map((item, index, arr) => (
-                <TimelineItem key={index} item={item} isLast={index === arr.length - 1} />
+                <TimelineItem key={`${item.status}-${item.data}`} item={item} isLast={index === arr.length - 1} />
             ))}
         </ul>
       </Card>

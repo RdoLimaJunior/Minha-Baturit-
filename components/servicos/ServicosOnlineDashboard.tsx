@@ -88,13 +88,6 @@ const ServicosOnlineDashboard: React.FC<ServicosOnlineDashboardProps> = ({ navig
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center space-x-2">
-        <Button onClick={() => navigateTo('SERVICOS_DASHBOARD')} variant="ghost" size="icon">
-          <Icon name="arrow_back" />
-        </Button>
-        <h2 className="text-2xl font-bold text-slate-800">Serviços Online</h2>
-      </div>
-      
       <p className="text-slate-600 px-1">
         Agende atendimentos presenciais ou acesse portais e informações importantes da prefeitura.
       </p>

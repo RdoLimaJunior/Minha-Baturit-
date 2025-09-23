@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useServicoOnlineById } from '../../hooks/useMockData';
 import Spinner from '../ui/Spinner';
 import Card from '../ui/Card';
@@ -8,10 +9,10 @@ import { useToast } from '../ui/Toast';
 
 interface ServicoFormProps {
   servicoId: string;
-  goBack: () => void;
 }
 
-const ServicoForm: React.FC<ServicoFormProps> = ({ servicoId, goBack }) => {
+const ServicoForm: React.FC<ServicoFormProps> = ({ servicoId }) => {
+  const navigate = useNavigate();
   const { data: servico, loading } = useServicoOnlineById(servicoId);
   const { addToast } = useToast();
   
@@ -30,7 +31,7 @@ const ServicoForm: React.FC<ServicoFormProps> = ({ servicoId, goBack }) => {
     setTimeout(() => {
       setIsSubmitting(false);
       addToast('Agendamento realizado com sucesso!', 'success');
-      goBack();
+      navigate(-1);
     }, 1500);
   };
 
@@ -48,7 +49,7 @@ const ServicoForm: React.FC<ServicoFormProps> = ({ servicoId, goBack }) => {
       <Card>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="text-center">
-            <Icon name={servico.icon} className="text-6xl text-indigo-600 mx-auto" />
+            <Icon name={servico.icon} className="text-6xl text-slate-700 mx-auto" />
             <h2 className="text-2xl font-bold text-slate-800 mt-4">{servico.nome}</h2>
             <p className="text-slate-600 mt-2">
               {servico.descricao}
@@ -65,7 +66,7 @@ const ServicoForm: React.FC<ServicoFormProps> = ({ servicoId, goBack }) => {
                 value={dataHora}
                 onChange={(e) => setDataHora(e.target.value)}
                 min={getMinDateTime()}
-                className="w-full p-2 bg-white text-slate-900 border border-slate-300 rounded-md focus:ring-indigo-600 focus:border-indigo-600"
+                className="w-full p-2 bg-white text-slate-900 border border-slate-300 rounded-md focus:ring-slate-600 focus:border-slate-600"
               />
             </div>
             
@@ -75,7 +76,7 @@ const ServicoForm: React.FC<ServicoFormProps> = ({ servicoId, goBack }) => {
                 type="checkbox"
                 checked={comLembrete}
                 onChange={(e) => setComLembrete(e.target.checked)}
-                className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                className="h-4 w-4 rounded border-slate-300 text-slate-600 focus:ring-slate-500"
               />
               <label htmlFor="lembrete" className="ml-2 block text-sm text-slate-700">
                 Criar lembrete para este agendamento

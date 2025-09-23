@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, OpiniaoConsulta, StatusConsultaPublica } from '../../types';
+import { OpiniaoConsulta, StatusConsultaPublica } from '../../types';
 import Button from '../ui/Button';
 import Card from '../ui/Card';
 import Icon from '../ui/Icon';
@@ -11,10 +11,9 @@ import { timeSince } from '../../utils/helpers';
 
 interface ConsultaPublicaDetailProps {
   consultaId: string;
-  navigateTo: (view: View) => void;
 }
 
-const ConsultaPublicaDetail: React.FC<ConsultaPublicaDetailProps> = ({ consultaId, navigateTo }) => {
+const ConsultaPublicaDetail: React.FC<ConsultaPublicaDetailProps> = ({ consultaId }) => {
   const { data: consulta, loading } = useConsultaPublicaById(consultaId);
   const { addToast } = useToast();
   const [opinioes, setOpinioes] = useState<OpiniaoConsulta[]>([]);
@@ -115,7 +114,7 @@ const ConsultaPublicaDetail: React.FC<ConsultaPublicaDetailProps> = ({ consultaI
               <div className="space-y-2">
                   {consulta.documentos.map(doc => (
                       <a href={doc.url} key={doc.nome} target="_blank" rel="noopener noreferrer" className="flex items-center p-2 rounded-md bg-slate-100 hover:bg-slate-200 transition-colors">
-                          <Icon name={doc.icon} className="text-2xl text-indigo-600" />
+                          <Icon name={doc.icon} className="text-2xl text-slate-700" />
                           <span className="ml-3 font-medium text-sm text-slate-800">{doc.nome}</span>
                           <Icon name="download" className="ml-auto text-xl text-slate-500" />
                       </a>
@@ -133,7 +132,7 @@ const ConsultaPublicaDetail: React.FC<ConsultaPublicaDetailProps> = ({ consultaI
                     value={newOpinion}
                     onChange={(e) => setNewOpinion(e.target.value)}
                     placeholder="Escreva sua sugestão, crítica ou apoio ao projeto..."
-                    className="w-full p-2 bg-white text-slate-900 border border-slate-300 rounded-lg focus:ring-indigo-600 focus:border-indigo-600 text-sm"
+                    className="w-full p-2 bg-white text-slate-900 border border-slate-300 rounded-lg focus:ring-slate-600 focus:border-slate-600 text-sm"
                     rows={4}
                     disabled={isSubmitting}
                 />
@@ -170,7 +169,7 @@ const ConsultaPublicaDetail: React.FC<ConsultaPublicaDetailProps> = ({ consultaI
                                 variant="ghost"
                                 onClick={() => handleSupport(op.id)}
                                 iconLeft="thumb_up"
-                                className={`transition-colors !py-1 ${isSupported ? '!text-indigo-600 font-bold' : 'text-slate-500'}`}
+                                className={`transition-colors !py-1 ${isSupported ? '!text-slate-800 font-bold' : 'text-slate-500'}`}
                             >
                                 {op.supports}
                             </Button>
@@ -184,7 +183,7 @@ const ConsultaPublicaDetail: React.FC<ConsultaPublicaDetailProps> = ({ consultaI
       <div className="fixed bottom-24 right-4 z-30 animate-fade-in">
           <Button
               size="lg"
-              className="!rounded-full !p-4 shadow-lg bg-indigo-600 hover:bg-indigo-700 text-white"
+              className="!rounded-full !p-4 shadow-lg"
               onClick={() => setIsHelpVisible(true)}
               aria-label="Ajuda sobre Consultas Públicas"
           >
@@ -205,7 +204,7 @@ const ConsultaPublicaDetail: React.FC<ConsultaPublicaDetailProps> = ({ consultaI
               >
                   <div className="flex justify-between items-center mb-2">
                       <h4 className="font-bold text-base text-slate-800 flex items-center">
-                          <Icon name="flutter_dash" className="mr-2 text-indigo-600" />
+                          <Icon name="flutter_dash" className="mr-2 text-slate-700" />
                           Assistente Uirapuru
                       </h4>
                       <Button size="icon" variant="ghost" onClick={() => setIsHelpVisible(false)} aria-label="Fechar ajuda">

@@ -1,14 +1,11 @@
 import React, { useState, useMemo } from 'react';
-import { View, Protocolo, Noticia, TurismoItem, ServicoOnline } from '../../types';
+import { useNavigate } from 'react-router-dom';
+import { Protocolo, Noticia, TurismoItem, ServicoOnline } from '../../types';
 import { useProtocolos, useNoticias, useTurismoItens, useServicosOnline } from '../../hooks/useMockData';
 import Spinner from '../ui/Spinner';
 import Card from '../ui/Card';
 import Icon from '../ui/Icon';
 import Button from '../ui/Button';
-
-interface SearchProps {
-  navigateTo: (view: View, params?: any) => void;
-}
 
 const ResultSkeletonItem: React.FC = () => (
     <div className="p-4 flex items-center space-x-4 animate-pulse">
@@ -30,7 +27,8 @@ const ResultItem: React.FC<{ icon: string, title: string, subtitle: string, onCl
     </div>
 );
 
-const Search: React.FC<SearchProps> = ({ navigateTo }) => {
+const Search: React.FC = () => {
+    const navigate = useNavigate();
     const [searchTerm, setSearchTerm] = useState('');
 
     const { data: protocolos, loading: loadingProtocolos } = useProtocolos();
@@ -120,7 +118,7 @@ const Search: React.FC<SearchProps> = ({ navigateTo }) => {
                                     icon="list_alt"
                                     title={`${p.tipo} - ${p.protocolo}`}
                                     subtitle={p.descricao}
-                                    onClick={() => navigateTo('PROTOCOLO_DETAIL', { protocoloId: p.id })}
+                                    onClick={() => navigate(`/protocolos/${p.id}`)}
                                 />
                             ))}
                         </section>
@@ -134,7 +132,7 @@ const Search: React.FC<SearchProps> = ({ navigateTo }) => {
                                     icon="feed"
                                     title={n.title}
                                     subtitle={n.summary}
-                                    onClick={() => navigateTo('NOTICIA_DETAIL', { noticiaId: n.id })}
+                                    onClick={() => navigate(`/noticias/${n.id}`)}
                                 />
                             ))}
                         </section>
@@ -148,7 +146,7 @@ const Search: React.FC<SearchProps> = ({ navigateTo }) => {
                                     icon="tour"
                                     title={t.nome}
                                     subtitle={t.descricaoCurta}
-                                    onClick={() => navigateTo('TURISMO_DETAIL', { turismoId: t.id, turismoCategoria: t.categoria })}
+                                    onClick={() => navigate(`/turismo/detalhe/${t.categoria}/${t.id}`)}
                                 />
                             ))}
                         </section>
@@ -162,7 +160,7 @@ const Search: React.FC<SearchProps> = ({ navigateTo }) => {
                                     icon="apps"
                                     title={s.nome}
                                     subtitle={s.descricao}
-                                    onClick={() => navigateTo('SERVICO_FORM', { servicoId: s.id })}
+                                    onClick={() => navigate(`/servicos/agendar/${s.id}`)}
                                 />
                             ))}
                         </section>

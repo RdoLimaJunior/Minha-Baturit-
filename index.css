@@ -1,0 +1,21 @@
+:root.font-size-sm { font-size: 14px; }
+:root.font-size-base { font-size: 16px; }
+:root.font-size-lg { font-size: 18px; }
+:root.font-size-xl { font-size: 20px; }
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Base transition for all elements */
+* {
+  transition: background-color 0.2s ease-out, color 0.2s ease-out, border-color 0.2s ease-out;
+}
+
+/* Consistent focus ring */
+*:focus-visible {
+  outline: 2px solid #4f46e5; /* indigo-600 */
+  outline-offset: 2px;
+  border-radius: 6px;
+}

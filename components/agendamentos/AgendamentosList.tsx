@@ -1,16 +1,12 @@
 import React, { useState, useMemo } from 'react';
 import { useAgendamentos } from '../../hooks/useMockData';
-import { Agendamento, AgendamentoStatus, View } from '../../types';
+import { Agendamento, AgendamentoStatus } from '../../types';
 import Card from '../ui/Card';
 import Spinner from '../ui/Spinner';
 import Icon from '../ui/Icon';
 import Button from '../ui/Button';
 import { useToast } from '../ui/Toast';
 import CalendarView from './CalendarView';
-
-interface AgendamentosListProps {
-  navigateTo: (view: View) => void;
-}
 
 const AgendamentoSkeletonItem: React.FC = () => (
     <Card className="animate-pulse">
@@ -70,7 +66,7 @@ const AgendamentoItem: React.FC<{ agendamento: Agendamento; onCancel: (id: strin
     );
 };
 
-const AgendamentosList: React.FC<AgendamentosListProps> = ({ navigateTo }) => {
+const AgendamentosList: React.FC = () => {
   const { data: agendamentos, loading } = useAgendamentos();
   const [listaAgendamentos, setListaAgendamentos] = useState<Agendamento[]>([]);
   const { addToast } = useToast();

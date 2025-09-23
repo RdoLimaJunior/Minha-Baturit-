@@ -1,7 +1,17 @@
+import React, { useState, useEffect } from 'react';
+import { HashRouter, Routes, Route, useParams, useNavigate } from 'react-router-dom';
+import { UserProfile, UserRole, CategoriaPredioPublico, TurismoCategoria } from './types';
+import { MOCK_USER_PROFILES } from './constants';
 
+// Providers
+import { AccessibilityProvider } from './contexts/AccessibilityContext';
+import { ToastProvider } from './components/ui/Toast';
 
-import React, { useState, useCallback } from 'react';
+// Layout Components
 import Header from './components/Header';
+import Page from './components/ui/Page';
+
+// View Components
 import Dashboard from './components/Dashboard';
 import ProtocolosList from './components/protocolos/ProtocolosList';
 import ProtocoloDetail from './components/protocolos/ProtocoloDetail';
@@ -18,147 +28,172 @@ import ServicosOnlineDashboard from './components/servicos/ServicosOnlineDashboa
 import ServicoForm from './components/servicos/ServicoForm';
 import AgendamentosList from './components/agendamentos/AgendamentosList';
 import NotificacoesList from './components/notificacoes/NotificacoesList';
-import Acessibilidade from './components/acessibilidade/Acessibilidade';
-import { UserProfile, View, TurismoCategoria } from './types';
-import { MOCK_USER_PROFILES } from './constants';
-import { ToastProvider } from './components/ui/Toast';
-import BottomNav from './components/BottomNav';
-import ServicosDashboard from './components/servicos/ServicosDashboard';
-import MoreDashboard from './components/more/MoreDashboard';
 import Search from './components/search/Search';
-import { AccessibilityProvider } from './contexts/AccessibilityContext';
+import Acessibilidade from './components/acessibilidade/Acessibilidade';
 import ParticipacaoFeed from './components/participacao/ParticipacaoFeed';
 import ParticipacaoDetail from './components/participacao/ParticipacaoDetail';
 import ParticipacaoForm from './components/participacao/ParticipacaoForm';
 import ConsultasPublicasList from './components/consultas/ConsultasPublicasList';
 import ConsultaPublicaDetail from './components/consultas/ConsultaPublicaDetail';
 import PrediosPorCategoriaList from './components/predios/PrediosPorCategoriaList';
-import Page from './components/ui/Page';
+import WelcomeScreen from './components/welcome/WelcomeScreen';
+import About from './components/About';
 
-// As importações abaixo são para componentes de versões futuras e não são usadas na versão inicial.
-import './components/onibus/OnibusTracker';
-import './components/coleta/ColetaCalendar';
-import './components/admin/AdminDashboard';
+// --- Wrappers for components that need URL params ---
 
+const ProtocoloDetailWrapper: React.FC = () => {
+    const { protocoloId } = useParams<{ protocoloId: string }>();
+    return <ProtocoloDetail protocoloId={protocoloId!} />;
+};
 
-const AppContent: React.FC = () => {
-  const [view, setView] = useState<View>('DASHBOARD');
-  const [activeParams, setActiveParams] = useState<any>(null);
-  const [activeProfile, setActiveProfile] = useState<UserProfile>(MOCK_USER_PROFILES[0]);
-  
-  const navigateTo = useCallback((newView: View, params: any = {}) => {
-    setView(newView);
-    setActiveParams(params);
-    window.scrollTo(0, 0);
-  }, []);
-  
-  const handleProfileChange = () => {
-    const nextProfileIndex = (MOCK_USER_PROFILES.findIndex(p => p.id === activeProfile.id) + 1) % MOCK_USER_PROFILES.length;
-    setActiveProfile(MOCK_USER_PROFILES[nextProfileIndex]);
-    navigateTo('DASHBOARD');
-  };
+const NoticiaDetailWrapper: React.FC = () => {
+    const { noticiaId } = useParams<{ noticiaId: string }>();
+    return <NoticiaDetail noticiaId={noticiaId!} />;
+};
 
-  const handleBottomNav = (view: View) => {
-    navigateTo(view);
-  };
+const MapaServicosWrapper: React.FC = () => {
+    const { predioId, turismoId } = useParams<{ predioId?: string; turismoId?: string }>();
+    return <MapaServicos predioId={predioId} turismoId={turismoId} />;
+};
 
-  const renderView = () => {
-    switch (view) {
-      case 'DASHBOARD':
-        return <Dashboard navigateTo={navigateTo} userProfile={activeProfile} />;
-      
-      // --- FLUXO DE SERVIÇOS ---
-      case 'SERVICOS_DASHBOARD':
-        return <ServicosDashboard navigateTo={navigateTo} />;
-      case 'AGENDAMENTOS_LIST':
-        return <Page title="Agenda do Cidadão" goBack={() => navigateTo('SERVICOS_DASHBOARD')}><AgendamentosList navigateTo={navigateTo} /></Page>;
-      case 'PROTOCOLO_FORM':
-        return <Page title="Participação Cidadã" goBack={() => navigateTo('SERVICOS_DASHBOARD')}><ProtocoloForm navigateTo={navigateTo} goBack={() => navigateTo('SERVICOS_DASHBOARD')} /></Page>;
-      case 'PROTOCOLOS_LIST':
-        return <Page title="Meus Protocolos" goBack={() => navigateTo('PROTOCOLO_FORM')}><ProtocolosList navigateTo={navigateTo} /></Page>;
-      case 'PROTOCOLO_DETAIL':
-        return <Page title="Detalhes do Protocolo" goBack={() => navigateTo('PROTOCOLOS_LIST')}><ProtocoloDetail protocoloId={activeParams.protocoloId} /></Page>;
-      case 'CONSULTAS_PUBLICAS_LIST':
-        return <Page title="Consultas Públicas" goBack={() => navigateTo('SERVICOS_DASHBOARD')}><ConsultasPublicasList navigateTo={navigateTo} /></Page>;
-      case 'CONSULTAS_PUBLICAS_DETAIL':
-        return <Page title="Detalhes da Consulta" goBack={() => navigateTo('CONSULTAS_PUBLICAS_LIST')}><ConsultaPublicaDetail consultaId={activeParams.consultaId} navigateTo={navigateTo} /></Page>;
-      case 'SERVICOS_ONLINE_DASHBOARD':
-        return <Page title="Serviços Online" goBack={() => navigateTo('SERVICOS_DASHBOARD')}><ServicosOnlineDashboard navigateTo={navigateTo} /></Page>;
-      case 'SERVICO_FORM':
-        return <Page title="Agendamento de Serviço" goBack={() => navigateTo('SERVICOS_ONLINE_DASHBOARD')}><ServicoForm servicoId={activeParams.servicoId} goBack={() => navigateTo('SERVICOS_ONLINE_DASHBOARD')} /></Page>;
-      
-      // --- FLUXO DE PARTICIPAÇÃO ---
-      case 'PARTICIPACAO_FEED':
-        return <ParticipacaoFeed navigateTo={navigateTo} />;
-      case 'PARTICIPACAO_DETAIL':
-        return <Page title="Detalhes da Publicação" goBack={() => navigateTo('PARTICIPACAO_FEED')}><ParticipacaoDetail publicacaoId={activeParams.publicacaoId} navigateTo={navigateTo} /></Page>;
-      case 'PARTICIPACAO_FORM':
-        return <Page title="Criar Publicação" goBack={() => navigateTo('PARTICIPACAO_FEED')}><ParticipacaoForm goBack={() => navigateTo('PARTICIPACAO_FEED')} /></Page>;
+const PrediosPorCategoriaListWrapper: React.FC = () => {
+    const { categoria, titulo, goBackView } = useParams<{ categoria: CategoriaPredioPublico, titulo: string, goBackView: string }>();
+    // Note: The icon property cannot be passed through URL params easily.
+    // It should be derived from the 'categoria' or handled differently if dynamic.
+    const iconMap: Record<CategoriaPredioPublico, string> = {
+        'Saúde': 'local_hospital',
+        'Educação': 'school',
+        'Assistência Social': 'people',
+        'Administração': 'corporate_fare',
+    };
+    return <PrediosPorCategoriaList categoria={categoria!} titulo={titulo!} icon={iconMap[categoria!]} goBackView={goBackView as any} />;
+};
 
-      // --- FLUXO DO MAPA ---
-      case 'MAPA_SERVICOS':
-        return <Page title="Mapa Interativo" goBack={() => navigateTo('DASHBOARD')}><MapaServicos navigateTo={navigateTo} {...activeParams} /></Page>;
+const TurismoListWrapper: React.FC = () => {
+    const { categoria } = useParams<{ categoria: TurismoCategoria }>();
+    return <TurismoList categoria={categoria!} />;
+};
 
-      // --- FLUXO 'MAIS' ---
-      case 'MAIS_DASHBOARD':
-        return <MoreDashboard navigateTo={navigateTo} />;
-      case 'NOTICIAS_LIST':
-        return <Page title="Últimas Notícias" goBack={() => navigateTo('MAIS_DASHBOARD')}><NoticiasList navigateTo={navigateTo} /></Page>;
-      case 'NOTICIA_DETAIL':
-        return <Page title="Detalhes da Notícia" goBack={() => navigateTo('NOTICIAS_LIST')}><NoticiaDetail noticiaId={activeParams.noticiaId} navigateTo={navigateTo} /></Page>;
-      case 'SECRETARIAS_LIST':
-        return <Page title="Secretarias Municipais" goBack={() => navigateTo('MAIS_DASHBOARD')}><SecretariasList navigateTo={navigateTo} /></Page>;
-      case 'TURISMO_DASHBOARD':
-        return <Page title="Cultura e Turismo" goBack={() => navigateTo('MAIS_DASHBOARD')}><TurismoDashboard navigateTo={navigateTo} /></Page>;
-      case 'TURISMO_LIST':
-        return <Page title={activeParams.turismoCategoria} goBack={() => navigateTo('TURISMO_DASHBOARD')}><TurismoList categoria={activeParams.turismoCategoria as TurismoCategoria} navigateTo={navigateTo} /></Page>;
-      case 'TURISMO_DETAIL':
-        return <Page title="Detalhes" goBack={() => navigateTo('TURISMO_LIST', { turismoCategoria: activeParams.turismoCategoria })}><TurismoDetail turismoId={activeParams.turismoId} categoria={activeParams.turismoCategoria as TurismoCategoria} navigateTo={navigateTo} /></Page>;
-      case 'CONTATOS_LIST':
-        return <Page title="Contatos Úteis" goBack={() => navigateTo('MAIS_DASHBOARD')}><ContatosList navigateTo={navigateTo} /></Page>;
-      case 'PREDIOS_POR_CATEGORIA_LIST':
-        return <Page title={activeParams.titulo} goBack={() => navigateTo('MAIS_DASHBOARD')}><PrediosPorCategoriaList navigateTo={navigateTo} {...activeParams} /></Page>;
-      case 'ACESSIBILIDADE':
-        return <Page title="Acessibilidade" goBack={() => navigateTo('MAIS_DASHBOARD')}><Acessibilidade /></Page>;
-        
-      // --- FLUXO GLOBAL / CABEÇALHO ---
-      case 'SEARCH':
-        return <Page title="Busca Global" goBack={() => navigateTo('DASHBOARD')}><Search navigateTo={navigateTo} /></Page>;
-      case 'NOTIFICACOES_LIST':
-        return <Page title="Notificações" goBack={() => navigateTo('DASHBOARD')}><NotificacoesList navigateTo={navigateTo} /></Page>;
-        
-      default:
-        return <Dashboard navigateTo={navigateTo} userProfile={activeProfile} />;
-    }
-  };
-  
-  const isDashboard = view === 'DASHBOARD' || view === 'PARTICIPACAO_FEED';
+const TurismoDetailWrapper: React.FC = () => {
+    const { turismoId, categoria } = useParams<{ turismoId: string; categoria: TurismoCategoria }>();
+    return <TurismoDetail turismoId={turismoId!} categoria={categoria!} />;
+};
 
-  const mainContainerClass = isDashboard
-    ? "flex-grow flex flex-col"
-    : "flex-grow flex flex-col";
+const ServicoFormWrapper: React.FC = () => {
+    const { servicoId } = useParams<{ servicoId: string }>();
+    return <ServicoForm servicoId={servicoId!} />;
+};
 
-  return (
-    <div className="min-h-screen flex flex-col font-sans">
-      <Header activeProfile={activeProfile} onProfileChange={handleProfileChange} navigateTo={navigateTo}/>
-      
-      <main className={mainContainerClass}>
-        {renderView()}
-      </main>
-      
-      <BottomNav navigateTo={handleBottomNav} currentView={view} />
-    </div>
-  );
+const ParticipacaoDetailWrapper: React.FC = () => {
+    const { publicacaoId } = useParams<{ publicacaoId: string }>();
+    return <ParticipacaoDetail publicacaoId={publicacaoId!} />;
+};
+
+const ConsultaPublicaDetailWrapper: React.FC = () => {
+    const { consultaId } = useParams<{ consultaId: string }>();
+    return <ConsultaPublicaDetail consultaId={consultaId!} />;
+};
+
+const AppContent: React.FC<{
+    activeProfile: UserProfile;
+    onProfileChange: () => void;
+}> = ({ activeProfile, onProfileChange }) => {
+    const navigate = useNavigate();
+
+    return (
+        <div className="flex flex-col h-screen bg-slate-50 font-sans antialiased">
+            <Header activeProfile={activeProfile} onProfileChange={onProfileChange} />
+            <main className="flex-1 overflow-y-auto">
+                <Routes>
+                    {/* Fullscreen Views */}
+                    <Route path="/" element={<Dashboard userProfile={activeProfile} />} />
+                    <Route path="/participacao" element={<ParticipacaoFeed />} />
+                    <Route path="/mapa" element={<MapaServicosWrapper />} />
+                    <Route path="/mapa/predio/:predioId" element={<MapaServicosWrapper />} />
+                    <Route path="/mapa/turismo/:turismoId" element={<MapaServicosWrapper />} />
+                    <Route path="/search" element={<Search />} />
+
+                    {/* Page-wrapped Views */}
+                    <Route path="/about" element={<Page title="Sobre o App"><About /></Page>} />
+                    <Route path="/protocolos" element={<Page title="Meus Protocolos"><ProtocolosList /></Page>} />
+                    <Route path="/protocolos/novo" element={<Page title="Abrir Protocolo"><ProtocoloForm /></Page>} />
+                    <Route path="/protocolos/:protocoloId" element={<Page title="Detalhes do Protocolo"><ProtocoloDetailWrapper /></Page>} />
+                    <Route path="/noticias" element={<Page title="Notícias"><NoticiasList /></Page>} />
+                    <Route path="/noticias/:noticiaId" element={<Page title="Detalhes da Notícia"><NoticiaDetailWrapper /></Page>} />
+                    <Route path="/secretarias" element={<Page title="Secretarias Municipais"><SecretariasList /></Page>} />
+                    <Route path="/locais/:categoria/:titulo/:goBackView" element={<Page title="Locais"><PrediosPorCategoriaListWrapper /></Page>} />
+                    <Route path="/turismo" element={<Page title="Turismo em Baturité"><TurismoDashboard /></Page>} />
+                    <Route path="/turismo/lista/:categoria" element={<Page title="Turismo"><TurismoListWrapper /></Page>} />
+                    <Route path="/turismo/detalhe/:categoria/:turismoId" element={<Page title="Detalhes"><TurismoDetailWrapper /></Page>} />
+                    <Route path="/contatos" element={<Page title="Contatos Úteis"><ContatosList /></Page>} />
+                    <Route path="/servicos" element={<Page title="Serviços Online"><ServicosOnlineDashboard /></Page>} />
+                    <Route path="/servicos/agendar/:servicoId" element={<Page title="Agendamento de Serviço"><ServicoFormWrapper /></Page>} />
+                    <Route path="/agendamentos" element={<Page title="Meus Agendamentos"><AgendamentosList /></Page>} />
+                    <Route path="/notificacoes" element={<Page title="Notificações"><NotificacoesList /></Page>} />
+                    <Route path="/acessibilidade" element={<Page title="Acessibilidade"><Acessibilidade /></Page>} />
+                    <Route path="/participacao/detalhe/:publicacaoId" element={<Page title="Detalhes da Publicação"><ParticipacaoDetailWrapper /></Page>} />
+                    <Route path="/participacao/novo" element={<Page title="Criar Publicação"><ParticipacaoForm /></Page>} />
+                    <Route path="/consultas" element={<Page title="Consultas Públicas"><ConsultasPublicasList /></Page>} />
+                    <Route path="/consultas/:consultaId" element={<Page title="Detalhes da Consulta"><ConsultaPublicaDetailWrapper /></Page>} />
+                </Routes>
+            </main>
+        </div>
+    );
 };
 
 const App: React.FC = () => {
-  return (
-    <AccessibilityProvider>
-      <ToastProvider>
-        <AppContent />
-      </ToastProvider>
-    </AccessibilityProvider>
-  );
+    const [activeProfile, setActiveProfile] = useState<UserProfile>(MOCK_USER_PROFILES[0]);
+    const [showWelcome, setShowWelcome] = useState(() => !localStorage.getItem('hasVisited'));
+
+    useEffect(() => {
+        if ('serviceWorker' in navigator) {
+          const registerSW = () => {
+            navigator.serviceWorker.register('/service-worker.js')
+              .then(registration => {
+                console.log('Service Worker registered with scope:', registration.scope);
+              })
+              .catch(error => {
+                console.error('Service Worker registration failed:', error);
+              });
+          };
+    
+          // The 'load' event fires when the whole page has loaded,
+          // including all dependent resources such as stylesheets and images.
+          // This is the safest moment to register a service worker.
+          window.addEventListener('load', registerSW);
+    
+          // Cleanup the event listener when the component unmounts.
+          return () => {
+            window.removeEventListener('load', registerSW);
+          };
+        }
+    }, []);
+
+    const handleProfileChange = () => {
+        const newProfile = activeProfile.role === UserRole.CIDADAO ? MOCK_USER_PROFILES[1] : MOCK_USER_PROFILES[0];
+        setActiveProfile(newProfile);
+        // In a router-based app, navigation to home on profile change is a good practice.
+        // This will be handled by the component triggering the change if needed.
+    };
+    
+    const handleWelcomeComplete = () => {
+        localStorage.setItem('hasVisited', 'true');
+        setShowWelcome(false);
+    };
+
+    if (showWelcome) {
+        return <WelcomeScreen onComplete={handleWelcomeComplete} />;
+    }
+  
+    return (
+        <AccessibilityProvider>
+            <ToastProvider>
+                <HashRouter>
+                    <AppContent activeProfile={activeProfile} onProfileChange={handleProfileChange} />
+                </HashRouter>
+            </ToastProvider>
+        </AccessibilityProvider>
+    );
 };
 
 export default App;

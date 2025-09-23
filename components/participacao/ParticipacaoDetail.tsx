@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { usePublicacaoById } from '../../hooks/useMockData';
-import { View, StatusPublicacao, HistoricoPublicacao, TipoPublicacao, ComentarioPublicacao } from '../../types';
+import { StatusPublicacao, HistoricoPublicacao, TipoPublicacao, ComentarioPublicacao } from '../../types';
 import Spinner from '../ui/Spinner';
 import Card from '../ui/Card';
 import Icon from '../ui/Icon';
@@ -11,7 +11,6 @@ import { timeSince } from '../../utils/helpers';
 
 interface ParticipacaoDetailProps {
   publicacaoId: string;
-  navigateTo: (view: View) => void;
 }
 
 const getStatusStyle = (status: StatusPublicacao) => {
@@ -59,7 +58,7 @@ const TimelineItem: React.FC<{ item: HistoricoPublicacao, isLast: boolean }> = (
 };
 
 
-const ParticipacaoDetail: React.FC<ParticipacaoDetailProps> = ({ publicacaoId, navigateTo }) => {
+const ParticipacaoDetail: React.FC<ParticipacaoDetailProps> = ({ publicacaoId }) => {
   const { data: publicacao, loading } = usePublicacaoById(publicacaoId);
   const [isSupported, setIsSupported] = useState(false);
   const [supportCount, setSupportCount] = useState(0);
@@ -108,7 +107,7 @@ const ParticipacaoDetail: React.FC<ParticipacaoDetailProps> = ({ publicacaoId, n
         {publicacao.fotos && publicacao.fotos.length > 0 && (
             <div className="grid grid-cols-2 gap-1 bg-slate-200">
                 {publicacao.fotos.map((foto, index) => (
-                    <img key={index} src={foto} alt={`Foto ${index+1}`} className="w-full h-48 object-cover" />
+                    <img key={index} src={foto} alt={`Foto ${index+1}`} className="w-full h-48 object-cover" loading="lazy" />
                 ))}
             </div>
         )}
@@ -160,7 +159,7 @@ const ParticipacaoDetail: React.FC<ParticipacaoDetailProps> = ({ publicacaoId, n
         <h2 className="text-lg font-bold text-slate-800 mb-4">Comentários ({comments.length})</h2>
         <div className="space-y-4">
             {comments.map(comment => (
-                <div key={comment.id} className={`flex items-start space-x-3 p-3 rounded-lg ${comment.isOfficialReply ? 'bg-indigo-50 border-l-4 border-indigo-500' : ''}`}>
+                <div key={comment.id} className={`flex items-start space-x-3 p-3 rounded-lg ${comment.isOfficialReply ? 'bg-slate-100 border-l-4 border-slate-500' : ''}`}>
                     <img src={comment.author.avatar} alt={comment.author.name} className="w-9 h-9 rounded-full"/>
                     <div className="flex-1">
                         <div className="flex items-center justify-between">
@@ -168,7 +167,7 @@ const ParticipacaoDetail: React.FC<ParticipacaoDetailProps> = ({ publicacaoId, n
                             <span className="text-xs text-slate-400">{timeSince(comment.date)}</span>
                         </div>
                          {comment.isOfficialReply && (
-                            <div className="text-xs font-bold text-indigo-700 mt-0.5">RESPOSTA OFICIAL</div>
+                            <div className="text-xs font-bold text-slate-700 mt-0.5">RESPOSTA OFICIAL</div>
                          )}
                         <p className="text-sm text-slate-600 mt-1">{comment.text}</p>
                     </div>
@@ -182,7 +181,7 @@ const ParticipacaoDetail: React.FC<ParticipacaoDetailProps> = ({ publicacaoId, n
                     value={newComment}
                     onChange={(e) => setNewComment(e.target.value)}
                     placeholder="Adicione um comentário..."
-                    className="w-full p-2 bg-white text-slate-900 border border-slate-300 rounded-lg focus:ring-indigo-600 focus:border-indigo-600 text-sm"
+                    className="w-full p-2 bg-white text-slate-900 border border-slate-300 rounded-lg focus:ring-slate-600 focus:border-slate-600 text-sm"
                     rows={2}
                 />
                 <Button type="submit" size="sm" disabled={!newComment.trim()} className="mt-2">

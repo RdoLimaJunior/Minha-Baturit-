@@ -1,14 +1,11 @@
 import React from 'react';
-import { View, ConsultaPublica, StatusConsultaPublica } from '../../types';
+import { useNavigate } from 'react-router-dom';
+import { ConsultaPublica, StatusConsultaPublica } from '../../types';
 import Button from '../ui/Button';
 import Card from '../ui/Card';
 import Icon from '../ui/Icon';
 import { useConsultasPublicas } from '../../hooks/useMockData';
 import Spinner from '../ui/Spinner';
-
-interface ConsultasPublicasListProps {
-  navigateTo: (view: View, params?: { consultaId?: string }) => void;
-}
 
 const SkeletonCard: React.FC = () => (
     <Card className="!p-0 animate-pulse">
@@ -49,7 +46,7 @@ const ConsultaCard: React.FC<{ consulta: ConsultaPublica, onClick: () => void }>
 
     return (
         <Card onClick={onClick} className="!p-0">
-            <img src={consulta.imageUrl} alt={consulta.title} className="w-full h-40 object-cover bg-slate-200" />
+            <img src={consulta.imageUrl} alt={consulta.title} className="w-full h-40 object-cover bg-slate-200" loading="lazy" />
             <div className="p-4">
                 <h3 className="font-bold text-lg text-slate-800">{consulta.title}</h3>
                 <p className="text-sm text-slate-600 mt-1 line-clamp-2">{consulta.summary}</p>
@@ -70,7 +67,8 @@ const ConsultaCard: React.FC<{ consulta: ConsultaPublica, onClick: () => void }>
 };
 
 
-const ConsultasPublicasList: React.FC<ConsultasPublicasListProps> = ({ navigateTo }) => {
+const ConsultasPublicasList: React.FC = () => {
+  const navigate = useNavigate();
   const { data: consultas, loading } = useConsultasPublicas();
 
   return (
@@ -87,7 +85,7 @@ const ConsultasPublicasList: React.FC<ConsultasPublicasListProps> = ({ navigateT
       ) : consultas && consultas.length > 0 ? (
         <div className="space-y-4 pt-2">
             {consultas.map(c => (
-                <ConsultaCard key={c.id} consulta={c} onClick={() => navigateTo('CONSULTAS_PUBLICAS_DETAIL', { consultaId: c.id })} />
+                <ConsultaCard key={c.id} consulta={c} onClick={() => navigate(`/consultas/${c.id}`)} />
             ))}
         </div>
       ) : (

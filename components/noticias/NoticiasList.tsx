@@ -1,16 +1,13 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useNoticias } from '../../hooks/useMockData';
-import { Noticia, View } from '../../types';
+import { Noticia } from '../../types';
 import Card from '../ui/Card';
 import Spinner from '../ui/Spinner';
 import Icon from '../ui/Icon';
 import Button from '../ui/Button';
 import { useToast } from '../ui/Toast';
 import LazyImage from '../ui/LazyImage';
-
-interface NoticiasListProps {
-  navigateTo: (view: View, params?: { noticiaId?: string }) => void;
-}
 
 const NoticiaSkeletonItem: React.FC = () => (
     <Card className="!p-0 overflow-hidden animate-pulse">
@@ -88,7 +85,8 @@ const NoticiaItem: React.FC<{ noticia: Noticia; onClick: () => void; onShare: ()
   );
 };
 
-const NoticiasList: React.FC<NoticiasListProps> = ({ navigateTo }) => {
+const NoticiasList: React.FC = () => {
+  const navigate = useNavigate();
   const { data: noticias, loading } = useNoticias();
   const { addToast } = useToast();
 
@@ -132,7 +130,7 @@ const NoticiasList: React.FC<NoticiasListProps> = ({ navigateTo }) => {
             <NoticiaItem 
               key={noticia.id} 
               noticia={noticia} 
-              onClick={() => navigateTo('NOTICIA_DETAIL', { noticiaId: noticia.id })}
+              onClick={() => navigate(`/noticias/${noticia.id}`)}
               onShare={() => handleShare(noticia)}
             />
           ))}

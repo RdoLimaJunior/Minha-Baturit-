@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { TipoPublicacao } from '../../types';
 import Button from '../ui/Button';
 import Card from '../ui/Card';
@@ -6,11 +7,8 @@ import Icon from '../ui/Icon';
 import { BAIRROS_BATURITE } from '../../constants';
 import { useToast } from '../ui/Toast';
 
-interface ParticipacaoFormProps {
-    goBack: () => void;
-}
-
-const TIPO_PUBLICACAO_METADATA = {
+// FIX: Explicitly type the metadata object as a Record to fix indexing errors.
+const TIPO_PUBLICACAO_METADATA: Record<TipoPublicacao, { title: string; icon: string; description: string; }> = {
   [TipoPublicacao.IDEIA]: { title: 'Compartilhar uma Ideia', icon: 'lightbulb', description: 'Sugira melhorias para a cidade.' },
   [TipoPublicacao.PROBLEMA]: { title: 'Relatar um Problema', icon: 'report_problem', description: 'Reporte problemas urbanos.' },
   [TipoPublicacao.ELOGIO]: { title: 'Fazer um Elogio', icon: 'thumb_up', description: 'Reconheça um bom serviço.' },
@@ -19,7 +17,8 @@ const TIPO_PUBLICACAO_METADATA = {
 
 const MAX_FOTOS = 4;
 
-const ParticipacaoForm: React.FC<ParticipacaoFormProps> = ({ goBack }) => {
+const ParticipacaoForm: React.FC = () => {
+    const navigate = useNavigate();
     const [step, setStep] = useState(1);
     const [tipo, setTipo] = useState<TipoPublicacao | null>(null);
 
@@ -42,7 +41,8 @@ const ParticipacaoForm: React.FC<ParticipacaoFormProps> = ({ goBack }) => {
         if (e.target.files) {
             const files = Array.from(e.target.files).slice(0, MAX_FOTOS - fotos.length);
             setFotos(prev => [...prev, ...files]);
-            const previews = files.map(file => URL.createObjectURL(file));
+            // FIX: Added type assertion `as Blob` to resolve TypeScript error where `file` was inferred as `unknown`.
+            const previews = files.map(file => URL.createObjectURL(file as Blob));
             setFotoPreviews(prev => [...prev, ...previews]);
         }
     };
@@ -72,14 +72,14 @@ const ParticipacaoForm: React.FC<ParticipacaoFormProps> = ({ goBack }) => {
             console.log({ tipo, title, descricao, bairro, fotos, isAnonymous, lgpdConsent });
             setIsSubmitting(false);
             addToast('Publicação enviada! Ela ficará visível após checagem rápida.', 'success');
-            goBack();
+            navigate(-1);
         }, 1500);
     };
 
     if (step === 1) {
         return (
             <div className="space-y-4">
-                <Button onClick={goBack} variant="ghost" iconLeft="arrow_back">Voltar</Button>
+                <Button onClick={() => navigate(-1)} variant="ghost" iconLeft="arrow_back">Voltar</Button>
                 <Card>
                     <div className="text-center mb-6">
                         <h1 className="text-2xl font-bold text-slate-800">Criar Publicação</h1>
@@ -87,8 +87,8 @@ const ParticipacaoForm: React.FC<ParticipacaoFormProps> = ({ goBack }) => {
                     </div>
                     <div className="space-y-3">
                         {Object.values(TipoPublicacao).map(type => (
-                            <Card key={type} onClick={() => handleTypeSelect(type)} className="flex items-center space-x-4 text-left !p-4 border-2 border-transparent hover:border-indigo-500 hover:shadow-lg">
-                                <Icon name={TIPO_PUBLICACAO_METADATA[type].icon} className="text-3xl text-indigo-600" />
+                            <Card key={type} onClick={() => handleTypeSelect(type)} className="flex items-center space-x-4 text-left !p-4 border-2 border-transparent hover:border-slate-500 hover:shadow-lg">
+                                <Icon name={TIPO_PUBLICACAO_METADATA[type].icon} className="text-3xl text-slate-700" />
                                 <div>
                                     <h3 className="font-bold text-slate-800">{TIPO_PUBLICACAO_METADATA[type].title}</h3>
                                     <p className="text-sm text-slate-600">{TIPO_PUBLICACAO_METADATA[type].description}</p>
@@ -110,17 +110,17 @@ const ParticipacaoForm: React.FC<ParticipacaoFormProps> = ({ goBack }) => {
                     
                     <div>
                         <label htmlFor="title" className="block text-sm font-medium text-slate-700 mb-1">Título *</label>
-                        <input id="title" type="text" value={title} onChange={e => setTitle(e.target.value)} placeholder="Resuma em poucas palavras..." className="w-full p-2 bg-white text-slate-900 border border-slate-300 rounded-md focus:ring-indigo-600 focus:border-indigo-600" />
+                        <input id="title" type="text" value={title} onChange={e => setTitle(e.target.value)} placeholder="Resuma em poucas palavras..." className="w-full p-2 bg-white text-slate-900 border border-slate-300 rounded-md focus:ring-slate-600 focus:border-slate-600" />
                     </div>
 
                     <div>
                         <label htmlFor="descricao" className="block text-sm font-medium text-slate-700 mb-1">Descrição *</label>
-                        <textarea id="descricao" rows={5} value={descricao} onChange={e => setDescricao(e.target.value)} placeholder="Conte os detalhes que ajudam a entender..." className="w-full p-2 bg-white text-slate-900 border border-slate-300 rounded-md focus:ring-indigo-600 focus:border-indigo-600"></textarea>
+                        <textarea id="descricao" rows={5} value={descricao} onChange={e => setDescricao(e.target.value)} placeholder="Conte os detalhes que ajudam a entender..." className="w-full p-2 bg-white text-slate-900 border border-slate-300 rounded-md focus:ring-slate-600 focus:border-slate-600"></textarea>
                     </div>
 
                      <div>
                         <label htmlFor="bairro" className="block text-sm font-medium text-slate-700 mb-1">Bairro *</label>
-                        <select id="bairro" value={bairro} onChange={(e) => setBairro(e.target.value)} className="w-full p-2 bg-white text-slate-900 border border-slate-300 rounded-md focus:ring-indigo-600 focus:border-indigo-600">
+                        <select id="bairro" value={bairro} onChange={(e) => setBairro(e.target.value)} className="w-full p-2 bg-white text-slate-900 border border-slate-300 rounded-md focus:ring-slate-600 focus:border-slate-600">
                             <option value="" disabled>Selecione seu bairro</option>
                             {BAIRROS_BATURITE.map(b => <option key={b} value={b}>{b}</option>)}
                         </select>
@@ -163,12 +163,12 @@ const ParticipacaoForm: React.FC<ParticipacaoFormProps> = ({ goBack }) => {
                     <div className="space-y-3 pt-4 border-t border-slate-200">
                         <div className="flex items-center justify-between">
                             <label htmlFor="anonymous" className="text-sm font-medium text-slate-700">Publicar como anônimo?</label>
-                            <button type="button" onClick={() => setIsAnonymous(!isAnonymous)} className={`${isAnonymous ? 'bg-indigo-600' : 'bg-slate-300'} relative inline-flex h-6 w-11 items-center rounded-full transition-colors`}>
+                            <button type="button" onClick={() => setIsAnonymous(!isAnonymous)} className={`${isAnonymous ? 'bg-slate-700' : 'bg-slate-300'} relative inline-flex h-6 w-11 items-center rounded-full transition-colors`}>
                                 <span className={`${isAnonymous ? 'translate-x-6' : 'translate-x-1'} inline-block h-4 w-4 transform rounded-full bg-white transition-transform`} />
                             </button>
                         </div>
                         <div className="flex items-start space-x-2">
-                            <input id="lgpd" type="checkbox" checked={lgpdConsent} onChange={e => setLgpdConsent(e.target.checked)} className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 mt-1" />
+                            <input id="lgpd" type="checkbox" checked={lgpdConsent} onChange={e => setLgpdConsent(e.target.checked)} className="h-4 w-4 rounded border-slate-300 text-slate-600 focus:ring-slate-500 mt-1" />
                             <label htmlFor="lgpd" className="text-xs text-slate-600">
                                 Concordo que as informações fornecidas (exceto dados pessoais, se anônimo) serão públicas e podem ser utilizadas pela prefeitura para análise.
                             </label>

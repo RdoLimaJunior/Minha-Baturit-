@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNoticiaById } from '../../hooks/useMockData';
-import { Comment, Noticia, View } from '../../types';
+import { Comment, Noticia } from '../../types';
 import Spinner from '../ui/Spinner';
 import Card from '../ui/Card';
 import Icon from '../ui/Icon';
@@ -10,10 +10,9 @@ import { MOCK_USER_PROFILES } from '../../constants';
 
 interface NoticiaDetailProps {
   noticiaId: string;
-  navigateTo: (view: View) => void;
 }
 
-const NoticiaDetail: React.FC<NoticiaDetailProps> = ({ noticiaId, navigateTo }) => {
+const NoticiaDetail: React.FC<NoticiaDetailProps> = ({ noticiaId }) => {
   const { data: noticia, loading } = useNoticiaById(noticiaId);
   
   const [isLiked, setIsLiked] = useState(false);

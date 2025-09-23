@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { usePrediosPublicos, useTurismoItemById } from '../../hooks/useMockData';
-import { View, PredioPublico, CategoriaPredioPublico, TurismoItem } from '../../types';
+import { PredioPublico, CategoriaPredioPublico, TurismoItem } from '../../types';
 import Spinner from '../ui/Spinner';
 import Button from '../ui/Button';
 import Icon from '../ui/Icon';
@@ -11,12 +12,14 @@ import { haversineDistance } from '../../utils/helpers';
 
 declare var L: any;
 
-const CATEGORIAS: CategoriaPredioPublico[] = ['Saúde', 'Educação', 'Assistência Social', 'Administração'];
+// FIX: Use enum members instead of string literals to satisfy the CategoriaPredioPublico type.
+const CATEGORIAS: CategoriaPredioPublico[] = [CategoriaPredioPublico.SAUDE, CategoriaPredioPublico.EDUCACAO, CategoriaPredioPublico.ASSISTENCIA, CategoriaPredioPublico.ADMINISTRACAO];
+// FIX: Use enum members as keys for the Record to align with the type definition.
 const CATEGORY_DETAILS: Record<CategoriaPredioPublico, { icon: string; color: string; bgColor: string }> = {
-    'Saúde': { icon: 'local_hospital', color: 'text-rose-700', bgColor: 'bg-rose-100' },
-    'Educação': { icon: 'school', color: 'text-sky-700', bgColor: 'bg-sky-100' },
-    'Assistência Social': { icon: 'people', color: 'text-violet-700', bgColor: 'bg-violet-100' },
-    'Administração': { icon: 'corporate_fare', color: 'text-slate-700', bgColor: 'bg-slate-200' }
+    [CategoriaPredioPublico.SAUDE]: { icon: 'local_hospital', color: 'text-rose-700', bgColor: 'bg-rose-100' },
+    [CategoriaPredioPublico.EDUCACAO]: { icon: 'school', color: 'text-sky-700', bgColor: 'bg-sky-100' },
+    [CategoriaPredioPublico.ASSISTENCIA]: { icon: 'people', color: 'text-violet-700', bgColor: 'bg-violet-100' },
+    [CategoriaPredioPublico.ADMINISTRACAO]: { icon: 'corporate_fare', color: 'text-slate-700', bgColor: 'bg-slate-200' }
 };
 
 const PredioPublicoSkeletonItem: React.FC = () => (
@@ -42,10 +45,11 @@ const PredioPublicoSkeletonItem: React.FC = () => (
 const getCategoryIcon = (category: CategoriaPredioPublico, isSelected: boolean = false) => {
     const detail = CATEGORY_DETAILS[category] || { icon: 'location_on' };
     let bgColorClass = 'bg-slate-500';
-    if(category === 'Saúde') bgColorClass = 'bg-rose-500';
-    if(category === 'Educação') bgColorClass = 'bg-sky-500';
-    if(category === 'Assistência Social') bgColorClass = 'bg-violet-500';
-    if(category === 'Administração') bgColorClass = 'bg-slate-500';
+    // FIX: Use enum members for comparison to improve type safety.
+    if(category === CategoriaPredioPublico.SAUDE) bgColorClass = 'bg-rose-500';
+    if(category === CategoriaPredioPublico.EDUCACAO) bgColorClass = 'bg-sky-500';
+    if(category === CategoriaPredioPublico.ASSISTENCIA) bgColorClass = 'bg-violet-500';
+    if(category === CategoriaPredioPublico.ADMINISTRACAO) bgColorClass = 'bg-slate-500';
 
     const size = isSelected ? 48 : 36;
     const iconSize = isSelected ? '24px' : '18px';
@@ -78,16 +82,17 @@ const getTurismoIcon = (isSelected: boolean = false) => {
 
 
 interface MapaServicosProps {
-  navigateTo: (view: View, params?: any) => void;
   predioId?: string;
   turismoId?: string;
 }
 
+// FIX: Use enum values for checking inclusion to ensure type safety.
 function isPredioPublico(item: any): item is PredioPublico {
-    return item && typeof item.categoria === 'string' && ['Saúde', 'Educação', 'Assistência Social', 'Administração'].includes(item.categoria);
+    return item && typeof item.categoria === 'string' && Object.values(CategoriaPredioPublico).includes(item.categoria as CategoriaPredioPublico);
 }
 
-const MapaServicos: React.FC<MapaServicosProps> = ({ navigateTo, predioId, turismoId }) => {
+const MapaServicos: React.FC<MapaServicosProps> = ({ predioId, turismoId }) => {
+  const navigate = useNavigate();
   const { data: predios, loading: loadingPredios } = usePrediosPublicos();
   const { data: focusedTurismoItem, loading: loadingTurismo } = useTurismoItemById(turismoId || null);
 
@@ -102,16 +107,14 @@ const MapaServicos: React.FC<MapaServicosProps> = ({ navigateTo, predioId, turis
   const userMarkerRef = useRef<any>(null);
   const markerRefs = useRef<Record<string, any>>({});
   const [selectedMarkerId, setSelectedMarkerId] = useState<string | null>(null);
-  const [mainImage, setMainImage] = useState<string | null>(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const loading = loadingPredios || (turismoId ? loadingTurismo : false);
   
   useEffect(() => {
-    let images: string[] | undefined = [];
     if (selectedItem) {
-        images = isPredioPublico(selectedItem) ? selectedItem.imagens : selectedItem.imagens;
+        setCurrentImageIndex(0);
     }
-    setMainImage(images && images.length > 0 ? images[0] : null);
   }, [selectedItem]);
 
   const prediosFiltrados = useMemo(() => {
@@ -261,7 +264,7 @@ const MapaServicos: React.FC<MapaServicosProps> = ({ navigateTo, predioId, turis
   return (
     <div className="space-y-4">
       <div className="flex items-center space-x-2">
-        <Button onClick={() => navigateTo('DASHBOARD')} variant="ghost" size="icon">
+        <Button onClick={() => navigate('/')} variant="ghost" size="icon">
           <Icon name="arrow_back" />
         </Button>
         <h2 className="text-2xl font-bold text-slate-800">Mapa de Serviços</h2>
@@ -331,50 +334,85 @@ const MapaServicos: React.FC<MapaServicosProps> = ({ navigateTo, predioId, turis
 
       {selectedItem && (
         <Modal isOpen={!!selectedItem} onClose={() => setSelectedItem(null)} title={selectedItem.nome}>
-            {isPredioPublico(selectedItem) ? (
-                <>
-                  {mainImage && <img src={mainImage} alt={`Foto de ${selectedItem.nome}`} className="w-full h-56 object-cover bg-slate-200" />}
-                  {selectedItem.imagens && selectedItem.imagens.length > 1 && (
-                    <div className="p-2 flex space-x-2 overflow-x-auto bg-slate-100">
-                        {selectedItem.imagens.map((img, index) => (
-                            <img key={index} src={img} alt={`Miniatura ${index + 1}`} className={`w-16 h-16 object-cover rounded-md cursor-pointer border-2 flex-shrink-0 ${mainImage === img ? 'border-indigo-500' : 'border-transparent'}`} onClick={() => setMainImage(img)} />
-                        ))}
-                    </div>
-                  )}
-                  <div className="p-6 space-y-4 text-slate-700">
-                      <p className="text-base text-slate-600">{selectedItem.endereco}</p>
-                      <div className="pt-4 border-t border-slate-200 space-y-2.5">
-                          <p className={`flex items-center font-semibold ${selectedItem.isOpenNow ? 'text-emerald-600' : 'text-rose-600'}`}><Icon name="fiber_manual_record" className="text-base mr-3" />{selectedItem.isOpenNow ? 'Aberto agora' : 'Fechado agora'}</p>
-                          {selectedItem.busyness && (<p className="flex items-center"><Icon name="show_chart" className="text-xl mr-2 text-slate-500" />{selectedItem.busyness}</p>)}
-                          <p className="flex items-center"><Icon name="schedule" className="text-xl mr-2 text-slate-500" />{selectedItem.horario}</p>
-                          <p className="flex items-center"><Icon name="phone" className="text-xl mr-2 text-slate-500" />{selectedItem.telefone}</p>
-                      </div>
-                      <div className="pt-4 border-t border-slate-200"><h5 className="font-bold text-slate-800 mb-2">Serviços oferecidos:</h5><ul className="list-disc list-inside space-y-1 pl-1">{selectedItem.servicos.map((s, i) => <li key={i}>{s}</li>)}</ul></div>
-                      {selectedItem.profissionais && selectedItem.profissionais.length > 0 && (<div className="pt-4 border-t border-slate-200"><h5 className="font-bold text-slate-800 mb-3">Profissionais</h5><div className="space-y-3">{selectedItem.profissionais.map((prof, i) => (<div key={i} className="text-sm"><p className="font-semibold text-slate-700">{prof.nome}</p><p className="text-slate-600">{prof.cargo}</p><p className="text-xs text-slate-500 uppercase">{prof.cargaHoraria}</p></div>))}</div></div>)}
-                      <div className="pt-4 mt-4 border-t border-slate-200 flex items-center flex-wrap gap-3"><Button iconLeft="call" onClick={() => window.location.href = `tel:${selectedItem.telefone.replace(/\D/g, '')}`} variant="secondary" className="bg-emerald-600 hover:bg-emerald-700 text-white">Ligar</Button><Button iconLeft="directions" onClick={() => window.open(`https://www.google.com/maps/dir/?api=1&destination=${selectedItem.localizacao.latitude},${selectedItem.localizacao.longitude}`, '_blank')} variant="primary" className="bg-sky-600 hover:bg-sky-700 text-white">Google Maps</Button><Button iconLeft="navigation" onClick={() => window.open(`waze://?ll=${selectedItem.localizacao.latitude},${selectedItem.localizacao.longitude}&navigate=yes`, '_blank')} variant="secondary" className="bg-cyan-500 hover:bg-cyan-600 text-white">Waze</Button></div>
-                  </div>
-                </>
-            ) : (
-                <>
-                  {mainImage && <img src={mainImage} alt={`Foto de ${selectedItem.nome}`} className="w-full h-56 object-cover bg-slate-200" />}
-                  {selectedItem.imagens && selectedItem.imagens.length > 1 && (
-                    <div className="p-2 flex space-x-2 overflow-x-auto bg-slate-100">
-                        {selectedItem.imagens.map((img, index) => (
-                            <img key={index} src={img} alt={`Miniatura ${index + 1}`} className={`w-16 h-16 object-cover rounded-md cursor-pointer border-2 flex-shrink-0 ${mainImage === img ? 'border-indigo-500' : 'border-transparent'}`} onClick={() => setMainImage(img)} />
-                        ))}
-                    </div>
-                  )}
-                  <div className="p-6 space-y-4 text-slate-700">
-                    <p className="text-base text-slate-600">{selectedItem.descricao}</p>
-                    <div className="pt-4 border-t border-slate-200 space-y-3">
-                        <p className="flex items-start"><Icon name="location_on" className="text-xl mr-2 text-slate-500 flex-shrink-0" /><span>{selectedItem.endereco}</span></p>
-                        {selectedItem.contato && <p className="flex items-center"><Icon name="phone" className="text-xl mr-2 text-slate-500" />{selectedItem.contato}</p>}
-                        {selectedItem.site && <p className="flex items-start"><Icon name="language" className="text-xl mr-2 text-slate-500 flex-shrink-0" /><a href={selectedItem.site} target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline break-all">{selectedItem.site}</a></p>}
-                    </div>
-                    <div className="pt-4 mt-4 border-t border-slate-200 flex items-center flex-wrap gap-3"><Button iconLeft="directions" onClick={() => window.open(`https://www.google.com/maps/dir/?api=1&destination=${selectedItem.localizacao.latitude},${selectedItem.localizacao.longitude}`, '_blank')} variant="primary">Rotas</Button>{selectedItem.contato && <Button iconLeft="call" onClick={() => window.location.href = `tel:${selectedItem.contato?.replace(/\D/g, '')}`} variant="secondary">Ligar</Button>}</div>
-                  </div>
-                </>
-            )}
+            {(() => {
+                const images = (isPredioPublico(selectedItem) ? selectedItem.imagens : selectedItem.imagens) || [];
+
+                const handlePrevImage = () => setCurrentImageIndex(prev => (prev - 1 + images.length) % images.length);
+                const handleNextImage = () => setCurrentImageIndex(prev => (prev + 1) % images.length);
+                
+                const imageGallery = (
+                    <>
+                        {images.length > 0 && (
+                            <div className="relative group w-full h-56 bg-slate-200">
+                                <img src={images[currentImageIndex]} alt={`Foto de ${selectedItem.nome}`} className="w-full h-full object-cover" />
+                                {images.length > 1 && (
+                                    <>
+                                        <Button size="icon" variant="secondary" onClick={handlePrevImage} className="!absolute left-2 top-1/2 -translate-y-1/2 !bg-black/40 !text-white !border-none opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity" aria-label="Imagem anterior">
+                                            <Icon name="chevron_left" />
+                                        </Button>
+                                        <Button size="icon" variant="secondary" onClick={handleNextImage} className="!absolute right-2 top-1/2 -translate-y-1/2 !bg-black/40 !text-white !border-none opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity" aria-label="Próxima imagem">
+                                            <Icon name="chevron_right" />
+                                        </Button>
+                                        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex space-x-1.5 p-1 bg-black/30 rounded-full">
+                                            {images.map((_, index) => (
+                                                <button key={index} onClick={() => setCurrentImageIndex(index)} className={`w-2 h-2 rounded-full block ${currentImageIndex === index ? 'bg-white' : 'bg-white/50'}`} aria-label={`Ir para imagem ${index + 1}`}></button>
+                                            ))}
+                                        </div>
+                                    </>
+                                )}
+                            </div>
+                        )}
+                        {images.length > 1 && (
+                            <div className="p-2 flex space-x-2 overflow-x-auto bg-slate-100">
+                                {images.map((img, index) => (
+                                    <img
+                                        key={index}
+                                        src={img}
+                                        alt={`Miniatura ${index + 1}`}
+                                        className={`w-16 h-16 object-cover rounded-md cursor-pointer border-2 flex-shrink-0 ${currentImageIndex === index ? 'border-indigo-500' : 'border-transparent'}`}
+                                        onClick={() => setCurrentImageIndex(index)}
+                                    />
+                                ))}
+                            </div>
+                        )}
+                    </>
+                );
+
+                if (isPredioPublico(selectedItem)) {
+                    return (
+                        <>
+                            {imageGallery}
+                            <div className="p-6 space-y-4 text-slate-700">
+                                <p className="text-base text-slate-600">{selectedItem.endereco}</p>
+                                <div className="pt-4 border-t border-slate-200 space-y-2.5">
+                                    <p className={`flex items-center font-semibold ${selectedItem.isOpenNow ? 'text-emerald-600' : 'text-rose-600'}`}><Icon name="fiber_manual_record" className="text-base mr-3" />{selectedItem.isOpenNow ? 'Aberto agora' : 'Fechado agora'}</p>
+                                    {selectedItem.busyness && (<p className="flex items-center"><Icon name="show_chart" className="text-xl mr-2 text-slate-500" />{selectedItem.busyness}</p>)}
+                                    <p className="flex items-center"><Icon name="schedule" className="text-xl mr-2 text-slate-500" />{selectedItem.horario}</p>
+                                    <p className="flex items-center"><Icon name="phone" className="text-xl mr-2 text-slate-500" />{selectedItem.telefone}</p>
+                                </div>
+                                <div className="pt-4 border-t border-slate-200"><h5 className="font-bold text-slate-800 mb-2">Serviços oferecidos:</h5><ul className="list-disc list-inside space-y-1 pl-1">{selectedItem.servicos.map((s, i) => <li key={i}>{s}</li>)}</ul></div>
+                                {selectedItem.profissionais && selectedItem.profissionais.length > 0 && (<div className="pt-4 border-t border-slate-200"><h5 className="font-bold text-slate-800 mb-3">Profissionais</h5><div className="space-y-3">{selectedItem.profissionais.map((prof, i) => (<div key={i} className="text-sm"><p className="font-semibold text-slate-700">{prof.nome}</p><p className="text-slate-600">{prof.cargo}</p><p className="text-xs text-slate-500 uppercase">{prof.cargaHoraria}</p></div>))}</div></div>)}
+                                <div className="pt-4 mt-4 border-t border-slate-200 flex items-center flex-wrap gap-3"><Button iconLeft="call" onClick={() => window.location.href = `tel:${selectedItem.telefone.replace(/\D/g, '')}`} variant="secondary" className="bg-emerald-600 hover:bg-emerald-700 text-white">Ligar</Button><Button iconLeft="directions" onClick={() => window.open(`https://www.google.com/maps/dir/?api=1&destination=${selectedItem.localizacao.latitude},${selectedItem.localizacao.longitude}`, '_blank')} variant="primary" className="bg-sky-600 hover:bg-sky-700 text-white">Google Maps</Button><Button iconLeft="navigation" onClick={() => window.open(`waze://?ll=${selectedItem.localizacao.latitude},${selectedItem.localizacao.longitude}&navigate=yes`, '_blank')} variant="secondary" className="bg-cyan-500 hover:bg-cyan-600 text-white">Waze</Button></div>
+                            </div>
+                        </>
+                    );
+                } else {
+                    return (
+                        <>
+                            {imageGallery}
+                            <div className="p-6 space-y-4 text-slate-700">
+                                <p className="text-base text-slate-600">{selectedItem.descricao}</p>
+                                <div className="pt-4 border-t border-slate-200 space-y-3">
+                                    <p className="flex items-start"><Icon name="location_on" className="text-xl mr-2 text-slate-500 flex-shrink-0" /><span>{selectedItem.endereco}</span></p>
+                                    {selectedItem.contato && <p className="flex items-center"><Icon name="phone" className="text-xl mr-2 text-slate-500" />{selectedItem.contato}</p>}
+                                    {selectedItem.site && <p className="flex items-start"><Icon name="language" className="text-xl mr-2 text-slate-500 flex-shrink-0" /><a href={selectedItem.site} target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline break-all">{selectedItem.site}</a></p>}
+                                </div>
+                                <div className="pt-4 mt-4 border-t border-slate-200 flex items-center flex-wrap gap-3"><Button iconLeft="directions" onClick={() => window.open(`https://www.google.com/maps/dir/?api=1&destination=${selectedItem.localizacao.latitude},${selectedItem.localizacao.longitude}`, '_blank')} variant="primary">Rotas</Button>{selectedItem.contato && <Button iconLeft="call" onClick={() => window.location.href = `tel:${selectedItem.contato?.replace(/\D/g, '')}`} variant="secondary">Ligar</Button>}</div>
+                            </div>
+                        </>
+                    );
+                }
+            })()}
         </Modal>
       )}
     </div>

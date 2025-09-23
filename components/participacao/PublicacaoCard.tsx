@@ -52,6 +52,7 @@ const PublicacaoCard: React.FC<PublicacaoCardProps> = ({ publicacao, onClick }) 
             src={publicacao.fotos[0]} 
             alt={publicacao.title} 
             className="w-full h-56 object-cover bg-slate-200"
+            loading="lazy"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
           

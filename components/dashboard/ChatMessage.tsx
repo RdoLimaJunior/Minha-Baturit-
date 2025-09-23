@@ -1,20 +1,21 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ChatMessage, View, ChatAction } from '../../types';
 import Icon from '../ui/Icon';
 import Button from '../ui/Button';
+import { viewToPath } from '../../utils/navigation';
 
 interface ChatMessageProps {
     message: ChatMessage;
     isLastMessage: boolean;
     isLoading: boolean;
-    onActionClick: (view: View, params?: any) => void;
     onFeedback: (messageId: string, feedback: 'like' | 'dislike') => void;
     onCopy: (text: string) => void;
 }
 
 const UirapuruAvatar = () => (
-    <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0">
-      <Icon name="flutter_dash" className="text-indigo-600 !text-xl" />
+    <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center flex-shrink-0">
+      <Icon name="flutter_dash" className="text-slate-700 !text-xl" />
     </div>
 );
 
@@ -24,15 +25,16 @@ const UserAvatar = () => (
     </div>
 );
 
-
-const ChatMessageComponent: React.FC<ChatMessageProps> = ({ message, isLastMessage, isLoading, onActionClick, onFeedback, onCopy }) => {
-    const showFeedbackActions = message.role === 'model' && message.content && !(isLoading && isLastMessage);
+const ChatMessageComponent: React.FC<ChatMessageProps> = ({ message, isLastMessage, isLoading, onFeedback, onCopy }) => {
+    const navigate = useNavigate();
+    const showFeedbackActions = message.role === 'model' && message.content && !isLastMessage;
 
     const handleActionClick = (action: ChatAction) => {
         switch (action.type) {
             case 'NAVIGATE':
                 if (action.payload.view) {
-                    onActionClick(action.payload.view, action.payload.params);
+                    const path = viewToPath(action.payload.view, action.payload.params);
+                    navigate(path);
                 }
                 break;
             case 'OPEN_URL':
@@ -55,7 +57,7 @@ const ChatMessageComponent: React.FC<ChatMessageProps> = ({ message, isLastMessa
              <div className="flex justify-end items-start gap-4 animate-fade-slide-in">
                 <div className="flex flex-col items-end">
                     <p className="font-semibold text-slate-800 pt-1.5">Você</p>
-                    <div className="mt-1 bg-indigo-600 text-white p-3 rounded-2xl rounded-br-lg max-w-prose">
+                    <div className="mt-1 bg-slate-800 text-white p-3 rounded-2xl rounded-br-lg max-w-prose">
                         <p className="whitespace-pre-wrap">{message.content}</p>
                     </div>
                 </div>
@@ -130,26 +132,26 @@ const ChatMessageComponent: React.FC<ChatMessageProps> = ({ message, isLastMessa
                         <button
                             onClick={() => onFeedback(message.id, 'like')}
                             title="Gostei"
-                            className={`p-1.5 rounded-full text-slate-500 hover:bg-slate-100 transition-colors ${message.feedback === 'like' ? '!text-emerald-600 !bg-emerald-100' : ''}`}
+                            className={`p-1.5 rounded-full text-slate-500 hover:bg-slate-100 transition-colors ${message.feedback === 'like' ? '!bg-emerald-100 !text-emerald-600' : ''}`}
                         >
-                            <Icon name="thumb_up" className="text-lg" />
+                            <Icon name="thumb_up" className="text-base" />
                         </button>
                         <button
                             onClick={() => onFeedback(message.id, 'dislike')}
-                            title="Não Gostei"
-                            className={`p-1.5 rounded-full text-slate-500 hover:bg-slate-100 transition-colors ${message.feedback === 'dislike' ? '!text-rose-600 !bg-rose-100' : ''}`}
+                            title="Não gostei"
+                            className={`p-1.5 rounded-full text-slate-500 hover:bg-slate-100 transition-colors ${message.feedback === 'dislike' ? '!bg-rose-100 !text-rose-600' : ''}`}
                         >
-                            <Icon name="thumb_down" className="text-lg" />
+                            <Icon name="thumb_down" className="text-base" />
                         </button>
                         <button
                             onClick={() => onCopy(message.content)}
                             title="Copiar"
-                            className={`p-1.5 rounded-full text-slate-500 hover:bg-slate-100 transition-colors`}
+                            className="p-1.5 rounded-full text-slate-500 hover:bg-slate-100 transition-colors"
                         >
-                            <Icon name="content_copy" className="text-lg" />
+                            <Icon name="content_copy" className="text-base" />
                         </button>
                     </div>
-                )}
+                 )}
             </div>
         </div>
     );

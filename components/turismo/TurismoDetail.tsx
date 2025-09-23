@@ -1,6 +1,7 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTurismoItemById } from '../../hooks/useMockData';
-import { View, TurismoCategoria } from '../../types';
+import { TurismoCategoria } from '../../types';
 import Spinner from '../ui/Spinner';
 import Card from '../ui/Card';
 import Icon from '../ui/Icon';
@@ -9,18 +10,14 @@ import Button from '../ui/Button';
 interface TurismoDetailProps {
   turismoId: string;
   categoria: TurismoCategoria;
-  navigateTo: (view: View, params?: any) => void;
 }
 
-const TurismoDetail: React.FC<TurismoDetailProps> = ({ turismoId, categoria, navigateTo }) => {
+const TurismoDetail: React.FC<TurismoDetailProps> = ({ turismoId, categoria }) => {
+  const navigate = useNavigate();
   const { data: item, loading } = useTurismoItemById(turismoId);
 
   if (loading) return <Spinner />;
   if (!item) return <Card><p>Item não encontrado.</p></Card>;
-  
-  const handleVerNoMapa = () => {
-      navigateTo('MAPA_SERVICOS', { turismoId: item.id });
-  };
 
   return (
     <div className="space-y-4">
@@ -54,13 +51,15 @@ const TurismoDetail: React.FC<TurismoDetailProps> = ({ turismoId, categoria, nav
           </div>
 
            <div className="pt-4 mt-4 border-t border-slate-200 dark:border-slate-700 flex items-center flex-wrap gap-3">
-                <Button
-                    iconLeft="map"
-                    onClick={handleVerNoMapa}
-                    variant="primary"
-                >
-                    Ver no mapa
-                </Button>
+                {item.localizacao && (
+                    <Button
+                        iconLeft="map"
+                        onClick={() => navigate(`/mapa/turismo/${item.id}`)}
+                        variant="primary"
+                    >
+                        Ver no mapa
+                    </Button>
+                )}
                 {item.contato && (
                     <Button
                         iconLeft="call"
@@ -84,6 +83,7 @@ const TurismoDetail: React.FC<TurismoDetailProps> = ({ turismoId, categoria, nav
                 src={img} 
                 alt={`Foto ${index + 2} de ${item.nome}`}
                 className="rounded-lg w-full h-32 object-cover"
+                loading="lazy"
               />
             ))}
           </div>

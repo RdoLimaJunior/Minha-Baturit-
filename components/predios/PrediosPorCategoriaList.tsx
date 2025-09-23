@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { usePrediosPublicos } from '../../hooks/useMockData';
-import { View, PredioPublico, CategoriaPredioPublico } from '../../types';
+import { PredioPublico, CategoriaPredioPublico } from '../../types';
 import Spinner from '../ui/Spinner';
 import Button from '../ui/Button';
 import Icon from '../ui/Icon';
@@ -18,11 +19,10 @@ const CATEGORY_DETAILS: Record<CategoriaPredioPublico, { icon: string; color: st
 type FilterType = 'todos' | 'abertos' | 'proximos';
 
 interface PrediosPorCategoriaListProps {
-  navigateTo: (view: View, params?: any) => void;
   categoria: CategoriaPredioPublico;
   titulo: string;
   icon: string;
-  goBackView: View;
+  goBackView: string;
 }
 
 const PredioPublicoSkeletonItem: React.FC = () => (
@@ -90,19 +90,18 @@ const PredioCard: React.FC<{predio: PredioPublico & {distance: number | null}, o
 };
 
 
-const PrediosPorCategoriaList: React.FC<PrediosPorCategoriaListProps> = ({ navigateTo, categoria, titulo, icon, goBackView }) => {
+const PrediosPorCategoriaList: React.FC<PrediosPorCategoriaListProps> = ({ categoria, titulo, icon, goBackView }) => {
+    const navigate = useNavigate();
     const { data: todosPredios, loading } = usePrediosPublicos();
     const [selectedPredio, setSelectedPredio] = useState<PredioPublico | null>(null);
     const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [activeFilter, setActiveFilter] = useState<FilterType>('todos');
-    const [mainImage, setMainImage] = useState<string | null>(null);
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
     
     useEffect(() => {
-        if (selectedPredio && selectedPredio.imagens && selectedPredio.imagens.length > 0) {
-            setMainImage(selectedPredio.imagens[0]);
-        } else {
-            setMainImage(null);
+        if (selectedPredio) {
+            setCurrentImageIndex(0);
         }
     }, [selectedPredio]);
 
@@ -180,7 +179,7 @@ const PrediosPorCategoriaList: React.FC<PrediosPorCategoriaListProps> = ({ navig
                     key={predio.id} 
                     predio={predio} 
                     onDetailsClick={() => setSelectedPredio(predio)}
-                    onVerNoMapaClick={() => navigateTo('MAPA_SERVICOS', { predioId: predio.id })}
+                    onVerNoMapaClick={() => navigate(`/mapa/predio/${predio.id}`)}
                 />
             ));
         }
@@ -199,7 +198,7 @@ const PrediosPorCategoriaList: React.FC<PrediosPorCategoriaListProps> = ({ navig
                             key={predio.id} 
                             predio={predio} 
                             onDetailsClick={() => setSelectedPredio(predio)}
-                            onVerNoMapaClick={() => navigateTo('MAPA_SERVICOS', { predioId: predio.id })}
+                            onVerNoMapaClick={() => navigate(`/mapa/predio/${predio.id}`)}
                         />
                     ))}
                 </div>
@@ -237,14 +236,48 @@ const PrediosPorCategoriaList: React.FC<PrediosPorCategoriaListProps> = ({ navig
             </div>
             {selectedPredio && (
                 <Modal isOpen={!!selectedPredio} onClose={() => setSelectedPredio(null)} title={selectedPredio.nome}>
-                    {mainImage && <img src={mainImage} alt={`Foto de ${selectedPredio.nome}`} className="w-full h-56 object-cover bg-slate-200" />}
-                    {selectedPredio.imagens && selectedPredio.imagens.length > 1 && (
-                    <div className="p-2 flex space-x-2 overflow-x-auto bg-slate-100">
-                        {selectedPredio.imagens.map((img, index) => (
-                            <img key={index} src={img} alt={`Miniatura ${index + 1}`} className={`w-16 h-16 object-cover rounded-md cursor-pointer border-2 flex-shrink-0 ${mainImage === img ? 'border-indigo-500' : 'border-transparent'}`} onClick={() => setMainImage(img)} />
-                        ))}
-                    </div>
-                    )}
+                    {(() => {
+                        const images = selectedPredio.imagens || [];
+                        const handlePrevImage = () => setCurrentImageIndex(prev => (prev - 1 + images.length) % images.length);
+                        const handleNextImage = () => setCurrentImageIndex(prev => (prev + 1) % images.length);
+                        return (
+                            <>
+                                {images.length > 0 && (
+                                    <div className="relative group w-full h-56 bg-slate-200">
+                                        <img src={images[currentImageIndex]} alt={`Foto de ${selectedPredio.nome}`} className="w-full h-full object-cover" />
+                                        {images.length > 1 && (
+                                            <>
+                                                <Button size="icon" variant="secondary" onClick={handlePrevImage} className="!absolute left-2 top-1/2 -translate-y-1/2 !bg-black/40 !text-white !border-none opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity" aria-label="Imagem anterior">
+                                                    <Icon name="chevron_left" />
+                                                </Button>
+                                                <Button size="icon" variant="secondary" onClick={handleNextImage} className="!absolute right-2 top-1/2 -translate-y-1/2 !bg-black/40 !text-white !border-none opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity" aria-label="Próxima imagem">
+                                                    <Icon name="chevron_right" />
+                                                </Button>
+                                                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex space-x-1.5 p-1 bg-black/30 rounded-full">
+                                                    {images.map((_, index) => (
+                                                        <button key={index} onClick={() => setCurrentImageIndex(index)} className={`w-2 h-2 rounded-full block ${currentImageIndex === index ? 'bg-white' : 'bg-white/50'}`} aria-label={`Ir para imagem ${index + 1}`}></button>
+                                                    ))}
+                                                </div>
+                                            </>
+                                        )}
+                                    </div>
+                                )}
+                                {images.length > 1 && (
+                                    <div className="p-2 flex space-x-2 overflow-x-auto bg-slate-100">
+                                        {images.map((img, index) => (
+                                            <img
+                                                key={index}
+                                                src={img}
+                                                alt={`Miniatura ${index + 1}`}
+                                                className={`w-16 h-16 object-cover rounded-md cursor-pointer border-2 flex-shrink-0 ${currentImageIndex === index ? 'border-indigo-500' : 'border-transparent'}`}
+                                                onClick={() => setCurrentImageIndex(index)}
+                                            />
+                                        ))}
+                                    </div>
+                                )}
+                            </>
+                        )
+                    })()}
                     <div className="p-6 space-y-4 text-slate-700">
                         <p className="text-base text-slate-600">{selectedPredio.endereco}</p>
                         <div className="pt-4 border-t border-slate-200 space-y-2.5">

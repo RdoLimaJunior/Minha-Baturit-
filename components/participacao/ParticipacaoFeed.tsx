@@ -1,15 +1,12 @@
 import React, { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { usePublicacoes } from '../../hooks/useMockData';
-import { View, Publicacao, TipoPublicacao } from '../../types';
+import { Publicacao, TipoPublicacao } from '../../types';
 import Card from '../ui/Card';
 import Spinner from '../ui/Spinner';
 import Icon from '../ui/Icon';
 import Button from '../ui/Button';
 import PublicacaoCard from './PublicacaoCard';
-
-interface ParticipacaoFeedProps {
-  navigateTo: (view: View, params?: { publicacaoId?: string }) => void;
-}
 
 const SkeletonCard: React.FC = () => (
     <Card className="!p-0 animate-pulse">
@@ -37,7 +34,8 @@ const SkeletonCard: React.FC = () => (
     </Card>
 );
 
-const ParticipacaoFeed: React.FC<ParticipacaoFeedProps> = ({ navigateTo }) => {
+const ParticipacaoFeed: React.FC = () => {
+  const navigate = useNavigate();
   const { data: publicacoes, loading } = usePublicacoes();
   const [filtroTipo, setFiltroTipo] = useState<TipoPublicacao | 'Todos'>('Todos');
   const [searchTerm, setSearchTerm] = useState('');
@@ -88,7 +86,7 @@ const ParticipacaoFeed: React.FC<ParticipacaoFeedProps> = ({ navigateTo }) => {
           <Icon name="forum" className="text-5xl text-slate-400 mx-auto" />
           <p className="text-slate-700 mt-4 font-semibold">Ainda sem publicações</p>
           <p className="text-slate-600 text-sm mt-1">Seja o primeiro a participar e compartilhar suas ideias!</p>
-          <Button onClick={() => navigateTo('PARTICIPACAO_FORM')} className="mt-6" iconLeft="add_comment">Criar Publicação</Button>
+          <Button onClick={() => navigate('/participacao/novo')} className="mt-6" iconLeft="add_comment">Criar Publicação</Button>
         </Card>
       );
     }
@@ -98,7 +96,7 @@ const ParticipacaoFeed: React.FC<ParticipacaoFeedProps> = ({ navigateTo }) => {
           <PublicacaoCard 
             key={pub.id} 
             publicacao={pub} 
-            onClick={() => navigateTo('PARTICIPACAO_DETAIL', { publicacaoId: pub.id })}
+            onClick={() => navigate(`/participacao/detalhe/${pub.id}`)}
           />
         ))}
       </div>
@@ -151,7 +149,7 @@ const ParticipacaoFeed: React.FC<ParticipacaoFeedProps> = ({ navigateTo }) => {
 
         <div className="fixed bottom-20 right-4 z-20">
              <Button
-                onClick={() => navigateTo('PARTICIPACAO_FORM')}
+                onClick={() => navigate('/participacao/novo')}
                 size="lg"
                 className="!rounded-full !p-4 shadow-lg"
                 aria-label="Criar nova publicação"

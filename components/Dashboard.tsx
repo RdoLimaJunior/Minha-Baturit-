@@ -1,17 +1,21 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import Icon from './ui/Icon';
-import Button from './ui/Button';
+import { useNavigate } from 'react-router-dom';
 import { UserProfile, UserRole, View } from '../types';
 import { useToast } from './ui/Toast';
 import { useChat } from '../../hooks/useChat';
 import ChatMessageComponent from './dashboard/ChatMessage';
 import WeatherWidget from './dashboard/WeatherWidget';
 import DynamicGreeting from './dashboard/DynamicGreeting';
+import AcoesRapidas from './dashboard/AcoesRapidas';
+import FeedPrincipal from './dashboard/FeedPrincipal';
+import Icon from './ui/Icon';
+import Button from './ui/Button';
+import { viewToPath } from '../../utils/navigation';
 
 const TypingIndicator = () => (
     <div className="flex items-start gap-4 animate-fade-slide-in">
-        <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0">
-            <Icon name="flutter_dash" className="text-indigo-600 !text-xl" />
+        <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center flex-shrink-0">
+            <Icon name="flutter_dash" className="text-slate-700 !text-xl" />
         </div>
         <div className="pt-1.5 w-full">
              <p className="font-semibold text-slate-800">Assistente Uirapuru</p>
@@ -27,7 +31,6 @@ const TypingIndicator = () => (
 );
 
 interface DashboardProps {
-  navigateTo: (view: View, params?: any) => void;
   userProfile: UserProfile;
 }
 
@@ -76,16 +79,18 @@ const getContextFromMessage = (messageContent: string): SuggestionTopic => {
   return 'geral';
 };
 
-const Dashboard: React.FC<DashboardProps> = ({ navigateTo, userProfile }) => {
+const Dashboard: React.FC<DashboardProps> = ({ userProfile }) => {
   const [input, setInput] = useState('');
   const [isListening, setIsListening] = useState(false);
   const [dynamicSuggestedQuestions, setDynamicSuggestedQuestions] = useState<string[]>([]);
+  const [chatVisible, setChatVisible] = useState(false);
   
   const { messages, isLoading, sendMessage, handleFeedback } = useChat(userProfile);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const recognitionRef = useRef<any>(null);
   const { addToast } = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const lastModelMessage = messages.filter(m => m.role === 'model').pop();
@@ -106,24 +111,22 @@ const Dashboard: React.FC<DashboardProps> = ({ navigateTo, userProfile }) => {
         i++;
     }
     
-    while (suggestions.size < 4 && i < shuffledGeneral.length) {
-         suggestions.add(shuffledGeneral[i]);
-        i++;
-    }
-
     setDynamicSuggestedQuestions(Array.from(suggestions));
   }, [messages]);
 
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, isLoading]);
+    if (chatVisible) {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages, isLoading, chatVisible]);
 
   const handleSendMessage = useCallback(async (message: string) => {
     if (!message.trim()) return;
     setInput('');
+    if (!chatVisible) setChatVisible(true);
     await sendMessage(message);
-  }, [sendMessage]);
+  }, [sendMessage, chatVisible]);
 
   useEffect(() => {
     if (!recognitionRef.current) {
@@ -184,6 +187,11 @@ const Dashboard: React.FC<DashboardProps> = ({ navigateTo, userProfile }) => {
     });
   };
 
+  const navigateTo = (view: View, params?: any) => {
+    const path = viewToPath(view, params);
+    navigate(path);
+  };
+
   if (userProfile.role === UserRole.GESTOR) {
     return (
         <div className="container mx-auto p-4">
@@ -194,70 +202,51 @@ const Dashboard: React.FC<DashboardProps> = ({ navigateTo, userProfile }) => {
   }
   
   return (
-    <div className="w-full max-w-4xl mx-auto px-4 flex flex-col h-full">
+    <div className="flex flex-col h-full">
        <style>{`
-        @keyframes bounce {
-            0%, 80%, 100% { transform: scale(0); }
-            40% { transform: scale(1.0); }
-        }
-        .typing-dot {
-            width: 8px;
-            height: 8px;
-            background-color: #94a3b8;
-            border-radius: 50%;
-            display: inline-block;
-            animation: bounce 1.4s infinite ease-in-out both;
-        }
-        .scrollbar-hide::-webkit-scrollbar {
-            display: none;
-        }
-        .scrollbar-hide {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-        @keyframes fade-slide-in {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        .animate-fade-slide-in {
-            animation: fade-slide-in 0.3s ease-out forwards;
-        }
+        @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1.0); } }
+        .typing-dot { width: 8px; height: 8px; background-color: #94a3b8; border-radius: 50%; display: inline-block; animation: bounce 1.4s infinite ease-in-out both; }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        @keyframes fade-slide-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-slide-in { animation: fade-slide-in 0.3s ease-out forwards; }
       `}</style>
       
-      {messages.length <= 1 ? (
-        <div className="flex-shrink-0 pt-6">
+      <div className="flex-1 overflow-y-auto scrollbar-hide">
+        <div className="container mx-auto px-4 pt-6 space-y-8">
             <div className="flex justify-between items-start">
               <DynamicGreeting userName={userProfile.name} />
               <WeatherWidget />
             </div>
-        </div>
-      ) : null}
 
-      <div className="flex-1 overflow-y-auto py-8 space-y-8 scrollbar-hide" role="log" aria-live="polite">
-          {messages.map((msg, index) => (
-            <ChatMessageComponent
-                key={msg.id}
-                message={msg}
-                isLastMessage={index === messages.length - 1}
-                isLoading={isLoading}
-                onActionClick={navigateTo}
-                onFeedback={handleFeedback}
-                onCopy={handleCopy}
-            />
-          ))}
-          {isLoading && <TypingIndicator />}
-          <div ref={messagesEndRef} />
+            <AcoesRapidas />
+
+            {chatVisible && (
+                 <div className="space-y-8" role="log" aria-live="polite">
+                    {messages.slice(1).map((msg, index) => (
+                        <ChatMessageComponent
+                            key={msg.id}
+                            message={msg}
+                            isLastMessage={index === messages.length - 2}
+                            isLoading={isLoading}
+                            onFeedback={handleFeedback}
+                            onCopy={handleCopy}
+                        />
+                    ))}
+                    {isLoading && <TypingIndicator />}
+                    <div ref={messagesEndRef} />
+                </div>
+            )}
+            
+            {!chatVisible && <FeedPrincipal navigateTo={navigateTo} />}
+
+        </div>
       </div>
       
-      <div className="flex-shrink-0 pt-2 pb-4">
+      <div className="flex-shrink-0 bg-slate-50/80 backdrop-blur-sm border-t border-gray-200">
+        <div className="container mx-auto px-4 pt-2 pb-4">
           {!isLoading && (
-              <div className="mb-4">
+              <div className="mb-3">
                   <div className="flex flex-wrap justify-center gap-2">
                   {dynamicSuggestedQuestions.map((q, i) => (
                       <button
@@ -272,7 +261,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigateTo, userProfile }) => {
             </div>
           )}
           <form onSubmit={handleSend} className="w-full">
-              <div className="bg-white border border-slate-200 rounded-2xl p-2 flex items-center gap-2 shadow-sm focus-within:ring-2 focus-within:ring-indigo-500">
+              <div className="bg-white border border-slate-200 rounded-2xl p-2 flex items-center gap-2 shadow-sm focus-within:ring-2 focus-within:ring-slate-500">
                 <input
                     type="text"
                     value={input}
@@ -281,6 +270,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigateTo, userProfile }) => {
                     className="bg-transparent focus:ring-0 border-0 w-full text-slate-800 placeholder-slate-400"
                     disabled={isLoading || isListening}
                     aria-label="Caixa de texto para perguntas ao assistente virtual"
+                    onFocus={() => setChatVisible(true)}
                 />
                 {input.trim() ? (
                     <Button type="submit" size="icon" disabled={isLoading} aria-label="Enviar mensagem">
@@ -301,6 +291,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigateTo, userProfile }) => {
                 )}
               </div>
           </form>
+        </div>
       </div>
     </div>
   );

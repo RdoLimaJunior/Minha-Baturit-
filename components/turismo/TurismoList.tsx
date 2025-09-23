@@ -1,85 +1,82 @@
-import React, { useMemo } from 'react';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTurismoItens } from '../../hooks/useMockData';
-import { View, TurismoCategoria, TurismoItem } from '../../types';
+import { TurismoItem, TurismoCategoria } from '../../types';
 import Card from '../ui/Card';
 import Spinner from '../ui/Spinner';
 import Icon from '../ui/Icon';
-import Button from '../ui/Button';
-import LazyImage from '../ui/LazyImage';
 
 interface TurismoListProps {
   categoria: TurismoCategoria;
-  navigateTo: (view: View, params?: { turismoId?: string; turismoCategoria?: TurismoCategoria }) => void;
 }
 
-const TurismoSkeletonItem: React.FC = () => (
-    <Card className="!p-0 animate-pulse">
-        <div className="w-full h-48 bg-slate-200 dark:bg-slate-700"></div>
+const TurismoItemSkeleton: React.FC = () => (
+    <Card className="animate-pulse">
+        <div className="w-full h-48 bg-slate-200 rounded-t-xl"></div>
         <div className="p-4 space-y-3">
-            <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-3/4"></div>
-            <div className="h-3 bg-slate-200 dark:bg-slate-700 rounded w-full"></div>
-            <div className="h-3 bg-slate-200 dark:bg-slate-700 rounded w-5/6"></div>
+            <div className="h-5 w-3/4 bg-slate-200 rounded"></div>
+            <div className="h-3 w-full bg-slate-200 rounded"></div>
+            <div className="h-3 w-1/2 bg-slate-200 rounded"></div>
         </div>
     </Card>
 );
 
-const TurismoListItem: React.FC<{ item: TurismoItem; onClick: () => void }> = ({ item, onClick }) => {
-  const [isImageLoading, setIsImageLoading] = React.useState(true);
-
-  return (
-    <Card onClick={onClick} className="!p-0">
-      <LazyImage 
-        src={item.imagens[0]} 
-        alt={`Foto de ${item.nome}`}
-        className="w-full h-48 object-cover"
-        isLoading={isImageLoading}
-        onLoad={() => setIsImageLoading(false)}
-      />
-      <div className="p-4">
-        <h3 className="font-bold text-slate-800 dark:text-slate-100 text-lg">{item.nome}</h3>
-        <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">{item.descricaoCurta}</p>
-      </div>
-    </Card>
-  );
+const TurismoCard: React.FC<{ item: TurismoItem }> = ({ item }) => {
+    const navigate = useNavigate();
+    
+    return (
+        <Card onClick={() => navigate(`/turismo/detalhe/${item.categoria}/${item.id}`)} className="!p-0">
+            <img 
+                src={item.imagens[0]} 
+                alt={item.nome}
+                className="w-full h-48 object-cover rounded-t-xl"
+                loading="lazy"
+            />
+            <div className="p-4">
+                <h3 className="font-bold text-lg text-slate-800">{item.nome}</h3>
+                <p className="text-sm text-slate-600 mt-1 line-clamp-2">{item.descricaoCurta}</p>
+                 <div className="flex items-center text-xs text-slate-500 mt-3 pt-3 border-t border-slate-100">
+                    <Icon name="location_on" className="text-base mr-1" />
+                    <span>{item.endereco}</span>
+                </div>
+            </div>
+        </Card>
+    );
 };
 
-const TurismoList: React.FC<TurismoListProps> = ({ categoria, navigateTo }) => {
-  const { data: todosItens, loading } = useTurismoItens();
 
-  const itensFiltrados = useMemo(() => {
-    if (!todosItens) return [];
-    return todosItens.filter(item => item.categoria === categoria);
-  }, [todosItens, categoria]);
+const TurismoList: React.FC<TurismoListProps> = ({ categoria }) => {
+    const { data: itens, loading } = useTurismoItens();
 
-  if (loading) {
-      return (
-          <div className="space-y-4">
-              <div className="space-y-4 pt-2">
-                  {[...Array(3)].map((_, i) => <TurismoSkeletonItem key={i} />)}
-              </div>
-          </div>
-      );
-  }
+    const filteredItens = React.useMemo(() => {
+        if (!itens) return [];
+        return itens.filter(item => item.categoria === categoria);
+    }, [itens, categoria]);
 
-  return (
-    <div className="space-y-4">
-      {itensFiltrados.length > 0 ? (
+    if (loading) {
+        return (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <TurismoItemSkeleton />
+                <TurismoItemSkeleton />
+            </div>
+        );
+    }
+    
+    return (
         <div className="space-y-4">
-          {itensFiltrados.map(item => (
-            <TurismoListItem 
-              key={item.id} 
-              item={item} 
-              onClick={() => navigateTo('TURISMO_DETAIL', { turismoId: item.id, turismoCategoria: categoria })} 
-            />
-          ))}
+            {filteredItens.length > 0 ? (
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {filteredItens.map(item => (
+                        <TurismoCard key={item.id} item={item} />
+                    ))}
+                </div>
+            ) : (
+                <Card className="text-center">
+                    <p className="text-slate-600">Nenhum item encontrado nesta categoria.</p>
+                </Card>
+            )}
         </div>
-      ) : (
-        <Card className="text-center">
-          <p className="text-slate-600 dark:text-slate-300">Nenhum item encontrado nesta categoria no momento.</p>
-        </Card>
-      )}
-    </div>
-  );
+    );
 };
 
 export default TurismoList;

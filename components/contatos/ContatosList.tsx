@@ -1,14 +1,10 @@
 import React, { useMemo } from 'react';
 import { useContatosUteis } from '../../hooks/useMockData';
-import { ContatoUtil, CategoriaContato, View } from '../../types';
+import { ContatoUtil, CategoriaContato } from '../../types';
 import Card from '../ui/Card';
 import Spinner from '../ui/Spinner';
 import Icon from '../ui/Icon';
 import Button from '../ui/Button';
-
-interface ContatosListProps {
-  navigateTo: (view: View) => void;
-}
 
 const ContatoSkeletonItem: React.FC = () => (
     <Card className="!p-4 animate-pulse">
@@ -48,7 +44,7 @@ const ContatoItem: React.FC<{ contato: ContatoUtil }> = ({ contato }) => {
     );
 };
 
-const ContatosList: React.FC<ContatosListProps> = ({ navigateTo }) => {
+const ContatosList: React.FC = () => {
   const { data: contatos, loading } = useContatosUteis();
   
   const groupedContatos = useMemo(() => {

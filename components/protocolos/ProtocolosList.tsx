@@ -1,14 +1,11 @@
 import React, { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useProtocolos } from '../../hooks/useMockData';
-import { Protocolo, StatusProtocolo, View, TipoProtocolo } from '../../types';
+import { Protocolo, StatusProtocolo, TipoProtocolo } from '../../types';
 import Card from '../ui/Card';
 import Spinner from '../ui/Spinner';
 import Icon from '../ui/Icon';
 import Button from '../ui/Button';
-
-interface ProtocolosListProps {
-  navigateTo: (view: View, params?: { protocoloId?: string }) => void;
-}
 
 const ProtocoloSkeletonItem: React.FC = () => (
     <Card>
@@ -85,7 +82,8 @@ const ProtocoloItem: React.FC<{ protocolo: Protocolo, onClick: () => void }> = (
     );
 };
 
-const ProtocolosList: React.FC<ProtocolosListProps> = ({ navigateTo }) => {
+const ProtocolosList: React.FC = () => {
+  const navigate = useNavigate();
   const { data: protocolos, loading } = useProtocolos();
   const [sortBy, setSortBy] = useState<'date-desc' | 'date-asc' | 'status'>('date-desc');
 
@@ -143,12 +141,12 @@ const ProtocolosList: React.FC<ProtocolosListProps> = ({ navigateTo }) => {
       
       {sortedProtocolos && sortedProtocolos.length > 0 ? (
         sortedProtocolos.map(protocolo => (
-          <ProtocoloItem key={protocolo.id} protocolo={protocolo} onClick={() => navigateTo('PROTOCOLO_DETAIL', { protocoloId: protocolo.id })} />
+          <ProtocoloItem key={protocolo.id} protocolo={protocolo} onClick={() => navigate(`/protocolos/${protocolo.id}`)} />
         ))
       ) : (
         <Card className="text-center">
           <p className="text-slate-600">Você ainda não abriu nenhum protocolo.</p>
-          <Button onClick={() => navigateTo('PROTOCOLO_FORM')} className="mt-4">
+          <Button onClick={() => navigate('/protocolos/novo')} className="mt-4">
             Abrir primeiro protocolo
           </Button>
         </Card>

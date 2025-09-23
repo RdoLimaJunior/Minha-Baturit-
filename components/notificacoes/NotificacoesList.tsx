@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useNotificacoes } from '../../hooks/useMockData';
 import { Notificacao, View } from '../../types';
 import Card from '../ui/Card';
@@ -8,10 +9,7 @@ import Button from '../ui/Button';
 import { timeSince } from '../../utils/helpers';
 import { useToast } from '../ui/Toast';
 import { usePushNotifications } from '../../hooks/usePushNotifications';
-
-interface NotificacoesListProps {
-  navigateTo: (view: View, params?: any) => void;
-}
+import { viewToPath } from '../../utils/navigation';
 
 const NotificacaoSkeletonItem: React.FC = () => (
     <div className="flex items-start space-x-4 p-4 bg-white rounded-lg shadow-sm animate-pulse">
@@ -41,7 +39,7 @@ const NotificacaoItem: React.FC<{ notificacao: Notificacao; onClick: () => void;
     return (
         <div 
             onClick={onClick}
-            className={`flex items-start space-x-4 p-4 border-l-4 ${notificacao.lida ? 'border-transparent bg-white' : 'border-indigo-500 bg-indigo-50'} rounded-r-lg shadow-sm cursor-pointer hover:bg-gray-100 transition-colors`}
+            className={`flex items-start space-x-4 p-4 border-l-4 ${notificacao.lida ? 'border-transparent bg-white' : 'border-slate-400 bg-slate-100'} rounded-r-lg shadow-sm cursor-pointer hover:bg-gray-100 transition-colors`}
         >
             <Icon name={icon} className={`text-3xl mt-1 ${color}`} />
             <div className="flex-1">
@@ -53,7 +51,8 @@ const NotificacaoItem: React.FC<{ notificacao: Notificacao; onClick: () => void;
     );
 };
 
-const NotificacoesList: React.FC<NotificacoesListProps> = ({ navigateTo }) => {
+const NotificacoesList: React.FC = () => {
+  const navigate = useNavigate();
   const { data: notificacoes, loading } = useNotificacoes();
   const [listaNotificacoes, setListaNotificacoes] = useState<Notificacao[]>([]);
   const { addToast } = useToast();
@@ -76,7 +75,8 @@ const NotificacoesList: React.FC<NotificacoesListProps> = ({ navigateTo }) => {
         prev.map(n => n.id === notificacao.id ? { ...n, lida: true } : n)
     );
     if (notificacao.link) {
-      navigateTo(notificacao.link.view, notificacao.link.params);
+      const path = viewToPath(notificacao.link.view, notificacao.link.params);
+      navigate(path);
     }
   };
   

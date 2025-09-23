@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
-import { CategoriaReclamacao, TipoProtocolo, View, Protocolo, StatusProtocolo } from '../../types';
+import { useNavigate } from 'react-router-dom';
+import { CategoriaReclamacao, TipoProtocolo, Protocolo, StatusProtocolo } from '../../types';
 import Button from '../ui/Button';
 import Card from '../ui/Card';
 import Icon from '../ui/Icon';
@@ -86,7 +87,8 @@ const ProtocoloItem: React.FC<{ protocolo: Protocolo, onClick: () => void }> = (
 };
 
 
-const MeusProtocolosList: React.FC<{ navigateTo: (view: View, params?: { protocoloId?: string }) => void; }> = ({ navigateTo }) => {
+const MeusProtocolosList: React.FC = () => {
+    const navigate = useNavigate();
     const { data: protocolos, loading } = useProtocolos();
     const [sortBy, setSortBy] = useState<'date-desc' | 'date-asc' | 'status'>('date-desc');
 
@@ -149,7 +151,7 @@ const MeusProtocolosList: React.FC<{ navigateTo: (view: View, params?: { protoco
             {sortedProtocolos && sortedProtocolos.length > 0 ? (
                 <div className="space-y-3">
                     {sortedProtocolos.map(protocolo => (
-                        <ProtocoloItem key={protocolo.id} protocolo={protocolo} onClick={() => navigateTo('PROTOCOLO_DETAIL', { protocoloId: protocolo.id })} />
+                        <ProtocoloItem key={protocolo.id} protocolo={protocolo} onClick={() => navigate(`/protocolos/${protocolo.id}`)} />
                     ))}
                 </div>
             ) : (
@@ -161,20 +163,16 @@ const MeusProtocolosList: React.FC<{ navigateTo: (view: View, params?: { protoco
     );
 };
 
-
-interface ProtocoloFormProps {
-    goBack: () => void;
-    navigateTo: (view: View, params?: { protocoloId?: string }) => void;
-}
-
-const TIPO_PROTOCOLO_METADATA = {
+// FIX: Explicitly type the metadata object as a Record to fix indexing errors.
+const TIPO_PROTOCOLO_METADATA: Record<TipoProtocolo, { title: string; icon: string; description: string; }> = {
   [TipoProtocolo.RECLAMACAO]: { title: 'Registrar Reclamação', icon: 'report_problem', description: 'Reporte problemas como buracos, iluminação, etc.' },
   [TipoProtocolo.SUGESTAO]: { title: 'Enviar Sugestão', icon: 'lightbulb', description: 'Dê ideias para melhorar nossa cidade.' },
   [TipoProtocolo.DENUNCIA]: { title: 'Fazer Denúncia', icon: 'security', description: 'Relate irregularidades de forma segura.' },
   [TipoProtocolo.ELOGIO]: { title: 'Fazer um Elogio', icon: 'thumb_up', description: 'Reconheça um bom serviço ou servidor.' },
 };
 
-const ProtocoloForm: React.FC<ProtocoloFormProps> = ({ goBack, navigateTo }) => {
+const ProtocoloForm: React.FC = () => {
+    const navigate = useNavigate();
     const [step, setStep] = useState(1);
     const [tipo, setTipo] = useState<TipoProtocolo | null>(null);
 
@@ -216,7 +214,7 @@ const ProtocoloForm: React.FC<ProtocoloFormProps> = ({ goBack, navigateTo }) => 
             console.log({ tipo, categoria, descricao, foto, localizacao, bairro });
             setIsSubmitting(false);
             addToast('Protocolo enviado com sucesso!', 'success');
-            goBack();
+            navigate(-1);
         }, 1500);
     };
 
@@ -243,7 +241,7 @@ const ProtocoloForm: React.FC<ProtocoloFormProps> = ({ goBack, navigateTo }) => 
                     </Card>
                 </div>
                 
-                <MeusProtocolosList navigateTo={navigateTo} />
+                <MeusProtocolosList />
             </div>
         );
     }

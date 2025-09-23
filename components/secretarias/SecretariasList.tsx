@@ -1,14 +1,10 @@
 import React from 'react';
 import { useSecretarias } from '../../hooks/useMockData';
-import { Secretaria, View } from '../../types';
+import { Secretaria } from '../../types';
 import Card from '../ui/Card';
 import Spinner from '../ui/Spinner';
 import Icon from '../ui/Icon';
 import Button from '../ui/Button';
-
-interface SecretariasListProps {
-  navigateTo: (view: View) => void;
-}
 
 const SecretariaSkeletonItem: React.FC = () => (
     <Card className="animate-pulse">
@@ -38,6 +34,7 @@ const SecretariaItem: React.FC<{ secretaria: Secretaria }> = ({ secretaria }) =>
       alt={`Foto de ${secretaria.secretario}`}
       className="w-24 h-24 rounded-full object-cover mb-4 border-4 border-slate-100 dark:border-slate-700 shadow-md"
       referrerPolicy="no-referrer"
+      loading="lazy"
     />
     <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100">{secretaria.nome}</h3>
     <div className="mt-2">
@@ -93,7 +90,7 @@ const SecretariaItem: React.FC<{ secretaria: Secretaria }> = ({ secretaria }) =>
   </Card>
 );
 
-const SecretariasList: React.FC<SecretariasListProps> = ({ navigateTo }) => {
+const SecretariasList: React.FC = () => {
   const { data: secretarias, loading } = useSecretarias();
 
   if (loading) {

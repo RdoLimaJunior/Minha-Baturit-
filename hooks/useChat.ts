@@ -45,17 +45,18 @@ const responseSchema = {
                         properties: {
                             view: {
                                 type: Type.STRING,
-                                description: "Para 'NAVIGATE', a tela de destino. Valores: 'PROTOCOLO_FORM', 'PROTOCOLOS_LIST', 'NOTICIAS_LIST', 'MAPA_SERVICOS', 'SECRETARIAS_LIST', 'TURISMO_DASHBOARD', 'CONTATOS_LIST', 'SERVICOS_ONLINE_DASHBOARD', 'AGENDAMENTOS_LIST', 'TURISMO_LIST'.",
+                                // FIX: Updated the list of valid views to be comprehensive, enabling the AI to navigate to all possible screens.
+                                description: "Para 'NAVIGATE', a tela de destino. Valores: 'DASHBOARD', 'ABOUT', 'PROTOCOLOS_LIST', 'PROTOCOLO_DETAIL', 'PROTOCOLO_FORM', 'NOTICIAS_LIST', 'NOTICIA_DETAIL', 'SECRETARIAS_LIST', 'MAPA_SERVICOS', 'TURISMO_DASHBOARD', 'TURISMO_LIST', 'TURISMO_DETAIL', 'CONTATOS_LIST', 'SERVICOS_ONLINE_DASHBOARD', 'SERVICO_FORM', 'AGENDAMENTOS_LIST', 'NOTIFICACOES_LIST', 'SEARCH', 'ACESSIBILIDADE', 'PARTICIPACAO_FEED', 'PARTICIPACAO_DETAIL', 'PARTICIPACAO_FORM', 'CONSULTAS_PUBLICAS_LIST', 'CONSULTAS_PUBLICAS_DETAIL', 'PREDIOS_POR_CATEGORIA_LIST'.",
                             },
                             params: {
                                 type: Type.OBJECT,
-                                description: "Parâmetros opcionais para a navegação. Ex: {'turismoCategoria': 'Gastronomia'}",
+                                description: "Parâmetros opcionais para a navegação. Ex: {'categoria': 'Gastronomia'}",
                                 nullable: true,
                                 properties: {
                                     protocoloId: { type: Type.STRING, description: 'ID de um protocolo.', nullable: true },
                                     noticiaId: { type: Type.STRING, description: 'ID de uma notícia.', nullable: true },
                                     turismoId: { type: Type.STRING, description: 'ID de um item de turismo.', nullable: true },
-                                    turismoCategoria: { type: Type.STRING, description: 'Categoria de um item de turismo.', nullable: true },
+                                    categoria: { type: Type.STRING, description: 'Categoria de um item de turismo.', nullable: true },
                                     servicoId: { type: Type.STRING, description: 'ID de um serviço online.', nullable: true },
                                     publicacaoId: { type: Type.STRING, description: 'ID de uma publicação de participação.', nullable: true },
                                     consultaId: { type: Type.STRING, description: 'ID de uma consulta pública.', nullable: true },

@@ -1,19 +1,16 @@
 import React, { useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useServicosOnline } from '../../hooks/useMockData';
-import { ServicoOnline, CategoriaServicoOnline, View } from '../../types';
+import { ServicoOnline, CategoriaServicoOnline } from '../../types';
 import Card from '../ui/Card';
 import Spinner from '../ui/Spinner';
 import Icon from '../ui/Icon';
 import Button from '../ui/Button';
 
-interface ServicosOnlineDashboardProps {
-  navigateTo: (view: View, params?: { servicoId?: string }) => void;
-}
-
 const ServicoItem: React.FC<{ servico: ServicoOnline; onAgendar: () => void; }> = ({ servico, onAgendar }) => (
   <Card className="!p-4">
     <div className="flex items-center space-x-4">
-      <Icon name={servico.icon} className="text-3xl text-indigo-600" />
+      <Icon name={servico.icon} className="text-3xl text-slate-700" />
       <div className="flex-1">
         <h3 className="font-bold text-slate-800">{servico.nome}</h3>
         <p className="text-sm text-slate-600">{servico.descricao}</p>
@@ -56,7 +53,7 @@ const ServicoExternoItem: React.FC<{ title: string; link: string; icon: string; 
     return (
         <Card onClick={handleOpenLink} className="!p-4 flex items-center justify-between">
             <div className="flex items-center space-x-4">
-                <Icon name={icon} className="text-3xl text-indigo-600" />
+                <Icon name={icon} className="text-3xl text-slate-700" />
                 <h3 className="font-bold text-slate-800">{title}</h3>
             </div>
             <Icon name="open_in_new" className="text-slate-400" />
@@ -65,7 +62,8 @@ const ServicoExternoItem: React.FC<{ title: string; link: string; icon: string; 
 };
 
 
-const ServicosOnlineDashboard: React.FC<ServicosOnlineDashboardProps> = ({ navigateTo }) => {
+const ServicosOnlineDashboard: React.FC = () => {
+  const navigate = useNavigate();
   const { data: servicos, loading } = useServicosOnline();
 
   const groupedServicos = useMemo(() => {
@@ -101,7 +99,7 @@ const ServicosOnlineDashboard: React.FC<ServicosOnlineDashboardProps> = ({ navig
                   <h3 className="text-lg font-bold text-slate-700 mb-2 pl-1">{category}</h3>
                   <div className="space-y-3">
                     {groupedServicos[category].map(servico => (
-                      <ServicoItem key={servico.id} servico={servico} onAgendar={() => navigateTo('SERVICO_FORM', { servicoId: servico.id })} />
+                      <ServicoItem key={servico.id} servico={servico} onAgendar={() => navigate(`/servicos/agendar/${servico.id}`)} />
                     ))}
                   </div>
                 </section>

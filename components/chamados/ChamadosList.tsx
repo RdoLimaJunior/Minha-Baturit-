@@ -1,9 +1,7 @@
+// This component is deprecated and its content has been removed to clean up the project.
+// The functionality is now handled by components/protocolos/ProtocolosList.tsx.
 import React from 'react';
-import { View } from '../../types';
 
-// DEPRECATED: Use components/protocolos/ProtocolosList.tsx instead. This file will be removed.
-interface ChamadosListProps {
-  navigateTo: (view: View, params?: { protocoloId?: string }) => void;
-}
-const ChamadosList: React.FC<ChamadosListProps> = () => null;
+const ChamadosList: React.FC = () => null;
+
 export default ChamadosList;

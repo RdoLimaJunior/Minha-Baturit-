@@ -1,0 +1,28 @@
+<svg width="512" height="512" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- 
+    Icon for Minha Baturité App
+    Concept: Represents the iconic mountains (Maciço de Baturité) and a rising sun,
+    symbolizing nature, optimism, and the city itself. The style is modern, clean, and accessible.
+    - Blue Gradient Sky: Trust and confidence.
+    - Green Mountains: Nature and the region's identity.
+    - Yellow Sun: Hope, clarity, and warmth.
+    -->
+    <defs>
+        <linearGradient id="skyGradient" x1="50" y1="0" x2="50" y2="100" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#81C7F4"/>
+            <stop offset="1" stop-color="#4A90E2"/>
+        </linearGradient>
+    </defs>
+
+    <!-- Background circle with sky gradient -->
+    <circle cx="50" cy="50" r="50" fill="url(#skyGradient)"/>
+
+    <!-- Sun -->
+    <circle cx="50" cy="45" r="15" fill="#F6E05E"/>
+
+    <!-- Back mountain layer for depth -->
+    <path d="M -10 100 L 40 60 L 70 80 L 110 100 Z" fill="#68D391"/>
+
+    <!-- Front mountain layer -->
+    <path d="M -10 100 L 25 70 L 60 90 L 85 75 L 110 100 Z" fill="#38A169"/>
+</svg>

@@ -1,8 +1,7 @@
+// This component is deprecated and its content has been removed to clean up the project.
+// The functionality is now handled by components/protocolos/ProtocoloForm.tsx.
 import React from 'react';
 
-// DEPRECATED: Use components/protocolos/ProtocoloForm.tsx instead. This file will be removed.
-interface ChamadoFormProps {
-    goBack: () => void;
-}
-const ChamadoForm: React.FC<ChamadoFormProps> = () => null;
+const ChamadoForm: React.FC = () => null;
+
 export default ChamadoForm;

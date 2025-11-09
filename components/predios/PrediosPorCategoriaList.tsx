@@ -22,7 +22,6 @@ interface PrediosPorCategoriaListProps {
   categoria: CategoriaPredioPublico;
   titulo: string;
   icon: string;
-  goBackView: string;
 }
 
 const PredioPublicoSkeletonItem: React.FC = () => (
@@ -90,7 +89,7 @@ const PredioCard: React.FC<{predio: PredioPublico & {distance: number | null}, o
 };
 
 
-const PrediosPorCategoriaList: React.FC<PrediosPorCategoriaListProps> = ({ categoria, titulo, icon, goBackView }) => {
+const PrediosPorCategoriaList: React.FC<PrediosPorCategoriaListProps> = ({ categoria, titulo, icon }) => {
     const navigate = useNavigate();
     const { data: todosPredios, loading } = usePrediosPublicos();
     const [selectedPredio, setSelectedPredio] = useState<PredioPublico | null>(null);

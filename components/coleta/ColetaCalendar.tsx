@@ -1,7 +1,7 @@
-
+// This component is a placeholder for a feature not in the initial scope.
+// Its content has been removed to clean up the project and can be safely deleted.
 import React from 'react';
 
-// Reverted to first version. This feature is not part of the initial scope.
-const ColetaCalendar: React.FC<{ goBack: () => void; }> = () => null;
+const ColetaCalendar: React.FC = () => null;
 
 export default ColetaCalendar;

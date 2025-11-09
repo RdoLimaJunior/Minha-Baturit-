@@ -39,6 +39,9 @@ export const viewToPath = (view: View, params: any = {}): string => {
         case 'CONSULTAS_PUBLICAS_LIST': return '/consultas';
         case 'CONSULTAS_PUBLICAS_DETAIL': return `/consultas/${params.consultaId}`;
         
+        // Locais
+        case 'PREDIOS_POR_CATEGORIA_LIST': return `/locais/${params.categoria}/${params.titulo}`;
+        
         default: 
             console.warn(`No path found for view: ${view}`);
             return '/';

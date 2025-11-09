@@ -10,6 +10,7 @@ import { ToastProvider } from './components/ui/Toast';
 // Layout Components
 import Header from './components/Header';
 import Page from './components/ui/Page';
+import BottomNav from './components/BottomNav';
 
 // View Components
 import Dashboard from './components/Dashboard';
@@ -57,7 +58,7 @@ const MapaServicosWrapper: React.FC = () => {
 };
 
 const PrediosPorCategoriaListWrapper: React.FC = () => {
-    const { categoria, titulo, goBackView } = useParams<{ categoria: CategoriaPredioPublico, titulo: string, goBackView: string }>();
+    const { categoria, titulo } = useParams<{ categoria: CategoriaPredioPublico, titulo: string }>();
     // Note: The icon property cannot be passed through URL params easily.
     // It should be derived from the 'categoria' or handled differently if dynamic.
     const iconMap: Record<CategoriaPredioPublico, string> = {
@@ -66,7 +67,7 @@ const PrediosPorCategoriaListWrapper: React.FC = () => {
         'Assistência Social': 'people',
         'Administração': 'corporate_fare',
     };
-    return <PrediosPorCategoriaList categoria={categoria!} titulo={titulo!} icon={iconMap[categoria!]} goBackView={goBackView as any} />;
+    return <PrediosPorCategoriaList categoria={categoria!} titulo={titulo!} icon={iconMap[categoria!]} />;
 };
 
 const TurismoListWrapper: React.FC = () => {
@@ -103,7 +104,7 @@ const AppContent: React.FC<{
     return (
         <div className="flex flex-col h-screen bg-slate-50 font-sans antialiased">
             <Header activeProfile={activeProfile} onProfileChange={onProfileChange} />
-            <main className="flex-1 overflow-y-auto">
+            <main className="flex-1 overflow-y-auto pb-24">
                 <Routes>
                     {/* Fullscreen Views */}
                     <Route path="/" element={<Dashboard userProfile={activeProfile} />} />
@@ -121,7 +122,7 @@ const AppContent: React.FC<{
                     <Route path="/noticias" element={<Page title="Notícias"><NoticiasList /></Page>} />
                     <Route path="/noticias/:noticiaId" element={<Page title="Detalhes da Notícia"><NoticiaDetailWrapper /></Page>} />
                     <Route path="/secretarias" element={<Page title="Secretarias Municipais"><SecretariasList /></Page>} />
-                    <Route path="/locais/:categoria/:titulo/:goBackView" element={<Page title="Locais"><PrediosPorCategoriaListWrapper /></Page>} />
+                    <Route path="/locais/:categoria/:titulo" element={<Page title="Locais"><PrediosPorCategoriaListWrapper /></Page>} />
                     <Route path="/turismo" element={<Page title="Turismo em Baturité"><TurismoDashboard /></Page>} />
                     <Route path="/turismo/lista/:categoria" element={<Page title="Turismo"><TurismoListWrapper /></Page>} />
                     <Route path="/turismo/detalhe/:categoria/:turismoId" element={<Page title="Detalhes"><TurismoDetailWrapper /></Page>} />
@@ -137,6 +138,7 @@ const AppContent: React.FC<{
                     <Route path="/consultas/:consultaId" element={<Page title="Detalhes da Consulta"><ConsultaPublicaDetailWrapper /></Page>} />
                 </Routes>
             </main>
+            <BottomNav />
         </div>
     );
 };
@@ -148,7 +150,10 @@ const App: React.FC = () => {
     useEffect(() => {
         if ('serviceWorker' in navigator) {
           const registerSW = () => {
-            navigator.serviceWorker.register('/service-worker.js')
+            // Construct the URL dynamically to ensure it's on the same origin.
+            // This fixes the cross-origin registration error.
+            const swUrl = new URL('service-worker.js', window.location.href).href;
+            navigator.serviceWorker.register(swUrl)
               .then(registration => {
                 console.log('Service Worker registered with scope:', registration.scope);
               })

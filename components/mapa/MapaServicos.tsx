@@ -12,9 +12,7 @@ import { haversineDistance } from '../../utils/helpers';
 
 declare var L: any;
 
-// FIX: Use enum members instead of string literals to satisfy the CategoriaPredioPublico type.
 const CATEGORIAS: CategoriaPredioPublico[] = [CategoriaPredioPublico.SAUDE, CategoriaPredioPublico.EDUCACAO, CategoriaPredioPublico.ASSISTENCIA, CategoriaPredioPublico.ADMINISTRACAO];
-// FIX: Use enum members as keys for the Record to align with the type definition.
 const CATEGORY_DETAILS: Record<CategoriaPredioPublico, { icon: string; color: string; bgColor: string }> = {
     [CategoriaPredioPublico.SAUDE]: { icon: 'local_hospital', color: 'text-rose-700', bgColor: 'bg-rose-100' },
     [CategoriaPredioPublico.EDUCACAO]: { icon: 'school', color: 'text-sky-700', bgColor: 'bg-sky-100' },
@@ -45,7 +43,6 @@ const PredioPublicoSkeletonItem: React.FC = () => (
 const getCategoryIcon = (category: CategoriaPredioPublico, isSelected: boolean = false) => {
     const detail = CATEGORY_DETAILS[category] || { icon: 'location_on' };
     let bgColorClass = 'bg-slate-500';
-    // FIX: Use enum members for comparison to improve type safety.
     if(category === CategoriaPredioPublico.SAUDE) bgColorClass = 'bg-rose-500';
     if(category === CategoriaPredioPublico.EDUCACAO) bgColorClass = 'bg-sky-500';
     if(category === CategoriaPredioPublico.ASSISTENCIA) bgColorClass = 'bg-violet-500';
@@ -80,13 +77,11 @@ const getTurismoIcon = (isSelected: boolean = false) => {
     });
 };
 
-
 interface MapaServicosProps {
   predioId?: string;
   turismoId?: string;
 }
 
-// FIX: Use enum values for checking inclusion to ensure type safety.
 function isPredioPublico(item: any): item is PredioPublico {
     return item && typeof item.categoria === 'string' && Object.values(CategoriaPredioPublico).includes(item.categoria as CategoriaPredioPublico);
 }
@@ -96,7 +91,7 @@ const MapaServicos: React.FC<MapaServicosProps> = ({ predioId, turismoId }) => {
   const { data: predios, loading: loadingPredios } = usePrediosPublicos();
   const { data: focusedTurismoItem, loading: loadingTurismo } = useTurismoItemById(turismoId || null);
 
-  const [filtro, setFiltro] = useState<'Todos' | CategoriaPredioPublico>('Todos');
+  const [filtro, setFiltro] = useState<'Todos' | CategoriaPredioPublico | 'Proximos'>('Todos');
   const [selectedItem, setSelectedItem] = useState<PredioPublico | TurismoItem | null>(null);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const { addToast } = useToast();
@@ -119,7 +114,7 @@ const MapaServicos: React.FC<MapaServicosProps> = ({ predioId, turismoId }) => {
 
   const prediosFiltrados = useMemo(() => {
     if (!predios) return [];
-    if (filtro === 'Todos') return predios;
+    if (filtro === 'Todos' || filtro === 'Proximos') return predios;
     return predios.filter(p => p.categoria === filtro);
   }, [predios, filtro]);
 
@@ -134,11 +129,11 @@ const MapaServicos: React.FC<MapaServicosProps> = ({ predioId, turismoId }) => {
               ) 
             : null
     }));
-    if (userLocation) {
+    if (filtro === 'Proximos' && userLocation) {
         enriched.sort((a, b) => (a.distance ?? Infinity) - (b.distance ?? Infinity));
     }
     return enriched;
-  }, [prediosFiltrados, userLocation]);
+  }, [prediosFiltrados, userLocation, filtro]);
 
   const handleProgrammaticFocus = useCallback((item: PredioPublico | TurismoItem) => {
     mapContainerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -273,6 +268,7 @@ const MapaServicos: React.FC<MapaServicosProps> = ({ predioId, turismoId }) => {
       <Card className="!p-3">
         <div className="flex items-center space-x-2 overflow-x-auto pb-1">
           <Button size="sm" onClick={() => setFiltro('Todos')} variant={filtro === 'Todos' ? 'primary' : 'ghost'} className="whitespace-nowrap">Todos</Button>
+          <Button size="sm" onClick={() => setFiltro('Proximos')} variant={filtro === 'Proximos' ? 'primary' : 'ghost'} className="whitespace-nowrap" disabled={!userLocation}>Próximos</Button>
           {CATEGORIAS.map(cat => (
             <Button key={cat} size="sm" onClick={() => setFiltro(cat)} variant={filtro === cat ? 'primary' : 'ghost'} className="whitespace-nowrap">{cat}</Button>
           ))}

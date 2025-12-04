@@ -26,6 +26,15 @@ const ServicoForm: React.FC<ServicoFormProps> = ({ servicoId }) => {
       addToast('Por favor, selecione uma data e hora.', 'error');
       return;
     }
+
+    const selectedDate = new Date(dataHora);
+    const now = new Date();
+
+    if (selectedDate <= now) {
+      addToast('A data e hora do agendamento devem ser no futuro.', 'error');
+      return;
+    }
+
     setIsSubmitting(true);
     // Simula a chamada de API
     setTimeout(() => {

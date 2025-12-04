@@ -16,25 +16,28 @@ root.render(
 );
 
 // --- Service Worker Registration ---
-const registerServiceWorker = () => {
+const registerServiceWorker = async () => {
   // Check if service workers are supported
   if ('serviceWorker' in navigator) {
-    // Use an absolute URL to prevent cross-origin issues in sandboxed environments.
-    const swUrl = `${window.location.origin}/service-worker.js`;
-    navigator.serviceWorker.register(swUrl)
-      .then(registration => {
-        console.log('Service Worker registered with scope:', registration.scope);
-      })
-      .catch(error => {
-        // Log the specific error for better debugging.
-        console.error('Service Worker registration failed:', error);
-      });
+    try {
+      // Use an absolute URL to prevent cross-origin issues in sandboxed environments.
+      const swUrl = `${window.location.origin}/service-worker.js`;
+      const registration = await navigator.serviceWorker.register(swUrl);
+      console.log('Service Worker registered with scope:', registration.scope);
+    } catch (error) {
+      // Gracefully handle specific registration errors common in restricted environments
+      const isInvalidState = error instanceof Error && error.message.includes('invalid state');
+      
+      if (isInvalidState) {
+         console.log('Service Worker skipped: Document is in an invalid state (likely a restricted preview environment).');
+      } else {
+         console.warn('Service Worker registration failed:', error);
+      }
+    }
   }
 };
 
 // Register the service worker after the page has fully loaded.
-// This approach is more robust because it handles cases where the script
-// runs after the 'load' event has already fired.
 if (document.readyState === 'complete') {
   registerServiceWorker();
 } else {

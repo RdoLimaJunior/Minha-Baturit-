@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { HashRouter, Routes, Route, useParams, useNavigate } from 'react-router-dom';
+import { HashRouter, Routes, Route, useParams, useNavigate, Navigate } from 'react-router-dom';
 import { UserProfile, UserRole, CategoriaPredioPublico, TurismoCategoria } from './types';
 import { MOCK_USER_PROFILES } from './constants';
 
@@ -68,7 +68,9 @@ const PrediosPorCategoriaListWrapper: React.FC = () => {
         'Assistência Social': 'people',
         'Administração': 'corporate_fare',
     };
-    return <PrediosPorCategoriaList categoria={categoria!} titulo={titulo!} icon={iconMap[categoria!]} />;
+    // Fallback if category or iconMap is missing
+    const icon = (categoria && iconMap[categoria]) ? iconMap[categoria] : 'location_on';
+    return <PrediosPorCategoriaList categoria={categoria!} titulo={titulo!} icon={icon} />;
 };
 
 const TurismoListWrapper: React.FC = () => {
@@ -100,8 +102,6 @@ const AppContent: React.FC<{
     activeProfile: UserProfile;
     onProfileChange: () => void;
 }> = ({ activeProfile, onProfileChange }) => {
-    const navigate = useNavigate();
-
     return (
         <div className="flex flex-col h-screen bg-slate-50 font-sans antialiased">
             <Header activeProfile={activeProfile} onProfileChange={onProfileChange} />
@@ -138,6 +138,9 @@ const AppContent: React.FC<{
                     <Route path="/participacao/novo" element={<Page title="Criar Publicação"><ParticipacaoForm /></Page>} />
                     <Route path="/consultas" element={<Page title="Consultas Públicas"><ConsultasPublicasList /></Page>} />
                     <Route path="/consultas/:consultaId" element={<Page title="Detalhes da Consulta"><ConsultaPublicaDetailWrapper /></Page>} />
+                    
+                    {/* Fallback route */}
+                    <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
             </main>
             <BottomNav />
@@ -146,13 +149,18 @@ const AppContent: React.FC<{
 };
 
 const App: React.FC = () => {
-    const [activeProfile, setActiveProfile] = useState<UserProfile>(MOCK_USER_PROFILES[0]);
+    // Ensure MOCK_USER_PROFILES is defined and has elements
+    const initialProfile = (MOCK_USER_PROFILES && MOCK_USER_PROFILES.length > 0) 
+        ? MOCK_USER_PROFILES[0] 
+        : { id: 'default', name: 'Usuário', avatar: '', role: UserRole.CIDADAO };
+
+    const [activeProfile, setActiveProfile] = useState<UserProfile>(initialProfile);
 
     const handleProfileChange = () => {
-        const newProfile = activeProfile.role === UserRole.CIDADAO ? MOCK_USER_PROFILES[1] : MOCK_USER_PROFILES[0];
+        const newProfile = activeProfile.role === UserRole.CIDADAO 
+            ? ((MOCK_USER_PROFILES && MOCK_USER_PROFILES.length > 1) ? MOCK_USER_PROFILES[1] : initialProfile)
+            : initialProfile;
         setActiveProfile(newProfile);
-        // In a router-based app, navigation to home on profile change is a good practice.
-        // This will be handled by the component triggering the change if needed.
     };
   
     return (

@@ -185,6 +185,16 @@ const ProtocoloForm: React.FC = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { addToast } = useToast();
 
+    // Estado para o Select de Bairro pesquisável
+    const [bairroSearch, setBairroSearch] = useState('');
+    const [isBairroDropdownOpen, setIsBairroDropdownOpen] = useState(false);
+
+    const filteredBairros = useMemo(() => {
+        const bairros = BAIRROS_BATURITE || [];
+        if (!bairroSearch) return bairros;
+        return bairros.filter(b => b.toLowerCase().includes(bairroSearch.toLowerCase()));
+    }, [bairroSearch]);
+
     const handleTypeSelect = (selectedType: TipoProtocolo) => {
         setTipo(selectedType);
         setStep(2);
@@ -268,17 +278,49 @@ const ProtocoloForm: React.FC = () => {
                         </div>
                     )}
 
-                    <div>
+                    <div className="relative">
                         <label htmlFor="bairro" className="block text-sm font-medium text-slate-700 mb-1">Bairro *</label>
-                        <select
-                            id="bairro"
-                            value={bairro}
-                            onChange={(e) => setBairro(e.target.value)}
-                            className="w-full p-2 bg-white text-slate-900 border border-slate-300 rounded-md focus:ring-indigo-600 focus:border-indigo-600"
-                        >
-                            <option value="" disabled>Selecione seu bairro</option>
-                            {BAIRROS_BATURITE.map(b => <option key={b} value={b}>{b}</option>)}
-                        </select>
+                        <div className="relative">
+                            <input
+                                id="bairro"
+                                type="text"
+                                value={bairroSearch}
+                                onChange={(e) => {
+                                    setBairroSearch(e.target.value);
+                                    setBairro(e.target.value);
+                                    setIsBairroDropdownOpen(true);
+                                }}
+                                onFocus={() => setIsBairroDropdownOpen(true)}
+                                onBlur={() => setTimeout(() => setIsBairroDropdownOpen(false), 200)}
+                                placeholder="Pesquise ou selecione seu bairro"
+                                className="w-full p-2 pr-8 bg-white text-slate-900 border border-slate-300 rounded-md focus:ring-indigo-600 focus:border-indigo-600"
+                                autoComplete="off"
+                            />
+                            <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
+                                <Icon name="expand_more" className="text-slate-400" />
+                            </div>
+                        </div>
+                        {isBairroDropdownOpen && (
+                            <ul className="absolute z-10 w-full mt-1 bg-white border border-slate-300 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                                {filteredBairros.length > 0 ? (
+                                    filteredBairros.map((b) => (
+                                        <li
+                                            key={b}
+                                            onClick={() => {
+                                                setBairro(b);
+                                                setBairroSearch(b);
+                                                setIsBairroDropdownOpen(false);
+                                            }}
+                                            className="p-2 hover:bg-indigo-50 cursor-pointer text-slate-800 border-b border-slate-50 last:border-none"
+                                        >
+                                            {b}
+                                        </li>
+                                    ))
+                                ) : (
+                                    <li className="p-2 text-slate-500 italic text-sm">Nenhum bairro encontrado</li>
+                                )}
+                            </ul>
+                        )}
                     </div>
 
                     <div>

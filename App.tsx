@@ -6,6 +6,7 @@ import { MOCK_USER_PROFILES } from './constants';
 // Providers
 import { AccessibilityProvider } from './contexts/AccessibilityContext';
 import { ToastProvider } from './components/ui/Toast';
+import { WeatherProvider } from './hooks/useWeather';
 
 // Layout Components
 import Header from './components/Header';
@@ -25,26 +26,26 @@ import TurismoDashboard from './components/turismo/TurismoDashboard';
 import TurismoList from './components/turismo/TurismoList';
 import TurismoDetail from './components/turismo/TurismoDetail';
 import ContatosList from './components/contatos/ContatosList';
-import ServicosOnlineDashboard from './components/servicos/ServicosOnlineDashboard';
+import ServicosHub from './components/servicos/ServicosHub';
 import ServicoForm from './components/servicos/ServicoForm';
 import AgendamentosList from './components/agendamentos/AgendamentosList';
 import NotificacoesList from './components/notificacoes/NotificacoesList';
 import Search from './components/search/Search';
 import Acessibilidade from './components/acessibilidade/Acessibilidade';
+import ParticipacaoDashboard from './components/participacao/ParticipacaoDashboard';
 import ParticipacaoFeed from './components/participacao/ParticipacaoFeed';
 import ParticipacaoDetail from './components/participacao/ParticipacaoDetail';
 import ParticipacaoForm from './components/participacao/ParticipacaoForm';
 import ConsultasPublicasList from './components/consultas/ConsultasPublicasList';
 import ConsultaPublicaDetail from './components/consultas/ConsultaPublicaDetail';
 import PrediosPorCategoriaList from './components/predios/PrediosPorCategoriaList';
-import WelcomeScreen from './components/welcome/WelcomeScreen';
 import About from './components/About';
 
 // --- Wrappers for components that need URL params ---
 
 const ProtocoloDetailWrapper: React.FC = () => {
-    const { protocoloId } = useParams<{ protocoloId: string }>();
-    return <ProtocoloDetail protocoloId={protocoloId!} />;
+    const { protocoloId } = useParams<{ protocoloId?: string }>();
+    return <ProtocoloDetail protocoloId={protocoloId} />;
 };
 
 const NoticiaDetailWrapper: React.FC = () => {
@@ -108,7 +109,6 @@ const AppContent: React.FC<{
                 <Routes>
                     {/* Fullscreen Views */}
                     <Route path="/" element={<Dashboard userProfile={activeProfile} />} />
-                    <Route path="/participacao" element={<ParticipacaoFeed />} />
                     <Route path="/mapa" element={<MapaServicosWrapper />} />
                     <Route path="/mapa/predio/:predioId" element={<MapaServicosWrapper />} />
                     <Route path="/mapa/turismo/:turismoId" element={<MapaServicosWrapper />} />
@@ -118,7 +118,7 @@ const AppContent: React.FC<{
                     <Route path="/about" element={<Page title="Sobre o App"><About /></Page>} />
                     <Route path="/protocolos" element={<Page title="Meus Protocolos"><ProtocolosList /></Page>} />
                     <Route path="/protocolos/novo" element={<Page title="Abrir Protocolo"><ProtocoloForm /></Page>} />
-                    <Route path="/protocolos/:protocoloId" element={<Page title="Detalhes do Protocolo"><ProtocoloDetailWrapper /></Page>} />
+                    <Route path="/protocolos/:protocoloId?" element={<Page title="Detalhes do Protocolo"><ProtocoloDetailWrapper /></Page>} />
                     <Route path="/noticias" element={<Page title="Notícias"><NoticiasList /></Page>} />
                     <Route path="/noticias/:noticiaId" element={<Page title="Detalhes da Notícia"><NoticiaDetailWrapper /></Page>} />
                     <Route path="/secretarias" element={<Page title="Secretarias Municipais"><SecretariasList /></Page>} />
@@ -127,11 +127,13 @@ const AppContent: React.FC<{
                     <Route path="/turismo/lista/:categoria" element={<Page title="Turismo"><TurismoListWrapper /></Page>} />
                     <Route path="/turismo/detalhe/:categoria/:turismoId" element={<Page title="Detalhes"><TurismoDetailWrapper /></Page>} />
                     <Route path="/contatos" element={<Page title="Contatos Úteis"><ContatosList /></Page>} />
-                    <Route path="/servicos" element={<Page title="Serviços Online"><ServicosOnlineDashboard /></Page>} />
+                    <Route path="/servicos" element={<Page title="Serviços e Informações"><ServicosHub /></Page>} />
                     <Route path="/servicos/agendar/:servicoId" element={<Page title="Agendamento de Serviço"><ServicoFormWrapper /></Page>} />
                     <Route path="/agendamentos" element={<Page title="Meus Agendamentos"><AgendamentosList /></Page>} />
                     <Route path="/notificacoes" element={<Page title="Notificações"><NotificacoesList /></Page>} />
                     <Route path="/acessibilidade" element={<Page title="Acessibilidade"><Acessibilidade /></Page>} />
+                    <Route path="/participacao" element={<Page title="Participação Pública"><ParticipacaoDashboard /></Page>} />
+                    <Route path="/participacao/feed" element={<Page title="Participação Cidadã"><ParticipacaoFeed /></Page>} />
                     <Route path="/participacao/detalhe/:publicacaoId" element={<Page title="Detalhes da Publicação"><ParticipacaoDetailWrapper /></Page>} />
                     <Route path="/participacao/novo" element={<Page title="Criar Publicação"><ParticipacaoForm /></Page>} />
                     <Route path="/consultas" element={<Page title="Consultas Públicas"><ConsultasPublicasList /></Page>} />
@@ -145,34 +147,6 @@ const AppContent: React.FC<{
 
 const App: React.FC = () => {
     const [activeProfile, setActiveProfile] = useState<UserProfile>(MOCK_USER_PROFILES[0]);
-    const [showWelcome, setShowWelcome] = useState(() => !localStorage.getItem('hasVisited'));
-
-    useEffect(() => {
-        if ('serviceWorker' in navigator) {
-          const registerSW = () => {
-            // Construct the URL dynamically to ensure it's on the same origin.
-            // This fixes the cross-origin registration error.
-            const swUrl = new URL('service-worker.js', window.location.href).href;
-            navigator.serviceWorker.register(swUrl)
-              .then(registration => {
-                console.log('Service Worker registered with scope:', registration.scope);
-              })
-              .catch(error => {
-                console.error('Service Worker registration failed:', error);
-              });
-          };
-    
-          // The 'load' event fires when the whole page has loaded,
-          // including all dependent resources such as stylesheets and images.
-          // This is the safest moment to register a service worker.
-          window.addEventListener('load', registerSW);
-    
-          // Cleanup the event listener when the component unmounts.
-          return () => {
-            window.removeEventListener('load', registerSW);
-          };
-        }
-    }, []);
 
     const handleProfileChange = () => {
         const newProfile = activeProfile.role === UserRole.CIDADAO ? MOCK_USER_PROFILES[1] : MOCK_USER_PROFILES[0];
@@ -180,22 +154,15 @@ const App: React.FC = () => {
         // In a router-based app, navigation to home on profile change is a good practice.
         // This will be handled by the component triggering the change if needed.
     };
-    
-    const handleWelcomeComplete = () => {
-        localStorage.setItem('hasVisited', 'true');
-        setShowWelcome(false);
-    };
-
-    if (showWelcome) {
-        return <WelcomeScreen onComplete={handleWelcomeComplete} />;
-    }
   
     return (
         <AccessibilityProvider>
             <ToastProvider>
-                <HashRouter>
-                    <AppContent activeProfile={activeProfile} onProfileChange={handleProfileChange} />
-                </HashRouter>
+                <WeatherProvider>
+                    <HashRouter>
+                        <AppContent activeProfile={activeProfile} onProfileChange={handleProfileChange} />
+                    </HashRouter>
+                </WeatherProvider>
             </ToastProvider>
         </AccessibilityProvider>
     );

@@ -17,19 +17,23 @@ const BottomNav: React.FC = () => {
   // Hide the nav bar on specific pages like forms, detail views, or utility screens
   // where it might obstruct content or be contextually inappropriate.
   const hiddenOnPaths = [
-    /^\/protocolos\/novo$/,
-    /^\/protocolos\/.+/,
-    /^\/noticias\/.+/,
-    /^\/locais\/.+/,
-    /^\/turismo\/detalhe\/.+/,
-    /^\/servicos\/agendar\/.+/,
+    // Form routes
     /^\/participacao\/novo$/,
-    /^\/participacao\/detalhe\/.+/,
-    /^\/consultas\/.+/,
+    
+    // Detail and form pages (matching one or more path segments)
+    /^\/protocolos\/[^/]+$/,        // Matches /protocolos/novo and /protocolos/p123
+    /^\/noticias\/[^/]+$/,          // Matches /noticias/noticia123
+    /^\/servicos\/agendar\/[^/]+$/, // Matches /servicos/agendar/s123
+    /^\/participacao\/detalhe\/[^/]+$/, // Matches /participacao/detalhe/pub123
+    /^\/consultas\/[^/]+$/,          // Matches /consultas/cp123
+    /^\/turismo\/detalhe\/.+/,      // Matches multi-segment detail paths
+    
+    // Other specific views without main nav
+    /^\/locais\/.+/,
     /^\/search$/,
     /^\/acessibilidade$/,
     /^\/about$/,
-    /^\/notificacoes$/, // Notifications is a utility page, better accessed from header
+    /^\/notificacoes$/,
   ];
 
   const isHidden = hiddenOnPaths.some(regex => regex.test(location.pathname));

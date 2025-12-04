@@ -7,7 +7,7 @@ import Icon from '../ui/Icon';
 import Button from '../ui/Button';
 
 interface ProtocoloDetailProps {
-  protocoloId: string;
+  protocoloId?: string;
 }
 
 const getStatusIcon = (status: StatusProtocolo) => {
@@ -45,10 +45,10 @@ const TimelineItem: React.FC<{ item: HistoricoProtocolo, isLast: boolean }> = ({
 );
 
 const ProtocoloDetail: React.FC<ProtocoloDetailProps> = ({ protocoloId }) => {
-  const { data: protocolo, loading } = useProtocoloById(protocoloId);
+  const { data: protocolo, loading } = useProtocoloById(protocoloId || null);
 
   if (loading) return <Spinner />;
-  if (!protocolo) return <Card><p>Protocolo não encontrado.</p></Card>;
+  if (!protocolo) return <Card><p>{protocoloId ? 'Protocolo não encontrado.' : 'Nenhum protocolo selecionado.'}</p></Card>;
 
   return (
     <div className="space-y-4">

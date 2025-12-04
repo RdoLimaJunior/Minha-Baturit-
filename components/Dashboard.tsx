@@ -1,16 +1,13 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { UserProfile, UserRole, View } from '../types';
+import { UserProfile, UserRole } from '../types';
 import { useToast } from './ui/Toast';
-import { useChat } from '../../hooks/useChat';
+import { useChat } from '../hooks/useChat';
 import ChatMessageComponent from './dashboard/ChatMessage';
-import WeatherWidget from './dashboard/WeatherWidget';
-import DynamicGreeting from './dashboard/DynamicGreeting';
-import AcoesRapidas from './dashboard/AcoesRapidas';
-import FeedPrincipal from './dashboard/FeedPrincipal';
 import Icon from './ui/Icon';
 import Button from './ui/Button';
-import { viewToPath } from '../../utils/navigation';
+import Card from './ui/Card';
+import { useAgendamentos } from '../hooks/useMockData';
+
 
 const TypingIndicator = () => (
     <div className="flex items-start gap-4 animate-fade-slide-in">
@@ -83,14 +80,13 @@ const Dashboard: React.FC<DashboardProps> = ({ userProfile }) => {
   const [input, setInput] = useState('');
   const [isListening, setIsListening] = useState(false);
   const [dynamicSuggestedQuestions, setDynamicSuggestedQuestions] = useState<string[]>([]);
-  const [chatVisible, setChatVisible] = useState(false);
   
-  const { messages, isLoading, sendMessage, handleFeedback } = useChat(userProfile);
+  const { data: agendamentos } = useAgendamentos();
+  const { messages, isLoading, sendMessage, handleFeedback } = useChat(userProfile, agendamentos || []);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const recognitionRef = useRef<any>(null);
   const { addToast } = useToast();
-  const navigate = useNavigate();
 
   useEffect(() => {
     const lastModelMessage = messages.filter(m => m.role === 'model').pop();
@@ -116,17 +112,14 @@ const Dashboard: React.FC<DashboardProps> = ({ userProfile }) => {
 
 
   useEffect(() => {
-    if (chatVisible) {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [messages, isLoading, chatVisible]);
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, isLoading]);
 
   const handleSendMessage = useCallback(async (message: string) => {
     if (!message.trim()) return;
     setInput('');
-    if (!chatVisible) setChatVisible(true);
     await sendMessage(message);
-  }, [sendMessage, chatVisible]);
+  }, [sendMessage]);
 
   useEffect(() => {
     if (!recognitionRef.current) {
@@ -187,11 +180,6 @@ const Dashboard: React.FC<DashboardProps> = ({ userProfile }) => {
     });
   };
 
-  const navigateTo = (view: View, params?: any) => {
-    const path = viewToPath(view, params);
-    navigate(path);
-  };
-
   if (userProfile.role === UserRole.GESTOR) {
     return (
         <div className="container mx-auto p-4">
@@ -202,7 +190,7 @@ const Dashboard: React.FC<DashboardProps> = ({ userProfile }) => {
   }
   
   return (
-    <div className="flex flex-col h-full">
+    <div className="h-full flex flex-col p-4">
        <style>{`
         @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1.0); } }
         .typing-dot { width: 8px; height: 8px; background-color: #94a3b8; border-radius: 50%; display: inline-block; animation: bounce 1.4s infinite ease-in-out both; }
@@ -212,87 +200,78 @@ const Dashboard: React.FC<DashboardProps> = ({ userProfile }) => {
         .animate-fade-slide-in { animation: fade-slide-in 0.3s ease-out forwards; }
       `}</style>
       
-      <div className="flex-1 overflow-y-auto scrollbar-hide">
-        <div className="container mx-auto px-4 pt-6 space-y-8">
-            <div className="flex justify-between items-start">
-              <DynamicGreeting userName={userProfile.name} />
-              <WeatherWidget />
-            </div>
-
-            <AcoesRapidas />
-
-            {chatVisible && (
-                 <div className="space-y-8" role="log" aria-live="polite">
-                    {messages.slice(1).map((msg, index) => (
-                        <ChatMessageComponent
-                            key={msg.id}
-                            message={msg}
-                            isLastMessage={index === messages.length - 2}
-                            isLoading={isLoading}
-                            onFeedback={handleFeedback}
-                            onCopy={handleCopy}
-                        />
-                    ))}
-                    {isLoading && <TypingIndicator />}
-                    <div ref={messagesEndRef} />
-                </div>
-            )}
-            
-            {!chatVisible && <FeedPrincipal navigateTo={navigateTo} />}
-
+      <Card className="!p-0 flex flex-col flex-1">
+        <div className="p-4 border-b border-slate-200 flex-shrink-0">
+            <h2 className="font-bold text-slate-800 flex items-center gap-2">
+                <Icon name="flutter_dash" className="text-slate-700" />
+                Assistente Uirapuru
+            </h2>
         </div>
-      </div>
-      
-      <div className="flex-shrink-0 bg-slate-50/80 backdrop-blur-sm border-t border-gray-200">
-        <div className="container mx-auto px-4 pt-2 pb-4">
-          {!isLoading && (
-              <div className="mb-3">
-                  <div className="flex flex-wrap justify-center gap-2">
-                  {dynamicSuggestedQuestions.map((q, i) => (
-                      <button
-                          key={i}
-                          onClick={() => handleSendMessage(q)}
-                          className="px-4 py-2 bg-white border border-slate-200 text-slate-600 rounded-full text-sm font-medium hover:bg-slate-100 hover:border-slate-300 transition-colors"
-                      >
-                      {q}
-                      </button>
-                  ))}
-                  </div>
-            </div>
-          )}
-          <form onSubmit={handleSend} className="w-full">
-              <div className="bg-white border border-slate-200 rounded-2xl p-2 flex items-center gap-2 shadow-sm focus-within:ring-2 focus-within:ring-slate-500">
-                <input
-                    type="text"
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    placeholder={isListening ? "Ouvindo..." : "Pergunte ao assistente..."}
-                    className="bg-transparent focus:ring-0 border-0 w-full text-slate-800 placeholder-slate-400"
-                    disabled={isLoading || isListening}
-                    aria-label="Caixa de texto para perguntas ao assistente virtual"
-                    onFocus={() => setChatVisible(true)}
+        <div className="flex-1 overflow-y-auto scrollbar-hide p-4 space-y-8" role="log" aria-live="polite">
+            {messages.map((msg, index) => (
+                <ChatMessageComponent
+                    key={msg.id}
+                    message={msg}
+                    isLastMessage={index === messages.length - 1}
+                    isLoading={isLoading}
+                    onFeedback={handleFeedback}
+                    onCopy={handleCopy}
                 />
-                {input.trim() ? (
-                    <Button type="submit" size="icon" disabled={isLoading} aria-label="Enviar mensagem">
-                        <Icon name="send" />
-                    </Button>
-                ) : (
-                    <Button
-                        type="button"
-                        size="icon"
-                        variant="ghost"
-                        onClick={handleToggleListening}
-                        disabled={isLoading}
-                        className={isListening ? '!text-red-500' : ''}
-                        aria-label={isListening ? "Parar de ouvir" : "Falar com assistente"}
-                    >
-                        <Icon name="mic" />
-                    </Button>
-                )}
-              </div>
-          </form>
+            ))}
+            {isLoading && <TypingIndicator />}
+            <div ref={messagesEndRef} />
         </div>
-      </div>
+        
+        <div className="flex-shrink-0 bg-white/80 backdrop-blur-sm border-t border-slate-200">
+          <div className="container mx-auto px-4 pt-2 pb-4">
+            {!isLoading && messages.length > 1 && ( // Only show suggestions after the first interaction
+                <div className="mb-3">
+                    <div className="flex flex-wrap justify-center gap-2">
+                    {dynamicSuggestedQuestions.map((q, i) => (
+                        <button
+                            key={i}
+                            onClick={() => handleSendMessage(q)}
+                            className="px-4 py-2 bg-white border border-slate-200 text-slate-600 rounded-full text-sm font-medium hover:bg-slate-100 hover:border-slate-300 transition-colors"
+                        >
+                        {q}
+                        </button>
+                    ))}
+                    </div>
+              </div>
+            )}
+            <form onSubmit={handleSend} className="w-full">
+                <div className="bg-white border border-slate-200 rounded-2xl p-2 flex items-center gap-2 shadow-sm focus-within:ring-2 focus-within:ring-slate-500">
+                  <input
+                      type="text"
+                      value={input}
+                      onChange={(e) => setInput(e.target.value)}
+                      placeholder={isListening ? "Ouvindo..." : "Converse com o assistente..."}
+                      className="bg-transparent focus:ring-0 border-0 w-full text-slate-800 placeholder-slate-400"
+                      disabled={isLoading || isListening}
+                      aria-label="Caixa de texto para perguntas ao assistente virtual"
+                  />
+                  {input.trim() ? (
+                      <Button type="submit" size="icon" disabled={isLoading} aria-label="Enviar mensagem">
+                          <Icon name="send" />
+                      </Button>
+                  ) : (
+                      <Button
+                          type="button"
+                          size="icon"
+                          variant="ghost"
+                          onClick={handleToggleListening}
+                          disabled={isLoading}
+                          className={isListening ? '!text-red-500' : ''}
+                          aria-label={isListening ? "Parar de ouvir" : "Falar com assistente"}
+                      >
+                          <Icon name="mic" />
+                      </Button>
+                  )}
+                </div>
+            </form>
+          </div>
+        </div>
+      </Card>
     </div>
   );
 };

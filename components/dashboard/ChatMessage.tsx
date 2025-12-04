@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChatMessage, View, ChatAction } from '../../types';
@@ -27,7 +28,8 @@ const UserAvatar = () => (
 
 const ChatMessageComponent: React.FC<ChatMessageProps> = ({ message, isLastMessage, isLoading, onFeedback, onCopy }) => {
     const navigate = useNavigate();
-    const showFeedbackActions = message.role === 'model' && message.content && !isLastMessage;
+    // Show feedback actions if it's a model's message, has content, and it's NOT the last message while the next one is loading.
+    const showFeedbackActions = message.role === 'model' && message.content && (!isLoading || !isLastMessage);
 
     const handleActionClick = (action: ChatAction) => {
         switch (action.type) {
@@ -111,7 +113,7 @@ const ChatMessageComponent: React.FC<ChatMessageProps> = ({ message, isLastMessa
                             )}
                         </div>
                     )}
-                     {message.actions && message.actions.length > 0 && !(isLoading && isLastMessage) && (
+                     {message.actions && message.actions.length > 0 && (
                         <div className="flex flex-wrap gap-2 max-w-prose">
                             {message.actions.map((action, index) => (
                                 <Button
@@ -158,3 +160,4 @@ const ChatMessageComponent: React.FC<ChatMessageProps> = ({ message, isLastMessa
 };
 
 export default ChatMessageComponent;
+      

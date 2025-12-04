@@ -140,9 +140,11 @@ const ProtocolosList: React.FC = () => {
       </Card>
       
       {sortedProtocolos && sortedProtocolos.length > 0 ? (
-        sortedProtocolos.map(protocolo => (
-          <ProtocoloItem key={protocolo.id} protocolo={protocolo} onClick={() => navigate(`/protocolos/${protocolo.id}`)} />
-        ))
+        <div className="space-y-4">
+          {sortedProtocolos.map(protocolo => (
+            <ProtocoloItem key={protocolo.id} protocolo={protocolo} onClick={() => navigate(`/protocolos/${protocolo.id}`)} />
+          ))}
+        </div>
       ) : (
         <Card className="text-center">
           <p className="text-slate-600">Você ainda não abriu nenhum protocolo.</p>
@@ -151,6 +153,17 @@ const ProtocolosList: React.FC = () => {
           </Button>
         </Card>
       )}
+
+      <div className="fixed bottom-20 right-4 z-20">
+            <Button
+                onClick={() => navigate('/protocolos/novo')}
+                size="lg"
+                className="!rounded-full !p-4 shadow-lg"
+                aria-label="Abrir novo protocolo"
+            >
+                <Icon name="add" className="text-3xl" />
+            </Button>
+        </div>
     </div>
   );
 };

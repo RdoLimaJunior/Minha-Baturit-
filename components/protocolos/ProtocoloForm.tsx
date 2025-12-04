@@ -319,7 +319,14 @@ const ProtocoloForm: React.FC = () => {
                     </div>
 
                     <Button type="submit" className="w-full" disabled={isSubmitting}>
-                        {isSubmitting ? 'Enviando...' : 'Enviar Protocolo'}
+                        {isSubmitting ? (
+                            <>
+                                <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></span>
+                                <span>Enviando...</span>
+                            </>
+                        ) : (
+                            'Enviar Protocolo'
+                        )}
                     </Button>
                 </form>
             </Card>

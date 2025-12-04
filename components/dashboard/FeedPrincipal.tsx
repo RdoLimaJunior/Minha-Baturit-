@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useNoticias, usePublicacoes } from '../../hooks/useMockData';
 import { View } from '../../types';
 import NoticiaCard from './NoticiaCard';
@@ -6,6 +7,7 @@ import PublicacaoCard from '../participacao/PublicacaoCard';
 import Card from '../ui/Card';
 import Button from '../ui/Button';
 import Icon from '../ui/Icon';
+import { viewToPath } from '../../utils/navigation';
 
 interface FeedPrincipalProps {
   navigateTo: (view: View, params?: any) => void;
@@ -43,7 +45,7 @@ const FeedPrincipal: React.FC<FeedPrincipalProps> = ({ navigateTo }) => {
     <div className="space-y-6">
         <div>
             <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-bold text-slate-800">Feed Principal</h2>
+                <h2 className="text-lg font-bold text-slate-800">Destaques da Cidade</h2>
             </div>
 
             {loading ? (
@@ -52,7 +54,7 @@ const FeedPrincipal: React.FC<FeedPrincipalProps> = ({ navigateTo }) => {
                     <SkeletonCard />
                 </div>
             ) : (
-                <div className="space-y-4">
+                <div className="space-y-6">
                     {ultimaPublicacao.length > 0 && (
                         <div>
                              <h3 className="text-sm font-bold text-slate-700 uppercase tracking-wider mb-2 flex items-center"><Icon name="campaign" className="mr-2" /> Participação Recente</h3>

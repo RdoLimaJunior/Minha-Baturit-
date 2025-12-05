@@ -96,25 +96,33 @@ const NoticiaDetail: React.FC<NoticiaDetailProps> = ({ noticiaId }) => {
             <img src={noticia.imageUrl} alt={noticia.title} className="w-full h-auto max-h-96 object-cover" />
             <div className="p-4">
                 <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100">{noticia.title}</h2>
-                <p className="text-slate-700 dark:text-slate-200 mt-2">{noticia.summary}</p>
-                <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700 flex items-center space-x-4">
-                    <button onClick={handleLike} className="flex items-center space-x-1 text-slate-600 dark:text-slate-300 hover:text-red-500">
-                        <Icon name={isLiked ? 'favorite' : 'favorite_border'} className={`text-3xl ${isLiked ? 'text-red-500' : ''}`} />
-                        <span className="font-semibold text-sm">{likeCount.toLocaleString('pt-BR')}</span>
-                    </button>
-                    <div className="flex items-center space-x-1 text-slate-600 dark:text-slate-300">
-                        <Icon name="chat_bubble_outline" className="text-3xl" />
-                        <span className="font-semibold text-sm">{comments.length}</span>
+                {/* Exibindo o conteúdo completo ao invés do resumo */}
+                <div className="text-slate-700 dark:text-slate-200 mt-4 leading-relaxed whitespace-pre-wrap">
+                    {noticia.content}
+                </div>
+                
+                <div className="mt-6 pt-4 border-t border-slate-200 dark:border-slate-700 flex items-center justify-between">
+                    <div className="flex items-center space-x-6">
+                        <button onClick={handleLike} className="flex items-center space-x-1.5 text-slate-600 dark:text-slate-300 hover:text-red-500 transition-colors">
+                            <Icon name={isLiked ? 'favorite' : 'favorite_border'} className={`text-2xl ${isLiked ? 'text-red-500' : ''}`} />
+                            <span className="font-semibold text-sm">{likeCount.toLocaleString('pt-BR')}</span>
+                        </button>
+                        <div className="flex items-center space-x-1.5 text-slate-600 dark:text-slate-300">
+                            <Icon name="chat_bubble_outline" className="text-2xl" />
+                            <span className="font-semibold text-sm">{comments.length}</span>
+                        </div>
                     </div>
-                    <button onClick={handleShare} className="flex items-center space-x-1 text-slate-600 dark:text-slate-300 hover:text-indigo-700 dark:hover:text-indigo-400">
-                        <Icon name="share" className="text-3xl" />
+                    
+                    <button onClick={handleShare} className="flex items-center space-x-1.5 text-slate-600 dark:text-slate-300 hover:text-indigo-700 dark:hover:text-indigo-400 transition-colors">
+                        <Icon name="share" className="text-2xl" />
+                        <span className="text-sm font-medium">Compartilhar</span>
                     </button>
                 </div>
             </div>
         </Card>
         
         <Card>
-            <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-4">Comentários</h3>
+            <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-4">Comentários ({comments.length})</h3>
             <div className="space-y-4">
                 {comments.length > 0 ? (
                     comments.map(comment => (

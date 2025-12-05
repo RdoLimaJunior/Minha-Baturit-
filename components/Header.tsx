@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Icon from './ui/Icon';
 import { UserProfile } from '../types';
-import { useNotificacoes } from '../../hooks/useMockData';
+import { useNotificacoes } from '../hooks/useMockData';
 
 interface HeaderProps {
     activeProfile: UserProfile;

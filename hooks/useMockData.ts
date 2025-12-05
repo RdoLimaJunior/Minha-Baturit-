@@ -1,11 +1,9 @@
-
-
-
 import { useState, useEffect } from 'react';
 import { MOCK_PROTOCOLOS, MOCK_NOTICIAS, MOCK_SECRETARIAS, MOCK_PREDIOS_PUBLICOS, MOCK_TURISMO_ITENS, MOCK_CONTATOS, MOCK_SERVICOS_ONLINE, MOCK_AGENDAMENTOS, MOCK_NOTIFICACOES, MOCK_PUBLICATIONS, MOCK_CONSULTAS_PUBLICAS } from '../constants';
 import { Protocolo, Noticia, Secretaria, PredioPublico, TurismoItem, ContatoUtil, ServicoOnline, Agendamento, Notificacao, Publicacao, ConsultaPublica } from '../types';
 
-const useMockData = <T,>(data: T, delay: number = 500) => {
+// Reduced delay from 500ms to 50ms for a snappier, "instant" feel while maintaining async nature.
+const useMockData = <T,>(data: T, delay: number = 50) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
   const [result, setResult] = useState<T | null>(null);

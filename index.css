@@ -1,3 +1,8 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root.font-size-sm { font-size: 14px; }
 :root.font-size-base { font-size: 16px; }
 :root.font-size-lg { font-size: 18px; }
@@ -18,4 +23,30 @@ body {
   outline: 2px solid #4f46e5; /* indigo-600 */
   outline-offset: 2px;
   border-radius: 6px;
+}
+
+/* Scrollbar styling for Webkit browsers (Chrome, Safari) to look cleaner on desktop */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Page transition animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+main > div {
+  animation: fadeIn 0.3s ease-out;
 }

@@ -1,8 +1,11 @@
+
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { UserProfile, UserRole } from '../types';
 import { useToast } from './ui/Toast';
 import { useChat } from '../hooks/useChat';
+import { useLiveAssistant } from '../hooks/useLiveAssistant';
 import ChatMessageComponent from './dashboard/ChatMessage';
+import LiveVoiceOverlay from './dashboard/LiveVoiceOverlay';
 import Icon from './ui/Icon';
 import Button from './ui/Button';
 import Card from './ui/Card';
@@ -78,14 +81,30 @@ const getContextFromMessage = (messageContent: string): SuggestionTopic => {
 
 const Dashboard: React.FC<DashboardProps> = ({ userProfile }) => {
   const [input, setInput] = useState('');
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isListening, setIsListening] = useState(false);
   const [dynamicSuggestedQuestions, setDynamicSuggestedQuestions] = useState<string[]>([]);
+  const [showLiveMode, setShowLiveMode] = useState(false);
   
   const { data: agendamentos } = useAgendamentos();
+  // Text Chat Hook
   const { messages, isLoading, sendMessage, handleFeedback } = useChat(userProfile, agendamentos || []);
   
+  // Live Voice Hook
+  const { 
+      connect: connectLive, 
+      disconnect: disconnectLive, 
+      isConnected: isLiveConnected, 
+      isSpeaking: isLiveSpeaking, 
+      isMuted: isLiveMuted,
+      toggleMute: toggleLiveMute,
+      volume: micVolume, 
+      error: liveError 
+  } = useLiveAssistant(userProfile, agendamentos || []);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const recognitionRef = useRef<any>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { addToast } = useToast();
 
   useEffect(() => {
@@ -115,10 +134,11 @@ const Dashboard: React.FC<DashboardProps> = ({ userProfile }) => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isLoading]);
 
-  const handleSendMessage = useCallback(async (message: string) => {
-    if (!message.trim()) return;
+  const handleSendMessage = useCallback(async (message: string, image?: string | null) => {
+    if (!message.trim() && !image) return;
     setInput('');
-    await sendMessage(message);
+    setSelectedImage(null);
+    await sendMessage(message, image || undefined);
   }, [sendMessage]);
 
   useEffect(() => {
@@ -148,13 +168,13 @@ const Dashboard: React.FC<DashboardProps> = ({ userProfile }) => {
     };
     recognition.onresult = (event: any) => {
       const transcript = event.results[0][0].transcript;
-      handleSendMessage(transcript);
+      handleSendMessage(transcript, selectedImage);
     };
-  }, [addToast, handleSendMessage]);
+  }, [addToast, handleSendMessage, selectedImage]);
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
-    handleSendMessage(input);
+    handleSendMessage(input, selectedImage);
   };
   
   const handleToggleListening = () => {
@@ -166,10 +186,37 @@ const Dashboard: React.FC<DashboardProps> = ({ userProfile }) => {
     if (isListening) {
       recognition.stop();
     } else {
-      setInput(''); 
       recognition.start();
     }
   };
+
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setSelectedImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+  
+  const handleStartLiveMode = () => {
+    setShowLiveMode(true);
+    connectLive();
+  };
+
+  const handleStopLiveMode = () => {
+    disconnectLive();
+    setShowLiveMode(false);
+  };
+
+  useEffect(() => {
+    if (liveError) {
+        addToast(liveError, 'error');
+        handleStopLiveMode();
+    }
+  }, [liveError, addToast]);
 
   const handleCopy = (text: string) => {
     navigator.clipboard.writeText(text).then(() => {
@@ -190,7 +237,7 @@ const Dashboard: React.FC<DashboardProps> = ({ userProfile }) => {
   }
   
   return (
-    <div className="h-full flex flex-col p-4 w-full">
+    <div className="h-full flex flex-col p-4 w-full relative">
        <style>{`
         @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1.0); } }
         .typing-dot { width: 8px; height: 8px; background-color: #94a3b8; border-radius: 50%; display: inline-block; animation: bounce 1.4s infinite ease-in-out both; }
@@ -200,12 +247,32 @@ const Dashboard: React.FC<DashboardProps> = ({ userProfile }) => {
         .animate-fade-slide-in { animation: fade-slide-in 0.3s ease-out forwards; }
       `}</style>
       
+      {showLiveMode && (
+          <LiveVoiceOverlay 
+            isConnected={isLiveConnected} 
+            isSpeaking={isLiveSpeaking} 
+            isMuted={isLiveMuted}
+            toggleMute={toggleLiveMute}
+            volume={micVolume} 
+            onHangup={handleStopLiveMode} 
+          />
+      )}
+
       <Card className="!p-0 flex flex-col flex-1 shadow-xl max-w-5xl mx-auto w-full">
-        <div className="p-4 border-b border-slate-200 flex-shrink-0 bg-white rounded-t-xl">
+        <div className="p-4 border-b border-slate-200 flex-shrink-0 bg-white rounded-t-xl flex justify-between items-center">
             <h2 className="font-bold text-slate-800 flex items-center gap-2">
                 <Icon name="flutter_dash" className="text-slate-700" />
                 Assistente Uirapuru
             </h2>
+             <Button
+                variant="secondary"
+                size="sm"
+                onClick={handleStartLiveMode}
+                className="!rounded-full !bg-indigo-50 !text-indigo-600 !border-indigo-100 hover:!bg-indigo-100"
+            >
+                <Icon name="graphic_eq" className="mr-1" />
+                Conversar
+            </Button>
         </div>
         <div className="flex-1 overflow-y-auto scrollbar-hide p-4 space-y-8 bg-slate-50/50" role="log" aria-live="polite">
             {messages.map((msg, index) => (
@@ -224,13 +291,13 @@ const Dashboard: React.FC<DashboardProps> = ({ userProfile }) => {
         
         <div className="flex-shrink-0 bg-white border-t border-slate-200 rounded-b-xl">
           <div className="container mx-auto px-4 pt-2 pb-4 max-w-5xl">
-            {!isLoading && messages.length > 1 && ( // Only show suggestions after the first interaction
+            {!isLoading && messages.length > 1 && !selectedImage && (
                 <div className="mb-3">
                     <div className="flex flex-wrap justify-center gap-2">
                     {dynamicSuggestedQuestions.map((q, i) => (
                         <button
                             key={i}
-                            onClick={() => handleSendMessage(q)}
+                            onClick={() => handleSendMessage(q, null)}
                             className="px-4 py-2 bg-white border border-slate-200 text-slate-600 rounded-full text-sm font-medium hover:bg-slate-100 hover:border-slate-300 transition-colors shadow-sm"
                         >
                         {q}
@@ -239,19 +306,55 @@ const Dashboard: React.FC<DashboardProps> = ({ userProfile }) => {
                     </div>
               </div>
             )}
+            
+            {/* Image Preview */}
+            {selectedImage && (
+              <div className="mb-2 px-2 flex items-center gap-2">
+                <div className="relative">
+                  <img src={selectedImage} alt="Preview" className="h-16 w-16 object-cover rounded-lg border border-slate-200" />
+                  <button 
+                    onClick={() => setSelectedImage(null)}
+                    className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full p-0.5 shadow-sm hover:bg-red-600"
+                  >
+                    <Icon name="close" className="text-xs" />
+                  </button>
+                </div>
+                <span className="text-sm text-slate-500 italic">Imagem anexada</span>
+              </div>
+            )}
+
             <form onSubmit={handleSend} className="w-full">
                 <div className="bg-white border border-slate-200 rounded-2xl p-2 flex items-center gap-2 shadow-sm focus-within:ring-2 focus-within:ring-slate-500">
+                  <input 
+                    type="file" 
+                    accept="image/*" 
+                    className="hidden" 
+                    ref={fileInputRef}
+                    onChange={handleImageSelect}
+                  />
+                  <Button
+                    type="button"
+                    size="icon"
+                    variant="ghost"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={isLoading}
+                    title="Enviar imagem"
+                    className="text-slate-400 hover:text-slate-600"
+                  >
+                    <Icon name="add_a_photo" />
+                  </Button>
+
                   <input
                       type="text"
                       value={input}
                       onChange={(e) => setInput(e.target.value)}
-                      placeholder={isListening ? "Ouvindo..." : "Converse com o assistente..."}
+                      placeholder={isListening ? "Ouvindo..." : "Digite sua mensagem..."}
                       className="bg-transparent focus:ring-0 border-0 w-full text-slate-800 placeholder-slate-400"
                       disabled={isLoading || isListening}
-                      aria-label="Caixa de texto para perguntas ao assistente virtual"
                   />
-                  {input.trim() ? (
-                      <Button type="submit" size="icon" disabled={isLoading} aria-label="Enviar mensagem">
+                  
+                  {input.trim() || selectedImage ? (
+                      <Button type="submit" size="icon" disabled={isLoading}>
                           <Icon name="send" />
                       </Button>
                   ) : (
@@ -261,8 +364,7 @@ const Dashboard: React.FC<DashboardProps> = ({ userProfile }) => {
                           variant="ghost"
                           onClick={handleToggleListening}
                           disabled={isLoading}
-                          className={isListening ? '!text-red-500' : ''}
-                          aria-label={isListening ? "Parar de ouvir" : "Falar com assistente"}
+                          className={isListening ? '!text-red-500 animate-pulse' : 'text-slate-400'}
                       >
                           <Icon name="mic" />
                       </Button>
